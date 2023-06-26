@@ -1,0 +1,296 @@
+
+
+:root{
+    --background: linear-gradient(0deg,#fdc322 100%,#ffc444 100%);
+    --color-primary:#431e0be3;
+    --color-secundary:#431e0be3;
+    --bottom-padding: 20px 40px;
+
+}
+
+body{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+.container{
+    width: 90%;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 80px 0;
+    max-width: 1500px;
+
+}
+
+.subtitle{
+    color: var(--color-primary);
+    font-size: 2.5rem;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+.subtitle2{
+
+    color: #431e0be3;
+    font-size: 2.5rem;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+.subtitle3{
+
+    color: #431e0be3;
+    font-size: 2.5rem;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+
+
+
+.hero{
+    height: 100vh;
+    background-image:url(img/Imagen3.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    position: relative;
+}
+
+.hero .container{
+    padding: 0;
+
+}
+
+.nav{
+    display: flex;
+    justify-content: flex-end;
+    height: 70px;
+    align-items: center;
+    font-weight: 700;
+
+}
+
+.nav--footer{
+    font-weight: 300;
+    justify-content: flex-start;
+
+}
+
+.nav_items{
+    color: #431e0be3;
+    text-decoration: none;
+    margin-right: 20px;
+    padding: 10px 15px;
+    font-weight: inherit;
+}
+
+.nav_items--cta{
+    border: 1px solid #431e0be3;
+}
+
+nav_items--cta{
+    border: 1px solid #431e0be3;
+}
+    nav_items--cta{
+        border: 1px solid #431e0be3;
+    }       
+
+
+.nav_items--footer{
+
+    padding: 10px;
+
+}
+
+.hero_container{
+    display: flex;
+    height: calc(100vh - 70px);
+    align-items: center;
+    color:#431e0be3;
+
+}
+
+.hero_texts{
+    width: 80%;
+    margin-bottom: 50px;
+}
+
+.hero_title{
+    font-size: 3.2rem;
+    color: rgb(117, 86, 0);
+}
+
+.hero_subtitle{
+    font-size: 2rem;
+    font-weight: 300;
+    margin: 15px;
+}
+
+.hero_cta{
+    display: inline-block;
+    background-color: #431e0be3;
+    padding: var(--bottom-padding);
+    color: ghostwhite;
+    text-decoration: none;
+    border-radius: 40px;
+
+}
+.hero_wave{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+}
+
+
+
+
+.Kius{
+    padding: 6%;
+    text-align: center;
+
+}
+
+.Kius_logo{
+    width: 230px;
+    height: 230px;
+    border-radius: 2%;
+    margin-bottom: 10px;
+    text-align: center;
+ 
+}
+.Kius_copy{
+    font-size: 1.5rem;
+    margin: 0 auto;
+    width: 100%;
+    line-height: 150%;
+}
+
+.Kius_cta{
+    display: inline-block;
+    margin-top: 12px;
+    background: #431e0be3;
+    color: ghostwhite;
+    text-decoration: none;
+    padding: 20px 40px;
+    border-radius: 40px;
+}
+
+
+.about{
+    padding: 0%;
+    min-height: 100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+
+}
+
+.about_img{
+    text-align: center;
+
+}
+
+.about_picture{
+    max-width: 100%;
+}
+
+.about_paragraph{
+    margin-bottom: 5px;
+    line-height: 1.5;
+    font-weight: 300;
+    font-size: 1.4rem;
+    text-align: left;
+
+}
+
+.about2{
+    min-height: 100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 0;
+    justify-items: center;
+    align-items: center;
+}
+
+.about2_img{
+    text-align: left;
+}
+
+.about2_picture{
+    max-width: 100%;
+}
+
+.about2_paragraph{
+    margin-bottom: 20px;
+    line-height: 1.5;
+    font-weight: 300;
+    font-size: 1.4rem;
+    text-align: center;
+
+}
+
+.about3{
+    min-height: 100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 0;
+    justify-items: center;
+    align-items: center;
+}
+
+.about3_img{
+    text-align: left;
+}
+
+.about3_picture{
+    max-width: 100%;
+}
+
+.about3_paragraph{
+    margin-bottom: 20px;
+    line-height: 1.5;
+    font-weight: 300;
+    font-size: 1.4rem;
+    text-align: center;
+
+}
+*{
+    box-sizing: border-box;
+
+}
+img{
+    width: 400px;
+}
+
+.row{
+
+    display: flex;
+    padding: 5px;
+    flex-wrap: wrap;
+}
+
+.column{
+    flex: 25px;
+    padding: 5px;
+}
+
+.column img{
+    margin-top: 5px;
+
+}
+    .animacion-imagen {
+        position: relative;
+        animation: desplazamiento 5s linear infinite;
+      }
+      @keyframes desplazamiento {
+        0% {
+          left: 7%;
+        }
+        100% {
+          left: 7%;
+        }
+      }
