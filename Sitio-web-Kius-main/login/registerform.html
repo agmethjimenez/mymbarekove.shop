@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/loginstyle.css">
+    <script src="login.js"></script>
+</head>
+<div id="contenedor">
+    <div id="contenedorcentrado">
+        <div id="login">
+                <h2>Registro</h2>
+                <form onsubmit="register(event)">
+                    <label for="registerUsername">Correo Electrónico:</label>
+                    <input type="text" id="registerUsername" required>
+                    <br>
+                    <label for="registerPassword">Contraseña:</label>
+                    <input type="password" id="registerPassword" required>
+                    <br>
+                    <label for="registerName">Nombres:</label>
+                    <input type="text" id="registerName" required>
+                    <br>
+                    <label for="registerCel">Número telefónico:</label>
+                    <input type="text" id="registerCel" required>
+                    <br>
+                    <label for="registerResidence">Dirección de residencia:</label>
+                    <input type="text" id="registerResidence" required>
+                    <br>
+                    <label for="fecha">Fecha de nacimiento:</label>
+    <input type="date" id="registerFecha" required>
+    <br>
+    <input type="submit" value="Registrarse">
+                </form>
+            </div>
