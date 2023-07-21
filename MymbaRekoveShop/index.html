@@ -7,21 +7,18 @@
     <title>Mymba Rekove Shop</title>
     <link rel="stylesheet" href="normalize.css">
     <link rel="stylesheet" href="Estilos.css">
-
-
-
-
+    <link rel="stylesheet" href="footerstyles.css">
+    <script src="login/login.js"></script>
 </head>
-<body>
+<body bgcolor="#FFEBB8">
     <header class="hero">
         <div class="container">
             <nav class="nav">
-                <a href="asesoria.html" class="nav_items nav_items--cta">Contactanos</a>
-                <a href="login/Formlogin.php" class="nav_items nav_items--cta">inicio</a>
-                <a href="#Productos" class="nav_items nav_items--cta">Productos</a>
-
+                <a onclick="redirectToLogin()" class="nav_items nav_items--cta">Iniciar sesión</a>
+                <a onclick="redirectToRegister()" class="nav_items nav_items--cta">Registrarse</a>
+                <a href="https://www.instagram.com/mymbarekove/" class="nav_items nav_items--cta">Contactános</a>
+                <a href="" class="nav_items nav_items--cta">Carrito de compras</a>
             </nav>
-
             <section  class="hero_container">
                 <div class="hero_texts">
                     <h1 class="hero_title">Mymba Rekove Shop</h1>
@@ -29,14 +26,16 @@
                     </div>
                 <div class="hero_texts">
                     <h1 class="hero_title">¡Productos, servicios y todo lo que necesites para tu mascota!</h1>
+                    <div class="hero_las">
                     <h2 class="hero_subtitle">Las mejores marcas y los mejores profesionales</h2>
-                    <a href="#" class="hero_cta">Catálogo</a>
+                </div>
+                    <a href="catalogo/catalogo.html" class="hero_cta">Catálogo</a>
                 </div>
 
 
             </section>
         </div>
-        <div class="hero_wave" style="overflow: hidden;" ><svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;"><path d="M0.00,49.98 C149.99,150.00 349.20,-49.98 500.00,49.98 L500.00,150.00 L0.00,150.00 Z" style="stroke: none; fill: #431e0be3;"></path></svg></div>
+        <div class="hero_wave" style="overflow: hidden;" ><svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;"><path d="M0.00,49.98 C149.99,150.00 349.20,-49.98 500.00,49.98 L500.00,150.00 L0.00,150.00 Z" style="stroke: none; fill: #95F5D5;"></path></svg></div>
  
 
     </header>
@@ -46,7 +45,8 @@
         <div id="¿Quienes somos?"></div>
         <section class="Kius container"> 
             <p class="Kius_copy">Mymba es un software dedicado a la venta de productos y servicios para mascotas, ofreciendo los mejores precios, la mejor calidad y una asesoria con profesionales expertos en el tema, totalmente dispuestos a despejar dudas o inquietudes acerca de sus mascotas o todo lo que tenga que ver con el aplicativo</p>
-            <a href="#" class="Kius_cta">Asesorate</a>
+            <p>
+            <a href="#" class="hero_cta">Asesorate</a>
         </section>
 
             <section class="about container">
@@ -63,7 +63,7 @@
             <section class="about2 container">
                 <div class="about2_texts">
                     <h2 class="subtitle2">Juguetes</h2>
-                    <p class="about2_paragraph">Que nunca falte la diversión y la alegría en tu hogar, en mymba contamos con una extensa variedad de juguetes, accesorios para que tu mascota se pueda desarrollar de forma sana y alegre, tambien contamos con vestimenta adecuada para ellos incluyendo ciertos tips de cuidado e incluso ideas para que nuestra mascota no deje de verse bien</p>
+                    <p class="about_paragraph">Que nunca falte la diversión y la alegría en tu hogar, en mymba contamos con una extensa variedad de juguetes, accesorios para que tu mascota se pueda desarrollar de forma sana y alegre, tambien contamos con vestimenta adecuada para ellos incluyendo ciertos tips de cuidado e incluso ideas para que nuestra mascota no deje de verse bien</p>
                 </div>
                 <figure class="about2_img">
                     <img src="imgs/juguetes.jpg" class="about2_picture">
@@ -73,19 +73,15 @@
             <section class="about3 container">
                 <div class="about3_texts">
                     <h2 class="subtitle3">Productos de limpieza y cuidado</h2>
-                    <p class="about3_paragraph">En mymba contamos con un amplio catálogo de productos para la limpieza y el cuidado de nuestras mascotas tales como shampoos, medicamentos, entre otros buscando adaptarnos a la necesidad del cliente y su mascota, de igual forma pueden consultar con nuestros asesores sobre como se deberia cuidar, limpiar a cada mascota</p>
+                    <p class="about_paragraph">En mymba contamos con un amplio catálogo de productos para la limpieza y el cuidado de nuestras mascotas tales como shampoos, medicamentos, entre otros buscando adaptarnos a la necesidad del cliente y su mascota, de igual forma pueden consultar con nuestros asesores sobre como se deberia cuidar, limpiar a cada mascota</p>
                 </div>
                 <figure class="about3_img">
                     <img src="imgs/Aseo.jpg" class="about3_picture">
                 </figure>
             </section>
-            
-    
-
-   
-   
-
-    <script src="https://kit.fontawesome.com/fa891a5448.js" 
-    crossorigin="anonymous"></script>
+            </div>
+            <footer>
+                <p>© 2023 MYMBA REKOVE SHOP. Todos los derechos reservados.</p>
+            </footer>
 </body>
 </html>
