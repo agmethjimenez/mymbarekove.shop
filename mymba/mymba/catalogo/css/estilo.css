@@ -1,0 +1,307 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Oxygen', sans-serif;
+    background: linear-gradient(135deg, #caa678, #f5f5f5 );
+    margin-top: 10%;
+}
+
+header {
+    background-color: white;
+    justify-content: center;
+    height: 90px;
+    width: 100%;
+    top: 0;
+    position: fixed;
+}
+
+#navegar {
+    list-style-type: none; /* Quita los puntos de la lista */
+    display: flex; /* Hace que los elementos se distribuyan en una línea */
+    justify-content: center; /* Centra horizontalmente los elementos */
+    align-items: center; /* Centra verticalmente los elementos */
+    margin: 0; /* Asegura que no haya espacios de margen en el ul */
+    padding: 0; /* Asegura que no haya espacios de relleno en el ul */
+}
+
+li {
+    margin: 0 10px; /* Agrega un margen horizontal entre los elementos */
+}
+
+button a {
+    text-decoration: none; /* Quita el subrayado del enlace dentro del botón */
+    color: inherit; /* Hereda el color del texto del botón */
+}
+
+button a:hover {
+    text-decoration: none; /* Subraya el enlace dentro del botón */
+}
+
+.center-item {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+}
+
+.right-item {
+    text-align: right;
+    display: flex;
+    align-items: center;
+}
+ul li h1{
+    font-size: 15px
+}
+li.right-item a {
+    text-decoration: none;
+    color: #333;
+    border-bottom: none; /* Quita la raya inferior en los enlaces */
+    font-family: 'Oxygen', sans-serif;
+}
+ul li .logo{
+    width: 110px;
+    height: 110px;
+}
+
+.acceso a{
+    color: white;
+    text-decoration: none;
+    border-bottom: none;
+}
+ul li button {
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transform: translateX(100px);
+    transition: background-color 0.3s; /* Agrega una transición para cambiar de color suavemente */
+}
+ul li button:hover{
+    background: #6b6b6b;
+}
+
+input[type="search"] {
+    font-family: 'Material Icons Outlined';
+    font-size: 16px;
+    padding: 8px;
+    border: none;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+}
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-size: 20px;
+    color: #fff;
+    cursor: pointer;
+    margin-left: -28px;
+    margin-top: 10px;
+}
+.search{
+    width: 420px;
+    height: 40px;
+    border-radius:16px;
+    border: none;
+    border-color: #efefef;
+    background-color: #efefef;
+    margin-bottom: 10px;
+    text-align: center;
+
+}
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-size: 20px;
+    margin-right: 10px; /* Ajusta el espaciado entre el ícono y el campo de búsqueda */
+    margin-top: 2px; /* Mueve la lupa hacia abajo */
+    color: #333; /* Ajusta el color del ícono */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el ícono */
+    
+    translate: -10px 7px;
+}
+.title1{
+    width: 100%;
+}
+.title1 h1{
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+}
+
+h1 {
+    font-family: 'Oxygen', sans-serif;
+    text-align: right;
+    margin: 30px 0px;
+}
+
+img {
+    width: 320px;
+    height: 340px;
+    object-fit: cover;
+    border-radius: 20px 20px 0px 0px;
+}
+
+.carrito {
+    filter: 100%;
+    width: 35px;
+    height: 35px;
+}
+
+.contenedor {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 50px;
+    margin-bottom: 20px;
+}
+.contenedor>div{
+    box-shadow: 0px 0px 5px 0px rgba(0, 0,0,0.75);
+    background-color: #594A3C;
+    border-radius: 20px;
+    color: white;
+}
+.contenedor>div:hover{
+    background-color: #F2E2CE;
+    color: #000;
+}
+.informacion>p:first-child{
+    font-family: 'Oxygen', sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+}
+.informacion .precio{
+    font-size: 20px;
+    font-weight: 500;
+}
+.informacion button{
+    background-color: #000;
+    color: white;
+    width: 100px;
+    height: 35px;
+    border-radius: 10px;
+    border: none;
+    font-size: 17px;
+    font-weight: 300px;
+    cursor: pointer;
+}
+.informacion button:hover{
+    background-color:#333;
+}
+.informacion{
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15%;
+}
+
+    .footer{
+        margin-top: 150px;
+        width: 100%;
+        padding: 100px;
+        background-color: #333;
+        color: #efefef;
+        display: flex;
+        height: 300px;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+    .footer div{
+        text-align: center;
+    }
+    .col-2{
+        flex-grow: 2;
+    }
+    .footer div h3{
+        font-weight: 200;
+        margin-bottom: 30px;
+        letter-spacing: 1px;
+    }
+    .col-1 a{
+        display: block;
+        text-decoration: none;
+        color: #efefef;
+        margin-top: 10px;
+        font-family: 'Oxygen', sans-serif;
+    }
+    form input{
+        width: 400px;
+        height: 40px;
+        border-radius: 15px;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 40px;
+        outline: none;
+        border: none;
+    }
+    form button{
+        background: transparent;
+        border: 2px solid #fff;
+        color: #Fff;
+        border-radius: 30px;
+        padding: 10px 30px;
+        font-size: 12px;
+        cursor: pointer;
+    }
+    
+
+
+
+    .carrito-flotante {
+        top: 100px;
+        position: fixed;
+        right: 20px;
+        background-color: #f2f2f2;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+        display: none; /* El contenedor estará oculto inicialmente */
+       
+      }
+      .carrito-flotante h1{
+        margin-top: 10px;
+        text-align: center;
+        justify-content: center;
+      }
+      
+      /* Estilos para el contenido del carrito dentro del contenedor flotante */
+      .carrito-contenido {
+
+       overflow-x: auto;
+       overflow-y: auto;             
+        width: 450px;
+        outline: none;
+      }
+      
+      /* Estilos para el botón de cerrar el contenedor flotante */
+      .carrito-cerrar {
+        cursor: pointer;
+        text-align: center;
+        margin-bottom: 10px;
+        color: #333;
+      }
+      
+      /* Estilos para los elementos dentro del carrito */
+      .carrito-item {
+        margin-bottom: 5px;
+        padding: 5px;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      /* Estilos para el total en el carrito */
+      .carrito-total {
+        text-align: right;
+        font-weight: bold;
+      }
+      .modal{
+        display: none;
+      }
