@@ -9,17 +9,24 @@ if (!empty($_POST["submit"])) {
         $error_message = "CAMPOS VACIOS";
     } else {
         $correo = $_POST["email"];
-        $contraseña =$_POST["password"];
+        $contraseña = $_POST["password"];
 
-        $query = "SELECT * FROM usuarios WHERE correo='$correo' AND contraseña='$contraseña'";
+        $query = "SELECT * FROM usuarios WHERE email='$correo'";
         $result = $conexion->query($query);
 
         if ($result !== false) {
             if ($result->num_rows > 0) {
-                header("location: index.html");
-                exit();
+                $row = $result->fetch_assoc();
+                $hashedPassword = $row['clave'];
+
+                if (password_verify($contraseña, $hashedPassword)) {
+                    header("location: catalogo.html");
+                    exit();
+                } else {
+                    $error_message = "Contraseña incorrecta";
+                }
             } else {
-                $error_message = "USUARIO NO EXISTE";
+                $error_message = "Usuario no existe";
             }
         } else {
             $error_message = "Error en la consulta: " . $conexion->error;
