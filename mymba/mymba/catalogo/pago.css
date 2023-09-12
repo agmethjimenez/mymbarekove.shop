@@ -1,115 +1,59 @@
-@import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
-body {
-    font-family: 'Oxygen', sans-serif;
-    background-color: #F2E4BB;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}
-
-.container {
-    background-color: white;
-    width: 1000px;
-    padding: 10px;
-    border-radius: 20px;
-}
-
-.logo {
-    margin: 20px auto; 
-    align-items: center;
-    justify-content: center;
-    display: flex;
-}
-
-.logo img {
-    width: 170px;
-    height: 170px;
-    object-fit: cover;
-}
-
-form {
-    display: flex;
-    flex-direction: column; 
-    align-items: center;
-    margin-top: 20px; 
-}
-
-label {
-    margin-bottom: 5px;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="tel"] {
-    width: 270px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    margin-bottom: 10px;
-    font-size: 16px;
-    background-color: #efefef;
-}
-
-input[type="submit"] {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 13px;
-    width: 130px;
-    margin-top: 20px;
-}
-
-input[type="submit"]:hover {
-    background-color: #6b6b6b;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10px;
-    align-items: center;
-}
-
-table td {
-    padding: 5px;
-}
-
-table label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-table select {
-    width: 50%;
-    padding: 10px;
-    border: none;
-    border-radius: 20px;
-    font-size: 16px;
-    background-color: #efefef;
-}
-
-.text {
-    width: 90%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    font-size: 13px;
-    background-color: #efefef;
-}
-
-.seccion {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    font-size: 13px;
-    background-color: #efefef;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="pago.css">
+    <title>Metodo pago</title>
+</head>
+<body>
+    <div class="container">
+        <form>
+            <div class="logo">
+                <h1>Método de Pago</h1>
+                <img src="imgs/Logo veterinaria animado azul rosado.png" alt="">
+            </div>
+        
+            <div class="form-container" align="center">
+                <div class="seccion">
+                    <h2>Información de Pago</h2>
+                    <label>
+                        <input type="radio" name="metodo_pago" value="tarjeta_credito">
+                        Tarjeta de Crédito
+                    </label><br>
+                    <label>
+                        <input type="radio" name="metodo_pago" value="paypal">
+                        PayPal
+                    </label><br>
+                    <label>
+                        <input type="radio" name="metodo_pago" value="transferencia_bancaria">
+                        Transferencia Bancaria
+                    </label><br>
+                    <label>
+                        <input type="radio" name="metodo_pago" value="efectivo">
+                        Efectivo (Contraentrega)
+                    </label><br>
+                    <div class="form-container" align="center">
+                    <h2>Información de Contacto</h2>
+                    <label for="correo">Correo electrónico:</label>
+                    <input type="email" name="correo" id="correo" required><br>
+        
+                    <label for="telefono">Teléfono:</label>
+                    <input type="tel" name="telefono" id="telefono" required><br>
+        
+                    <label for="direccion">Dirección:</label>
+                    <input type="text" name="direccion" id="direccion" required><br>
+        
+                    <label for="ciudad">Ciudad:</label>
+                    <input type="text" name="ciudad" id="ciudad" required><br>
+        
+                    <label for="barrio">Barrio:</label>
+                    <input type="text" name="barrio" id="barrio" required><br>
+                </div>
+                </div>
+            <input type="submit" value="Confirmar Pago">
+        </form>
+        
+</div>
+</body>
+</html>
