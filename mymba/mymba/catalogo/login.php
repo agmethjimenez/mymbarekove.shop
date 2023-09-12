@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $conexion = new mysqli("localhost", "root", "", "mymba", "3306");
 $conexion->set_charset("utf8");
 
@@ -20,7 +22,9 @@ if (!empty($_POST["submit"])) {
                 $hashedPassword = $row['clave'];
 
                 if (password_verify($contraseña, $hashedPassword)) {
-                    header("location: catalogo.html");
+                    $_SESSION['usuario_nombre'] = $row['primerNombre'];
+                    $_SESSION['usuario_apellido'] = $row['primerApellido'];
+                    header("location: catalogo.php");
                     exit();
                 } else {
                     $error_message = "Contraseña incorrecta";
