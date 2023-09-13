@@ -18,7 +18,7 @@
            <div class="con1">
                     <div class="field">
                         <div class="control has-icons-left has-icons-right">
-                          <input class="input" type="text"  name="nombre1"  id="nombre1" placeholder="Primer nombre" required pattern="[A-Za-zÁáÉéÍíÓóÚúÑñ\s'-]*">
+                          <input class="input" type="text"  name="nombre1"  id="nombre1" placeholder="Primer nombre" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]*" >
                           <span class="icon is-small is-left">
                             <i class="fas fa-user"></i>
                           </span>
@@ -28,7 +28,7 @@
                                         
                         <div class="field">
                             <div class="control has-icons-left has-icons-right">
-                              <input class="input" type="text" placeholder="Segundo nombre" name="nombre2"  id="nombre2" required pattern="[A-Za-zÁáÉéÍíÓóÚúÑñ\s'-]*">
+                              <input class="input" type="text" placeholder="Segundo nombre" name="nombre2"  id="nombre2" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]*">
                               <span class="icon is-small is-left">
                                 <i class="fas fa-user"></i>
                               </span>
@@ -41,7 +41,7 @@
                     <div class="con2">
                             <div class="field">
                                 <div class="control has-icons-left has-icons-right">
-                                  <input class="input" type="text" placeholder="Primer apellido" name="apellido1"  id="apellido1" required pattern="[A-Za-zÁáÉéÍíÓóÚúÑñ\s'-]*">
+                                  <input class="input" type="text" placeholder="Primer apellido" name="apellido1"  id="apellido1" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]*">
                                   <span class="icon is-small is-left">
                                     <i class="fas fa-user"></i>
                                     
@@ -52,7 +52,7 @@
 
                                 <div class="field">
                                     <div class="control has-icons-left has-icons-right">
-                                      <input class="input" type="text" placeholder="Segundo apellido" name="apellido2"  id="apellido2" required pattern="[A-Za-zÁáÉéÍíÓóÚúÑñ\s'-]*">
+                                      <input class="input" type="text" placeholder="Segundo apellido" name="apellido2"  id="apellido2" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]*">
                                       <span class="icon is-small is-left">
                                         <i class="fas fa-user"></i>
                                       </span>
@@ -64,8 +64,8 @@
                 <div class="con3">
                   <div class="field">
                     <div class="control has-icons-left has-icons-right">
-                        <div class="select" id="tipoIdentificacion" name="tipoIdentificacion" onchange="Onchange()">
-                            <select name="tipoIdentificacion" id="tipoIdentificacion"  onchange="Onchange()" required>
+                        <div class="select" id="tipoIdentificacion" name="tipoIdentificacion">
+                            <select name="tipoIdentificacion" id="tipoIdentificacion" required>
                                 <option value="">Tipo de ID</option>
                                 <option value="1">Cédula de Ciudadanía</option>
                                 <option value="2">Cedula Extranjeria</option>
@@ -80,7 +80,7 @@
                 </div>
                 <div class="field">
                   <div class="control has-icons-left has-icons-right">
-                    <input class="input" type="text" placeholder="Identificacion" name="identificacion"  id="identificacion" required>
+                    <input class="input" type="text" placeholder="Identificacion" name="identificacion"  id="identificacion" required pattern="^[0-9]+$" title="Solo numeros" minlength="7" maxlength="10">
                     <span class="icon is-small is-left">
                       
                       <i class="fa-solid fa-id-card"></i>
@@ -88,11 +88,11 @@
   
                     </span>
                   </div>
-                                      <div class="field is-horizontal">
-                                        <div class="field-body">
-                                           
-                                        </div>
-                                    </div>
+                  <div class="field is-horizontal">
+                  <div class="field-body">
+                                    
+                  </div>
+                  </div>
                   </div>
   
                 
@@ -116,7 +116,8 @@
                   
                                         <div class="field">
                                             <div class="control has-icons-left has-icons-right">
-                                            <input class="input" type="email" placeholder="Email" name="email"  id="email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+                                              <input class="input" type="email" placeholder="Email" name="email" id="email" required pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+">
+
                                             <span class="icon is-small is-left">
                                             <i class="fas fa-envelope"></i>
                                             </span>
@@ -147,8 +148,9 @@
         
                 
         <div class="boton">
-            <input type="submit"  id="submit"value="Registrarse">
+            <input type="submit"  id="submit"value="Registrarse" onclick="validaron()">
         </div>
+        <p class="error" id="error"></p>
         </form>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
