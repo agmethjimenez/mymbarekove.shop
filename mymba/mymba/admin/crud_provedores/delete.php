@@ -8,7 +8,7 @@ $sql = "UPDATE `proveedores` SET `estado` = 'NO' WHERE `proveedores`.`idProveedo
 
 if ($conexion->query($sql)) {
     echo "Desactivacion exitosa";
-    echo '<a href="proveedores.php">Volver</a>';
+    echo '<a href="provedores.php">Volver</a>';
 } else {
     echo "Error al eliminar el usuario";
 }

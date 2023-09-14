@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="title" style="padding: 20px; display: flex; justify-content: space-between; color:white;" >
-    <h1>Usuarios</h1>
+    <h1>Proveedores</h1>
     <a href="create.php" class="button is-primary">Nuevo usuario</a>
 </div>
 <div class="tata">
