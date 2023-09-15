@@ -112,7 +112,7 @@ $conexion->set_charset("utf8");
     </div>
     <div class="con5">
         <div class="con5-1">
-            <label for="" class="label">Imagen</label>
+            <label for="" class="label">Imagen del producto</label>
             <input type="file" class="file is-primary" name="imagen">
         </div>
     </div>
