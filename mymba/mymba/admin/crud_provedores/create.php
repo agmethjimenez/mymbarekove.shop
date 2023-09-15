@@ -17,7 +17,7 @@ $conexion = new mysqli("localhost", "root", "", "mymba", 3306);
 $conexion->set_charset("utf8");
 
 ?>
-    <div class="title" ><h1>Agregar Proveedor</h1></div>
+    <div class="title" ><h1>Agregar Proveedores</h1></div>
         <div class="con1">
         <div class="con1-1">
         <label for="" class="label">ID Proveedor</label>

@@ -7,7 +7,7 @@ $id = $_GET['id'];
 $sql = "UPDATE `proveedores` SET `estado` = 'NO' WHERE `proveedores`.`idProveedor` = '$id'";
 
 if ($conexion->query($sql)) {
-    echo "Desactivacion exitosa";
+    echo "Desactivacion de proveedor exitosa";
     echo '<a href="provedores.php">Volver</a>';
 } else {
     echo "Error al eliminar el usuario";

@@ -24,7 +24,7 @@ if ($result) {
     $row = $result->fetch_assoc();
 }}
 ?>
-    <div class="title" ><h1>Actualizar Datos</h1></div>
+    <div class="title" ><h1>Actualizar Proveedor</h1></div>
         <div class="con1">
             <div class="con1-1">
         <label for="" class="label">ID</label>
