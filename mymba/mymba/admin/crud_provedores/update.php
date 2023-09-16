@@ -17,7 +17,7 @@ $conexion = new mysqli("localhost", "root", "", "mymba", 3306);
 $conexion->set_charset("utf8");
 if($_SERVER["REQUEST_METHOD"] === "GET"){
 $id = $_GET["id"];
-$sql = "SELECT*FROM proveedores WHERE estado = 'SI'";
+$sql = "SELECT*FROM proveedores WHERE idProveedor = '$id'";
 $result = $conexion->query($sql);
 
 if ($result) {
@@ -31,28 +31,28 @@ if ($result) {
         <input class="input is-primary" type="text" value="<?php echo isset($row['idProveedor']) ? $row['idProveedor'] : ''; ?>" name="id" readonly>
         </div>
         <div class="con1-2">
-        <label for="" class="label">Identificacion</label>
-        <input class="input is-primary" type="text" value="<?php echo isset($row['nombre']) ? $row['nombre'] : ''; ?>" name="nombre">
+        <label for="" class="label">Nombre</label>
+        <input class="input is-primary" type="text" value="<?php echo isset($row['nombreP']) ? $row['nombreP'] : ''; ?>" name="nombre">
         </div>   
     </div>
         <div class="con2">
         <div class="con2-1">
-        <label for="" class="label">Identificacion</label>
+        <label for="" class="label">Ciudad</label>
         <input class="input is-primary" type="text" value="<?php echo isset($row['ciudad']) ? $row['ciudad'] : ''; ?>" name="ciudad">
         </div> 
             <div class="con2-2">
-        <label for="" class="label">Tipo de ID</label>
+        <label for="" class="label">Correo</label>
         <input class="input is-primary" type="text" value="<?php echo isset($row['correo']) ? $row['correo'] : ''; ?>" name="correo">
         </div>
         
         </div>
         <div class="con3">
         <div class="con3-1">
-        <label for="" class="label">Primer nombre</label>
+        <label for="" class="label">Telefono</label>
         <input class="input is-primary" type="text" value="<?php echo isset($row['telefono']) ? $row['telefono'] : ''; ?>" name="telefono">
         </div>
             <div class="con3-2">
-        <label for="" class="label">Segundo nombre</label>
+        <label for="" class="label">Estado</label>
         <input class="input is-primary" type="text" value="<?php echo isset($row['estado']) ? $row['estado'] : ''; ?>" name="estado" readonly>
         </div>  
     </div>
@@ -70,7 +70,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
     $telefono = $_POST['telefono'];
     $estado = $_POST['estado'];
 
-    $sqli = "UPDATE `proveedores` SET `nombre` = '$nombre', `ciudad` = '$ciudad', `correo` = '$correo', `telefono` = '$telefono' WHERE `proveedores`.`idProveedor` = '$ida'";
+    $sqli = "UPDATE `proveedores` SET `nombreP` = '$nombre', `ciudad` = '$ciudad', `correo` = '$correo', `telefono` = '$telefono' WHERE `proveedores`.`idProveedor` = '$ida'";
 
 if ($conexion->query($sqli) === true) {
     echo '<div class="message is-primary" id="message">';

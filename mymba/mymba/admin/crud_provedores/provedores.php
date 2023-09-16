@@ -39,7 +39,7 @@
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
                 echo "<td>" . $row["idProveedor"] . "</td>";
-                echo "<td>" . $row["nombre"] . "</td>";
+                echo "<td>" . $row["nombreP"] . "</td>";
                 echo "<td>" . $row["ciudad"] . "</td>";
                 echo "<td>" . $row["correo"] . "</td>";
                 echo "<td>" . $row["telefono"] . "</td>";

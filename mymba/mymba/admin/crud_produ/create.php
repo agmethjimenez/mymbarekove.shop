@@ -36,7 +36,7 @@ $conexion->set_charset("utf8");
                 <?php
                 while($row = $resul->fetch_assoc()){
                     $idpro = $row['idProveedor'];
-                    $namepro = $row['nombre'];
+                    $namepro = $row['nombreP'];
                     echo "<option value=\"$idpro\">$namepro</option>";
                 }
                 ?>
@@ -140,12 +140,12 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
 
-    $sqli = "INSERT INTO `productos` (`idProducto`, `proveedor`, `nombre`, `descripcion`, `contenido`, `precio`,`marca`,`categoria`,`imagen`) VALUES ('$id_producto', '$proveedor', '$nombreproducto', '$descripcion', '$contenido', '$precio','$marca','$categoria', '$img')";
+    $sqli = "INSERT INTO `productos` (`idProducto`, `proveedor`, `nombre`, `descripcionP`, `contenido`, `precio`,`marca`,`categoria`,`imagen`) VALUES ('$id_producto', '$proveedor', '$nombreproducto', '$descripcion', '$contenido', '$precio','$marca','$categoria', '$img')";
     $resultado = mysqli_query($conexion, $sqli);
 if ($resultado == true) {
     echo '<div class="message is-primary" id="message">';
     echo '<p>Insercion de producto exitosa</p>';
-    echo '<a href="provedores.php" class="button is-primary">Volver</a>';
+    echo '<a href="productos.php" class="button is-primary">Volver</a>';
     echo '</div>';
 } else {
     echo "Error al agregar el usuario: "          ;         
