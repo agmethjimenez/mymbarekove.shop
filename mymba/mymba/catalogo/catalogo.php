@@ -74,7 +74,7 @@ $conexion->set_charset("utf8");
 </header>
 
 <div class="title1">
-    <h1>Comida</h1>
+    <h1>Productos</h1>
     <p></p>
 </div>
 <div class="contenedor" name="contenedor"id="contenedor">

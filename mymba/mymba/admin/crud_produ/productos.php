@@ -18,6 +18,10 @@
 <table class="table is-bordered">
     <thead>
         <tr>
+            <th>Proveedores</h1></th>
+            <th> <a href="create.php" class="button is-primary">Nuevo producto</a></th>
+        </tr>
+        <tr>
             <th>ID</th>
             <th>Proveedor</th>
             <th>Nombre</th>
@@ -49,7 +53,7 @@
                 echo "<td>" . $row["nombre"] . "</td>";
                 echo "<td>" . $row["descripcionP"] . "</td>";
                 echo "<td>" . $row["contenido"] . "</td>";
-                echo "<td>" . $row["precio"] . "</td>";
+                echo "<td> $" . $row["precio"] . "</td>";
                 echo "<td>" . $row["marca"] . "</td>";
                 echo "<td>" . $row["descripcion"] . "</td>";
 

@@ -23,7 +23,7 @@ $(document).ready(function() {
                     </div>
                     <div class="info">
                     <h1>${producto.nombre}</h1>
-                    <p>${producto.descripcion}</p>
+                    <p>${producto.descripcionP}</p>
                     <p>${producto.contenido}</p>
                     <p>$ ${producto.precio}</p>
                     </div>
