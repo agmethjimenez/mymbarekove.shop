@@ -1,3 +1,8 @@
+<?php
+$conexion = new mysqli("localhost", "root", "", "mymba", 3306);
+$conexion->set_charset("utf8");
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -8,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="./css/estilo.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 </head>
 <body>
@@ -48,7 +53,6 @@
         <a class="infoin" href="../index.html"></i>Inicio</a>
        <a class="infoin" href="https://www.instagram.com/mymbarekove/">Contáctanos</a>
        <?php
-    // Verificar si el usuario ha iniciado sesión
     session_start();
     if (isset($_SESSION['usuario_nombre']) && isset($_SESSION['usuario_apellido'])) {
         $nombreUsuario = $_SESSION['usuario_nombre'];
@@ -70,60 +74,30 @@
 </header>
 
 <div class="title1">
-    <h1>Comida</h1>
+    <h1>Productos</h1>
     <p></p>
 </div>
 <div class="contenedor" name="contenedor"id="contenedor">
-    <div class="producto">
-        <img src="imgs/productos/purgante canisan 2,5ml.jpg" alt="producto1">
-        <div class="informacion">
-            <p>Purgante Canisan el mas vendido de todos</p>
-            <p>⭐️⭐️⭐️⭐️⭐️</p>
-            <p class="precio">$ 20000</p>
-            <button class="comprar">Comprar</button>
-            <button class="detalles" id="detalles" data-producto-id="1" onclick="abrirmodal()">Detalles</button>
-        </div>
-    </div>
-    <div class="producto">
-        <img src="imgs/productos/dog chow adulto raza pequeña 8kg.jpg" alt="producto2">
-        <div class="informacion">
-            <p>Dog Chow Raza pequeña</p>
-            <p>⭐️⭐️⭐️⭐️⭐️</p>
-            <p class="precio">$ 60000</p>
-            <button class="comprar">Comprar</button>
-            <button class="detalles" id="detalles" data-producto-id="2" onclick="abrirmodal()">Detalles</button>
-        </div>
-    </div>
-    <div class="producto" id="producto">
-        <img src="imgs/productos/2626_Smartbones_Pollo_Mini_8_Unidades_500X500.avif" alt="producto3">
-        <div class="informacion">
-            <p>Smartbones Pollo Mini x8</p>
-            <p>⭐️⭐️⭐️⭐️⭐️</p>
-            <p class="precio">$ 18090</p>
-            <button class="comprar">Comprar</button>
-            <button class="detalles" id="detalles" data-producto-id="3" onclick="abrirmodal()">Detalles</button>
-        </div>
-    </div>
-    <div class="producto">
-        <img src="imgs/productos/3606_61898_Royal_Canin_Fbn_Persian_Adult_1616613262_2176x2168.avif" alt="producto4">
-        <div class="informacion">
-            <p>Royal Canin-Persian Adult</p>
-            <p>⭐️⭐️⭐️⭐️⭐️</p>
-            <p class="precio">$ 152900</p>
-            <button class="comprar">Comprar</button>
-            <button class="detalles" id="detalles" data-producto-id="4" onclick="abrirmodal()">Detalles</button>
-        </div>
-    </div>
-    <div class="producto">
-        <img src="imgs/productos/80340_Pet_Spa___Rascador_Tipo_Ola_1658844444_0_500x500.avif" alt="producto5">
-        <div class="informacion">
-            <p>Rascador tipo ola</p>
-            <p>⭐️⭐️⭐️⭐️⭐️</p>
-            <p class="precio">$ 42000</p>
-            <button class="comprar">Comprar</button>
-            <button class="detalles" data-producto-id="5" id="detalles" onclick="abrirmodal()">Detalles</button>
-        </div>
-    </div>
+    <?php $sqlq = "SELECT*FROM productos";
+     $result = $conexion->query($sqlq);
+
+     if ($result->num_rows > 0) {
+         while ($row = $result->fetch_assoc()){
+            $imagenBLOB = $row["imagen"];
+            $imagenBase64 = base64_encode($imagenBLOB);
+            echo '<div class="producto">';
+            echo '<img src="data:' . $imagenBase64 . ';base64,' . base64_encode($imagenBLOB) . '" alt="">';
+            echo '<div class="informacion">';
+            echo "<p>" .$row['nombre'] ."</p>";
+            echo "<p>⭐️⭐️⭐️⭐️⭐️</p>";
+            echo "<p class='precio'>$" . $row['precio'] . "</p>";
+            echo '<button class="comprar">Comprar</button>';
+            echo '<button class="detalles" id="detalles" data-producto-id="" onclick="abrirmodal()">Detalles</button>';
+            echo '</div>';
+            echo '</div>';
+
+         }} ?>
+   
 </div>
 <div id="modal" class="modal">
     </div>

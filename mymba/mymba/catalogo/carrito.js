@@ -61,7 +61,7 @@ document.querySelector('.carrito').addEventListener('click', () => {
 });
 
 // Agregamos eventos para el botón de "Comprar" en cada producto
-const botonesComprar = document.querySelectorAll('.informacion button');
+const botonesComprar = document.querySelectorAll('.informacion .comprar');
 botonesComprar.forEach((boton) => {
   boton.addEventListener('click', () => {
     const productoDiv = boton.closest('.informacion');
