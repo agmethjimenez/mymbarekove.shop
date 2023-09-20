@@ -12,7 +12,7 @@
 <body>
     <div class="title" style="padding: 20px; display: flex; justify-content: space-between; color:white;" >
     <h1>Proveedores</h1>
-    <a href="create.php" class="button is-primary">Nuevo usuario</a>
+    <a href="create.php" class="button is-primary">Nuevo proveedor</a>
 </div>
 <div class="tata">
 <table class="table is-bordered">

@@ -92,7 +92,7 @@ $conexion->set_charset("utf8");
             echo "<p>⭐️⭐️⭐️⭐️⭐️</p>";
             echo "<p class='precio'>$" . $row['precio'] . "</p>";
             echo '<button class="comprar">Comprar</button>';
-            echo '<button class="detalles" id="detalles" data-producto-id="" onclick="abrirmodal()">Detalles</button>';
+            echo '<button class="detalles" id="detalles" data-producto-id="1" onclick="abrirmodal()">Detalles</button>';
             echo '</div>';
             echo '</div>';
 
