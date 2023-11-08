@@ -1,4 +1,3 @@
-
 let carritoProductos = [];
 
 // Función para agregar un producto al carrito
@@ -9,8 +8,8 @@ function agregarAlCarrito(nombre, precio) {
 
 // Función para actualizar el contenido del carrito en el contenedor flotante
 function mostrarCarrito() {
-  const carritoContenido = document.getElementById('carritoContenido');
-  carritoContenido.innerHTML = ''; // Limpiamos el contenido previo
+  const carritoContenido = document.getElementById("carritoContenido");
+  carritoContenido.innerHTML = ""; // Limpiamos el contenido previo
 
   let carritoItems = {};
 
@@ -27,63 +26,77 @@ function mostrarCarrito() {
     }
   });
 
-  // Mostrar los productos y su cantidad en el carrito 
+  // Mostrar los productos y su cantidad en el carrito
   Object.values(carritoItems).forEach((item) => {
-    const itemDiv = document.createElement('div');
-    itemDiv.classList.add('carrito-item');
+    const itemDiv = document.createElement("div");
+    itemDiv.classList.add("carrito-item");
     itemDiv.innerHTML = `
-      <p>${item.nombre} - Cantidad: ${item.cantidad} - Precio: $${item.precio * item.cantidad}</p>
+      <p>${item.nombre} - Cantidad: ${item.cantidad} - Precio: $${
+      item.precio * item.cantidad
+    }</p>
       <button class="carrito-quitar" data-nombre="${item.nombre}">X</button>
     `;
     carritoContenido.appendChild(itemDiv);
   });
 
   // Mostramos el total en el carrito flotante
-  const total = carritoProductos.reduce((acc, producto) => acc + producto.precio, 0);
-  const totalDiv = document.createElement('div');
-  totalDiv.classList.add('carrito-total');
+  const total = carritoProductos.reduce(
+    (acc, producto) => acc + producto.precio,
+    0
+  );
+  const totalDiv = document.createElement("div");
+  totalDiv.classList.add("carrito-total");
   totalDiv.textContent = `Total: $${total}`;
   carritoContenido.appendChild(totalDiv);
 
   // Mostramos el contenedor flotante
-  document.getElementById('carritoFlotante').style.display = 'block';
+  document.getElementById("carritoFlotante").style.display = "block";
 }
 
 // Función para actualizar el contenido del carrito en la página principal
 function actualizarCarrito() {
-  const carritoNumero = document.getElementById('numero');
+  const carritoNumero = document.getElementById("numero");
   carritoNumero.textContent = carritoProductos.length;
 }
 
 // Agregamos el evento click para abrir el contenedor flotante al hacer clic en la imagen de clase "carrito"
-document.querySelector('.carrito').addEventListener('click', () => {
+document.querySelector(".carrito").addEventListener("click", () => {
   mostrarCarrito();
 });
 
 // Agregamos eventos para el botón de "Comprar" en cada producto
-const botonesComprar = document.querySelectorAll('.informacion .comprar');
+const botonesComprar = document.querySelectorAll(".informacion .comprar");
 botonesComprar.forEach((boton) => {
-  boton.addEventListener('click', () => {
-    const productoDiv = boton.closest('.informacion');
-    const nombreProducto = productoDiv.querySelector('p:first-child').textContent;
-    const precioProducto = parseFloat(productoDiv.querySelector('.precio').textContent.slice(1));
+  boton.addEventListener("click", () => {
+    const productoDiv = boton.closest(".informacion");
+    const nombreProducto =
+      productoDiv.querySelector("p:first-child").textContent;
+    const precioProducto = parseFloat(
+      productoDiv.querySelector(".precio").textContent.slice(1)
+    );
     agregarAlCarrito(nombreProducto, precioProducto);
   });
 });
 
 // Agregamos el evento click para quitar un producto del carrito
-document.getElementById('carritoContenido').addEventListener('click', (event) => {
-  if (event.target.classList.contains('carrito-quitar')) {
-    const nombreProducto = event.target.getAttribute('data-nombre');
-    carritoProductos = carritoProductos.filter((producto) => producto.nombre !== nombreProducto);
-    mostrarCarrito(); // Actualizamos el contenido del carrito
-    actualizarCarrito(); // Actualizamos el carrito en la página principal
-  }
-});
+document
+  .getElementById("carritoContenido")
+  .addEventListener("click", (event) => {
+    if (event.target.classList.contains("carrito-quitar")) {
+      const nombreProducto = event.target.getAttribute("data-nombre");
+      carritoProductos = carritoProductos.filter(
+        (producto) => producto.nombre !== nombreProducto
+      );
+      mostrarCarrito(); // Actualizamos el contenido del carrito
+      actualizarCarrito(); // Actualizamos el carrito en la página principal
+    }
+  });
 
 // Función para ocultar el contenedor flotante al hacer clic en el botón de cerrar
-document.getElementById('carritoFlotante').addEventListener('click', (event) => {
-  if (event.target.classList.contains('carrito-cerrar')) {
-    document.getElementById('carritoFlotante').style.display = 'none';
-  }
-});
+document
+  .getElementById("carritoFlotante")
+  .addEventListener("click", (event) => {
+    if (event.target.classList.contains("carrito-cerrar")) {
+      document.getElementById("carritoFlotante").style.display = "none";
+    }
+  });
