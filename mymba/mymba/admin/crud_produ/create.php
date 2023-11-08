@@ -13,7 +13,7 @@
 <div class="contenedor" >
     <form action="create.php" method="post" enctype="multipart/form-data">
     <?php
-$conexion = new mysqli("localhost", "root", "", "mymba", 3306);
+require_once("../../database/conexion.php");
 $conexion->set_charset("utf8");
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$conexion = new mysqli("localhost", "root", "", "mymba", "3306");
+require_once("../database/conexion.php");
 $conexion->set_charset("utf8");
 
 $error_message = "";

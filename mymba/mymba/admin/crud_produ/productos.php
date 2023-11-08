@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="title" style="padding: 20px; display: flex; justify-content: space-between; color:white;" >
-    <h1>Proveedores</h1>
+    <h1>Productos</h1>
     <a href="create.php" class="button is-primary">Nuevo producto</a>
 </div>
 <div class="tata">
@@ -36,8 +36,8 @@
     </thead>
     <tbody>
         <?php
-        $conexion = new mysqli("localhost", "root", "", "mymba", 3306);
-        $conexion->set_charset("utf8");
+        require_once("../../database/conexion.php");
+    
 
         $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion, p.imagen FROM productos as p 
         INNER JOIN proveedores as pr ON p.proveedor = pr.idProveedor
