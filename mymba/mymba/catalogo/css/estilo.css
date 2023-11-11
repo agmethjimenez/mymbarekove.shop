@@ -32,7 +32,7 @@ body {
 
 header {
     background-color: white;
-    height: 73px;
+    height: 100px;
     width: 100%;
     top: 0;
     position: sticky;
@@ -301,7 +301,7 @@ h1 {
     font-size: 15px;
     font-weight: bold;
 }
-.informacion button{
+.informacion .comprar{
     background-color: #000;
     color: white;
     width: 100px;
@@ -312,7 +312,24 @@ h1 {
     font-weight: 300px;
     cursor: pointer;
 }
-.informacion button:hover{
+.informacion .detalles{
+    background-color: #000;
+    color: white;
+    width: 100px;
+    height: 40px;
+    border-radius: 20px;
+    border: none;
+    font-size: 14px;
+    font-weight: 300px;
+    cursor: pointer;
+}
+.informacion .detalles:hover{
+  background-color:#333;
+}
+.detalles a{
+  color: white;
+}
+.informacion .comprar:hover{
     background-color:#333;
 }
 .informacion{
