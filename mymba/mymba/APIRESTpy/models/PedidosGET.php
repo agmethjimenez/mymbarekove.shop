@@ -18,7 +18,7 @@ class Pedido extends Database {
         $conexion = parent::connect();
         $hashedpass = password_hash($password, PASSWORD_BCRYPT);
 
-        $sql = "INSERT INTO usuarios VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO usuarios (identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email, clave) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conexion->prepare($sql);
         $stmt->bind_param("sssssssss", $id, $tipoid, $name1, $name2, $name3, $name4, $phone, $email, $hashedpass);
 
@@ -54,14 +54,14 @@ class Pedido extends Database {
 
         $hashedpass = password_hash($password, PASSWORD_BCRYPT);
 
-        $sql = "INSERT INTO usuarios VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO usuarios (id, identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email, clave) VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conexion->prepare($sql);
         $stmt->bind_param("sssssssss", $idC, $tipoid, $name1, $name2, $name3, $name4, $phone, $email, $hashedpass);
         $stmt->execute();
 
         $user = $stmt->insert_id;
 
-        $sql="INSERT INTO pedidos VALUES(?,?,?,?)";
+        $sql="INSERT INTO pedidos (idPedido, usuario, fecha, estado) VALUES(?,?,?,?)";
         $stmt2 = $conexion->prepare($sql);
         $stmt2->bind_param("ssss", $IDP,$user,$fecha,$estado);
         $stmt2->execute();
