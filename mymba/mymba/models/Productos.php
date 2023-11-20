@@ -5,15 +5,14 @@ class Producto
     function verProducto()
     {
         global $conexion;
-        $sqlq = "SELECT*FROM productos";
+        $sqlq = "SELECT*FROM productos WHERE activo = 1";
         $result = $conexion->query($sqlq);
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $imagenBLOB = $row["imagen"];
-                $imagenBase64 = base64_encode($imagenBLOB);
                 echo '<div class="producto">';
-                echo '<img src="data:' . $imagenBase64 . ';base64,' . base64_encode($imagenBLOB) . '" alt="">';
+                echo '<img src="./imgs/productos/'. $imagenBLOB .'" alt="">';
                 echo '<div class="informacion">';
                 echo "<p>" . $row['nombre'] . "</p>";
                 echo "<p>⭐️⭐️⭐️⭐️⭐️</p>";
@@ -37,9 +36,8 @@ class Producto
         $row = $result->fetch_assoc();
         if($result->num_rows > 0){
             $imagenBLOB = $row['imagen'];
-            $imagenSI = base64_encode($imagenBLOB);
             echo '<div class="imagenpro">';
-            echo '<img src="data:' . $imagenSI . ';base64,' . base64_encode($imagenBLOB) . '" alt="">';
+            echo '<img src="./imgs/productos/'. $imagenBLOB .'" alt="">';
             echo '</div>';
             echo '<div class="detalles">';
             echo '<div class="nombre"><h4>'. $row['nombre'] .'</h4></div>';

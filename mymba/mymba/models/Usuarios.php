@@ -21,7 +21,7 @@ class Usuario
     {
         global $conexion;
         $error_message = " ";
-        $query = "SELECT * FROM usuarios WHERE email='$correo'";
+        $query = "SELECT * FROM usuarios WHERE email='$correo' AND activo = 1";
         $result = $conexion->query($query);
 
         if ($result !== false) {
@@ -34,11 +34,15 @@ class Usuario
                     $_SESSION['usuario_apellido'] = $row['primerApellido'];
                     header("location: catalogo.php");
                     exit();
-                } else {
-                    $error_message = "Contraseña incorrecta";
+                } else {          
+                    echo '<div class="message is-danger" id="message">';
+                    echo '<p>Contraseña incorrecta</p>';
+                    echo '</div>';
                 }
-            } else {
-                $error_message = "Usuario no existe";
+            } else {  
+                echo '<div class="message is-danger" id="message">';
+                echo '<p>Usuario no encontrado</p>';
+                echo '</div>';
             }
         } else {
             $error_message = "Error en la consulta: " . $conexion->error;

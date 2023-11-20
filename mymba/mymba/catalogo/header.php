@@ -51,7 +51,7 @@
           echo '</form>';
         } else {
 
-          echo '<button class="acceso"><a href="./login.html">Acceder</a></button>';
+          echo '<button class="acceso"><a href="./login.php">Acceder</a></button>';
           echo '<button class="acceso"><a href="./registro.html">Registrarse</a></button>';
         }
         ?>
