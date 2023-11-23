@@ -13,4 +13,4 @@ $telefono = $_POST['telefono'];
 $contrasena = $_POST['password'];
 
 $usuario = new Usuario();
-$usuario->registrarse($id_usuario, $cod_id, $primernombre, $segundonombre, $primerapellido, $segundoapellido, $email, $telefono, $contrasena);
+$usuario->registrarse($id_usuario, $cod_id, $primernombre, $segundonombre, $primerapellido, $segundoapellido,$telefono, $email, $contrasena);

@@ -8,12 +8,14 @@ class Usuario
         $hashedPassword = password_hash($clave, PASSWORD_BCRYPT);
         global $conexion;
 
-        $sql = "INSERT INTO usuarios (identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email, clave)
-            VALUES ('$id_usuario', '$tipoid', '$name1', '$name2', '$lastname1', '$lastname2', '$telefono','$email', '$hashedPassword')";
-        if ($conexion->query($sql)) {
+        $sql = "INSERT INTO usuarios (identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email,activo,clave)
+            VALUES (?,?,?,?,?,?,?,?,1,?)";
+        $bin = $conexion->prepare($sql);
+        $bin->bind_param("sssssssss",$id_usuario,$tipoid,$name1,$name2,$lastname1,$lastname2,$telefono,$email,$hashedPassword);
+        if ($bin->execute()) {
             echo "Registro exitoso";
         } else {
-            echo "Error al registrar el usuario";
+            echo "Error al registrar el usuario", $conexion->error ;
         }
     }
 
