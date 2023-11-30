@@ -33,6 +33,7 @@
                     <th>Precio</th>
                     <th>Marca</th>
                     <th>Categoria</th>
+                    <th>Stock</th>
                     <th>Imagen</th>
                     <th>Acciones</th>
                 </tr>
@@ -42,10 +43,11 @@
                 require_once("../../database/conexion.php");
 
 
-                $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion, p.imagen FROM productos as p 
+                $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion,p.cantidadDisponible, p.imagen FROM productos as p 
         INNER JOIN proveedores as pr ON p.proveedor = pr.idProveedor
         INNER JOIN marcas as m ON p.marca = m.idMarca
-        INNER JOIN categorias as c ON p.categoria = c.categoria;";
+        INNER JOIN categorias as c ON p.categoria = c.categoria
+        WHERE activo = 1";
                 $result = $conexion->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -59,11 +61,11 @@
                         echo "<td> $" . $row["precio"] . "</td>";
                         echo "<td>" . $row["marca"] . "</td>";
                         echo "<td>" . $row["descripcion"] . "</td>";
+                        echo "<td>" . $row["cantidadDisponible"] . "</td>";
 
                         $imagenBLOB = $row["imagen"];
-                        $imagenBase64 = base64_encode($imagenBLOB);
 
-                        echo '<td><img src="data:' . $imagenBase64 . ';base64,' . base64_encode($imagenBLOB) . '" alt="Imagen de Producto" width="70px"></td>';
+                        echo '<td><img src="../../catalogo/imgs/productos/'. $imagenBLOB .'" alt="" width="70px"></td>';
                         echo '<td><a href="update.php?id=' . $row["idProducto"] . '" class="button is-link">Editar</a> <a href="delete.php?id=' . $row["idProducto"] . '" class="button is-danger">Desactivar</a></td>';
 
                         echo "</tr>";

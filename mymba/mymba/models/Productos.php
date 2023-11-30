@@ -2,6 +2,23 @@
 require_once("../database/conexion.php");
 class Producto
 {
+    public function GetProductos(){
+        global $conexion;
+        $sql = "SELECT p.idProducto, pr.nombreP as proveedor,p.nombre,p.precio, ca.descripcion as categoria, p.imagen from productos as p 
+        INNER JOIN proveedores as pr ON p.proveedor = pr.idProveedor 
+        INNER JOIN categorias as ca ON p.categoria = ca.categoria WHERE p.activo = 1";
+
+    $resultados = array();
+
+        if ($resultado = $conexion->query($sql)) {
+            while ($fila = $resultado->fetch_assoc()) {
+                $resultados[] = $fila;
+            }
+            $resultado->free();
+        }
+        return $resultados;
+}
+    
     function verProducto()
     {
         global $conexion;
@@ -52,8 +69,8 @@ class Producto
         }
 
     }
-    
+}
 
     
-}
+
 ?>

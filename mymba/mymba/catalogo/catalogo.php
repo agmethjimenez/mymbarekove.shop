@@ -26,10 +26,10 @@ $conexion->set_charset("utf8");
     <p></p>
   </div>
   <div class="contenedor" name="contenedor" id="contenedor">
-    <?php 
-    $producto = new Producto();
+  <?php 
+    /*$producto = new Producto();
 
-    $producto->verProducto();
+    $producto->verProducto();*/
     ?>
 
 
@@ -60,6 +60,6 @@ $conexion->set_charset("utf8");
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="carrito.js"></script>
-<script src="modal.js"></script>
+<script src="./js/getproducts.js"></script>
 
 </html>

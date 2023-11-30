@@ -2,6 +2,7 @@
 session_start();
 require_once("../models/Usuarios.php");
 require_once("../database/conexion.php");
+require_once("../models/Administrador.php");
 $conexion->set_charset("utf8");
 
 ?>
@@ -22,7 +23,7 @@ $conexion->set_charset("utf8");
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
-    <link rel="stylesheet" href="login.css" />
+    <link rel="stylesheet" href="./css/login.css"/>
 
     <title>Document</title>
   </head>
@@ -77,11 +78,20 @@ $conexion->set_charset("utf8");
           } else {
               $correo = $_POST["email"];
               $contraseña = $_POST["password"];
-      
+
+              $admin = new Admin();
               $usuario = new Usuario();
-              $usuario->inicioSesion($correo,$contraseña);       
-      }}
+              if ($admin->iniciarSesion($correo, $contraseña)) {
+                exit();
+            } else {
+                $usuario = new Usuario();
+                if ($usuario->inicioSesion($correo, $contraseña)) {
+                    exit();
+                }       
+      }}}
       ?>
+
+
       </form>
     </div>
   </body>

@@ -521,3 +521,8 @@ h1 {
       .modal{
         display: none;
       }
+      .tag{
+        display: flex;
+        gap: 6px;
+      }
+      

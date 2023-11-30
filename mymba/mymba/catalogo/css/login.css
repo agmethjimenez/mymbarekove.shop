@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=Oxygen&display=swap");
+body {
+  font-family: "Oxygen", sans-serif;
+  background-color: #f2e4bb;
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  width: 400px;
+  padding: 30px;
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.logo h1 {
+  font-weight: bold;
+  font-size: 35px;
+}
+.logo img {
+  width: 170px;
+  height: 170px;
+}
+form {
+  background-color: white;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 25px;
+  gap: 5px;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 300px;
+  border-radius: 20px;
+  font-size: 16px;
+  background-color: #efefef;
+}
+
+input[type="submit"] {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100px;
+  object-fit: cover;
+  margin: 0 auto;
+}
+
+input[type="submit"]:hover {
+  background-color: #6b6b6b;
+}

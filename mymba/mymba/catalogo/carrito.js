@@ -1,3 +1,4 @@
+
 let carritoProductos = [];
 
 // Función para agregar un producto al carrito
@@ -55,10 +56,14 @@ function mostrarCarrito() {
 
 // Función para actualizar el contenido del carrito en la página principal
 function actualizarCarrito() {
-  const carritoNumero = document.getElementById("numero");
-  carritoNumero.textContent = carritoProductos.length;
+  // Asegúrate de que carritoProductos esté definido
+  if (carritoProductos) {
+    const carritoNumero = document.getElementById("numero");
+    carritoNumero.textContent = carritoProductos.length;
+  } else {
+    console.error("La variable carritoProductos no está definida.");
+  }
 }
-
 // Agregamos el evento click para abrir el contenedor flotante al hacer clic en la imagen de clase "carrito"
 document.querySelector(".carrito").addEventListener("click", () => {
   mostrarCarrito();
@@ -100,3 +105,6 @@ document
       document.getElementById("carritoFlotante").style.display = "none";
     }
   });
+  console.log(carritoProductos);
+  console.log(carritoContenido);
+  console.log(carritoItems);

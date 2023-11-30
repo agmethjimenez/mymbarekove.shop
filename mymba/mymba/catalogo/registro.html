@@ -15,7 +15,8 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
-    <link rel="stylesheet" href="registro.css" />
+    <link rel="stylesheet" href="./css/registro.css" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <title>Formulario de Registro</title>
   </head>
   <body>
@@ -164,34 +165,17 @@
 
           <div class="field">
             <div class="control has-icons-left has-icons-right">
-              <input
-                class="input"
-                type="email"
-                placeholder="Email"
-                name="email"
-                id="email"
-                required
-                pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+"
-              />
-
+              <input class="input" type="email" placeholder="Email" name="email" id="email" required pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+"/>
               <span class="icon is-small is-left">
                 <i class="fas fa-envelope"></i>
               </span>
             </div>
           </div>
         </div>
-
         <div class="con5">
           <div class="field">
             <div class="control has-icons-left has-icons-right">
-              <input
-                class="input"
-                type="password"
-                placeholder="Contraseña"
-                name="password"
-                id="password"
-                required
-              />
+              <input class="input" type="password" placeholder="Contraseña" name="password" id="password" required/>
               <span class="icon is-small is-left">
                 <i class="fas fa-lock"></i>
               </span>
@@ -200,32 +184,39 @@
 
           <div class="field">
             <div class="control has-icons-left has-icons-right">
-              <input
-                class="input"
-                type="password"
-                placeholder="Confirmar contraseña"
-                id="confirmPassword"
-                required
-              />
+              <input class="input" type="password" placeholder="Confirmar contraseña" id="confirmPassword" required/>
               <span class="icon is-small is-left">
                 <i class="fas fa-lock"></i>
               </span>
             </div>
           </div>
         </div>
+        <div class="g-recaptcha" data-sitekey="6LelmxwpAAAAAFS3KlCNxJf9TfDpe70SP2y0Ie3w"></div>
 
         <div class="boton">
-          <input
-            type="submit"
-            id="submit"
-            value="Registrarse"
-            onclick="validaron()"
-          />
+          <input type="submit"id="submit" value="Registrarse" onclick="validar()"/>
         </div>
+        
         <p class="error" id="error"></p>
       </form>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="registro.js"></script>
+    <script>
+      function validar(){
+
+      let password1 = document.getElementById("password").value;
+      let password2 = document.getElementById("confirmPassword").value;
+      let error = document.getElementById("error");
+
+      error.innerHTML=""
+
+      if (password2 != password1) {
+        error.innerHTML = "La contraseñas no coinciden";
+        
+      }
+      }
+
+    </script>
   </body>
 </html>

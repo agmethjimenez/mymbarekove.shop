@@ -41,18 +41,30 @@
         <a class="infoin" href="https://www.instagram.com/mymbarekove/">Contáctanos</a>
         <?php
         session_start();
-        if (isset($_SESSION['usuario_nombre']) && isset($_SESSION['usuario_apellido'])) {
-          $nombreUsuario = $_SESSION['usuario_nombre'];
-          $apellidoUsuario = $_SESSION['usuario_apellido'];
 
-          echo '<span class="tag is-primary is-medium" id="user">  <i class="fa-solid fa-circle-user fa-lg"></i>'  . $nombreUsuario . ' ' . $apellidoUsuario . '</span> ';
-          echo '<form action="./logout.php" method="post">';
-          echo '<button type="submit" class="acceso">Salir</button>';
-          echo '</form>';
-        } else {
+        if (isset($_SESSION['id_admin']) && isset($_SESSION['username'])) {
+            $idAdministrador = $_SESSION['id_admin'];
+            $usernameAdministrador = $_SESSION['username'];
 
-          echo '<button class="acceso"><a href="./login.php">Acceder</a></button>';
-          echo '<button class="acceso"><a href="./registro.html">Registrarse</a></button>';
+            echo '<span id="admin" class="tag is-link is-light is-medium"><i class="fa-solid fa-screwdriver-wrench"></i><a href="panel.php">Panel</a></span>';
+            echo '<span id="admin" class="tag is-danger is-medium"><i class="fa-solid fa-circle-user fa-lg"></i><a href="perfil_admin.php">' . $usernameAdministrador . '</a></span>';
+            echo '<form action="./logout.php" method="post">';
+            echo '<button type="submit" class="acceso">Salir</button>';
+            echo '</form>';
+        } 
+
+        else if (isset($_SESSION['usuario_nombre']) && isset($_SESSION['usuario_apellido'])) {
+            $nombre = $_SESSION['usuario_nombre'];
+            $apellido = $_SESSION['usuario_apellido'];
+        
+            echo '<span class="tag is-primary is-medium" id="user">  <i class="fa-solid fa-circle-user fa-lg"></i><a href="perfil.php">' . $nombre . ' ' . $apellido . '</a></span> ';
+            echo '<form action="./logout.php" method="post">';
+            echo '<button type="submit" class="acceso">Salir</button>';
+            echo '</form>';
+        } 
+        else {
+            echo '<button class="acceso"><a href="./login.php">Acceder</a></button>';
+            echo '<button class="acceso"><a href="./registro.html">Registrarse</a></button>';
         }
         ?>
       </nav>
