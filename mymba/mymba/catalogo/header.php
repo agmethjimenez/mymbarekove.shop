@@ -23,7 +23,7 @@
         <div id="carritoFlotante" class="carrito-flotante">
           <div class="car-head">
             <h1>CARRITO DE COMPRAS</h1>
-            <button class="carrito-cerrar" id="carrito-cerrar">X</button>
+            <button class="button is-white" id="carrito-cerrar">x</button>
           </div>
           <div class="carrito-contenido" id="carritoContenido"></div>
 

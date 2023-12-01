@@ -188,17 +188,15 @@ header {
   .carrito-quitar{
     background-color: #000;
     color: white;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     border: none;
-    border-radius: 5px;
   }
-  .carrito-cerrar{
+  #carrito-cerrar{
     background-color: #000;
     width: 30px;
     height: 30px;
-    transform: translateY(50px);
-    transform: translateX(70px);
+    border: none;
   }
   .navigation {
     display: flex;
@@ -461,13 +459,14 @@ h1 {
 
     .carrito-flotante {
         top: 100px;
+        width: 570px;
         position: fixed;
         right: 20px;
         background-color: #f2f2f2;
         border-radius: 10px;
         padding: 10px;
         box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
-        display: none; /* El contenedor estará oculto inicialmente */
+        display: none;
        
       }
       .carrito-flotante h1{
@@ -481,32 +480,43 @@ h1 {
 
        overflow-x: auto;
        overflow-y: auto;             
-        width: 300px;
+        width: 570px;
         outline: none;
       }
       
       /* Estilos para el botón de cerrar el contenedor flotante */
-      .carrito-cerrar {
+      #carrito-cerrar {
         cursor: pointer;
         text-align: center;
         margin-bottom: 10px;
-        color: #333;
       }
       
       /* Estilos para los elementos dentro del carrito */
       .carrito-item {
+        display: flex;
+        justify-content: space-between;
         margin-bottom: 5px;
         padding: 5px;
         border-bottom: 1px solid #ddd;
+        width: 95%;
       }
       
       /* Estilos para el total en el carrito */
       .carrito-total {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         text-align: center;
         font-weight: bold;
       }
+      .carrito-total button{
+        width: 160px;
+      }
       .car-head{
+        width: 95%;
         display: flex;
+        justify-content: space-between;
         height: 30px;
       }
       .car-head h1{
@@ -525,4 +535,7 @@ h1 {
         display: flex;
         gap: 6px;
       }
-      
+#admin a{
+  text-decoration: none;
+  color: #000;
+}

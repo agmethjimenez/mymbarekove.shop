@@ -20,7 +20,7 @@ fetch(url, {
       <div class="informacion">
       <p>${producto.nombre}</p>
             <p class="precio">$${producto.precio} </p>
-            <button class="comprar">Comprar</button>
+            <button class="comprar" onclick="agregarAlCarrito('${producto.nombre}', ${producto.precio})">Comprar</button>
             <button class="detalles" id="detalles"><a href="../catalogo/paginaproducto.php?id=${producto.idProducto}" class="dety">Detalles</a></button>
             </div>`;
       

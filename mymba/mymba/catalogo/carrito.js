@@ -3,8 +3,12 @@ let carritoProductos = [];
 
 // Función para agregar un producto al carrito
 function agregarAlCarrito(nombre, precio) {
-  carritoProductos.push({ nombre, precio });
+  carritoProductos.push({nombre, precio});
   actualizarCarrito();
+  const carritoFlotante = document.getElementById("carritoFlotante");
+  if (carritoFlotante.style.display === "block") {
+    mostrarCarrito();
+  }
 }
 
 // Función para actualizar el contenido del carrito en el contenedor flotante
@@ -32,10 +36,13 @@ function mostrarCarrito() {
     const itemDiv = document.createElement("div");
     itemDiv.classList.add("carrito-item");
     itemDiv.innerHTML = `
+    <div>
       <p>${item.nombre} - Cantidad: ${item.cantidad} - Precio: $${
       item.precio * item.cantidad
-    }</p>
-      <button class="carrito-quitar" data-nombre="${item.nombre}">X</button>
+    }</p></div>
+    <div>
+      <button class="carrito-quitar" data-nombre="${item.nombre}">x</button>
+      </div>
     `;
     carritoContenido.appendChild(itemDiv);
   });
@@ -47,7 +54,8 @@ function mostrarCarrito() {
   );
   const totalDiv = document.createElement("div");
   totalDiv.classList.add("carrito-total");
-  totalDiv.textContent = `Total: $${total}`;
+  totalDiv.innerHTML = `
+  <div>Total: $${total}</div> <button class="button is-success is-outlined">Realizar pedido</button>`;
   carritoContenido.appendChild(totalDiv);
 
   // Mostramos el contenedor flotante
@@ -56,7 +64,9 @@ function mostrarCarrito() {
 
 // Función para actualizar el contenido del carrito en la página principal
 function actualizarCarrito() {
-  // Asegúrate de que carritoProductos esté definido
+  const carritoNumero = document.getElementById("numero");
+  carritoNumero.textContent = carritoProductos.length;
+  
   if (carritoProductos) {
     const carritoNumero = document.getElementById("numero");
     carritoNumero.textContent = carritoProductos.length;
@@ -101,7 +111,7 @@ document
 document
   .getElementById("carritoFlotante")
   .addEventListener("click", (event) => {
-    if (event.target.classList.contains("carrito-cerrar")) {
+    if (event.target.id === "carrito-cerrar") {
       document.getElementById("carritoFlotante").style.display = "none";
     }
   });

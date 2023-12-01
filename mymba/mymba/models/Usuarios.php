@@ -103,9 +103,8 @@ class Usuario
                 $stmt = $conexion->prepare($sql);
                 $stmt->bind_param("ss", $hashedNuevaPassword, $id);
                 $stmt->execute();
-                echo "Contraseña cambiada exitosamente";
             } else {
-                echo "Contraseña actual incorrecta";
+                echo $conexion->error;
             }
         } else {
             echo "Usuario no encontrado";
