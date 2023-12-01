@@ -13,7 +13,7 @@
 <div class="contenedor">
     <form action="update.php" method="post" enctype="multipart/form-data">
     <?php
-$conexion = new mysqli("localhost", "root", "", "mymba", 3306);
+require_once("../../database/conexion.php");
 $conexion->set_charset("utf8");
 if($_SERVER["REQUEST_METHOD"] === "GET"){
 $id = $_GET["id"];

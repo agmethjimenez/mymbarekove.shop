@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    font-family: 'Oxygen', sans-serif;
+}
+.wrapper{
+    display: flex;
+}
+#options{
+    padding: 15px;
+    background-color: #594A3C;
+    width: 20%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: static;
+}
+#options ul {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    list-style: none;
+    padding: 0;
+    color: black;
+}
+
+#options ul li {
+    padding: 10px;
+    border-radius: 20px;
+    text-align: center;
+    background-color: white;
+    text-decoration: none;
+}
+#options ul li a {
+    text-decoration: none;
+    color: #000000;
+}
+.titulo{
+    font-weight: bold;
+    font-size: 34px;
+}
+.info{
+    display: flex;
+    flex-grow: 2;
+    padding: 30px;
+    flex-direction: column;
+    gap: 5%;
+}
+.info .inf strong{
+    font-size: 25px
+}
+.info .inf{
+    font-size: 20px;
+}
+.actualizardatos{
+    height: 100vh;
+    display: none;
+    flex-grow: 2;
+    padding: 30px;
+    flex-direction: column;
+    gap: 5%;
+}
+.actualizardatos form{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 50px;
+    flex-direction: column;
+}
+.input{
+    width: 400px;
+}
+.actualizardatos form .con1,.con2,.con3,.con4{
+    display: flex;
+    gap: 20px;
+}
+#message{
+    padding: 20px;
+}

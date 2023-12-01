@@ -61,7 +61,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
     $correo = $_POST['correo'];
     $telefono = $_POST['telefono'];
 
-    $sqli = "INSERT INTO `proveedores` (`idProveedor`, `nombre`, `ciudad`, `correo`, `telefono`, `estado`) VALUES ('$id_provedor', '$nombre', '$ciudad', '$correo', '$telefono', 'SI');";
+    $sqli = "INSERT INTO `proveedores` (`idProveedor`, `nombreP`, `ciudad`, `correo`, `telefono`, `estado`) VALUES ('$id_provedor', '$nombre', '$ciudad', '$correo', '$telefono', 'SI');";
 
 if ($conexion->query($sqli) === true) {
     echo '<div class="message is-primary" id="message">';
