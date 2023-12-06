@@ -9,6 +9,8 @@ include_once("../models/Productos.php");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="paginaproducto.css">
+    <script src="carrito.js"></script>
+    <script src="js/pago.js"></script>
     <title></title>
 </head>
 <body>

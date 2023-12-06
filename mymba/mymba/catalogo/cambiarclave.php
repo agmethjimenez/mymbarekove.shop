@@ -165,22 +165,21 @@ require_once("../controller/password.php");
         }
     })
     .then(data => {
-        console.log(data);
-        alert("Contraseña actualizada exitosamente");
-        mesage("!Contraseña actualizada!", "is-primary");
+        if (data.exito) {
+            alert(data.mensaje);
+            mesage(data.mensaje,"is-primary");
+            window.location.href = "login.php";
+        } else {
+            alert(data.mensaje);
+            mesage(data.mensaje,"is-danger");
+            event.preventDefault();
+            return false;
+        }
+        
 
-        // Redirige a login.php después de actualizar la contraseña
-        window.location.href = "login.php";
-
-        event.preventDefault();
-        return false;
     })
     .catch(error => {
         console.error('Error:', error);
-        alert("Error al actualizar");
-        mesage("!Error al actualizar contraseña", "is-danger");
-        event.preventDefault();
-        return false;
     });
 }
 

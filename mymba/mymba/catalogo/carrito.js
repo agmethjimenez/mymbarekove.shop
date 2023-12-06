@@ -1,15 +1,32 @@
 
-let carritoProductos = [];
+let carritoProductos =   JSON.parse(localStorage.getItem("carritoProductos")) || [];
 
-// Función para agregar un producto al carrito
-function agregarAlCarrito(nombre, precio) {
-  carritoProductos.push({nombre, precio});
+function agregarAlCarrito(nombre, precio, id, cantidad = 1, imagen) {
+  const productoExistente = carritoProductos.find((producto) => producto.nombre === nombre);
+
+  if (productoExistente) {
+    productoExistente.cantidad += cantidad;
+    productoExistente.total = productoExistente.precio * productoExistente.cantidad;
+  } else {
+    carritoProductos.push({
+      imagen,
+      id,
+      nombre,
+      precio,
+      cantidad,
+      total:precio*cantidad
+    });
+    console.log(carritoProductos);
+  }
+
+  savelocal();
   actualizarCarrito();
   const carritoFlotante = document.getElementById("carritoFlotante");
   if (carritoFlotante.style.display === "block") {
     mostrarCarrito();
   }
 }
+
 
 // Función para actualizar el contenido del carrito en el contenedor flotante
 function mostrarCarrito() {
@@ -18,15 +35,18 @@ function mostrarCarrito() {
 
   let carritoItems = {};
 
-  // Contamos la cantidad de cada producto en el carrito
   carritoProductos.forEach((producto) => {
     if (carritoItems[producto.nombre]) {
-      carritoItems[producto.nombre].cantidad++;
+      carritoItems[producto.nombre].cantidad += producto.cantidad;
+      carritoItems[producto.nombre].total += producto.total;
+      savelocal();
     } else {
       carritoItems[producto.nombre] = {
+        imagen: producto.imagen,
         nombre: producto.nombre,
         precio: producto.precio,
-        cantidad: 1,
+        cantidad: producto.cantidad,
+        total: producto.total
       };
     }
   });
@@ -37,8 +57,9 @@ function mostrarCarrito() {
     itemDiv.classList.add("carrito-item");
     itemDiv.innerHTML = `
     <div>
-      <p>${item.nombre} - Cantidad: ${item.cantidad} - Precio: $${
-      item.precio * item.cantidad
+    
+      <p><img src="./imgs/productos/${item.imagen}" alt="" width="50px">${item.nombre} - Cantidad: ${item.cantidad} - Precio: $${
+      item.total
     }</p></div>
     <div>
       <button class="carrito-quitar" data-nombre="${item.nombre}">x</button>
@@ -47,15 +68,14 @@ function mostrarCarrito() {
     carritoContenido.appendChild(itemDiv);
   });
 
-  // Mostramos el total en el carrito flotante
   const total = carritoProductos.reduce(
-    (acc, producto) => acc + producto.precio,
+    (acc, producto) => acc + producto.total,
     0
   );
   const totalDiv = document.createElement("div");
   totalDiv.classList.add("carrito-total");
   totalDiv.innerHTML = `
-  <div>Total: $${total}</div> <button class="button is-success is-outlined">Realizar pedido</button>`;
+  <div>Total: $${total}</div><a href="pagina_de_pago.php" class="button is-black">Realizar pedido</a>`;
   carritoContenido.appendChild(totalDiv);
 
   // Mostramos el contenedor flotante
@@ -102,6 +122,7 @@ document
       carritoProductos = carritoProductos.filter(
         (producto) => producto.nombre !== nombreProducto
       );
+      savelocal();
       mostrarCarrito(); // Actualizamos el contenido del carrito
       actualizarCarrito(); // Actualizamos el carrito en la página principal
     }
@@ -115,6 +136,43 @@ document
       document.getElementById("carritoFlotante").style.display = "none";
     }
   });
-  console.log(carritoProductos);
-  console.log(carritoContenido);
-  console.log(carritoItems);
+
+  const savelocal = ()=>{
+    localStorage.setItem("carritoProductos", JSON.stringify(carritoProductos));
+  }
+
+
+
+
+
+  function EnviarDatosenvio() {
+    let tipodireccion = document.getElementById("tipocarrera").value ;
+    let calle = document.getElementById("calle").value;
+    let numerodireccion1 = document.getElementById("numero1").value;
+    let numerodireccion2 = document.getElementById("numero2").value;
+    let home = document.getElementById("home").value;
+    let direccionreal = `${tipodireccion} ${calle} #${numerodireccion1} -${numerodireccion2} ${home}`;
+    let datos = {
+        direccion: direccionreal,
+        detalles: carritoProductos,
+    };
+    fetch('http://localhost/mymbarekove.shop/mymba/mymba/controller/pedido.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(datos),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.exito) {
+            alert('PEDIDO EXITOSO: ' + data.mensaje);
+        } else {
+            alert('ERROR EN EL PEDIDO: ' + data.mensaje);
+        }
+    })
+    .catch(error => {
+        console.error('Error en la solicitud fetch:', error);
+    });
+}
+
