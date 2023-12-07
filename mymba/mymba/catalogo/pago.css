@@ -1,59 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="pago.css">
-    <title>Metodo pago</title>
-</head>
-<body>
-    <div class="container">
-        <form>
-            <div class="logo">
-                <h1>Método de Pago</h1>
-                <img src="imgs/Logo veterinaria animado azul rosado.png" alt="">
-            </div>
-        
-            <div class="form-container" align="center">
-                <div class="seccion">
-                    <h2>Información de Pago</h2>
-                    <label>
-                        <input type="radio" name="metodo_pago" value="tarjeta_credito">
-                        Tarjeta de Crédito
-                    </label><br>
-                    <label>
-                        <input type="radio" name="metodo_pago" value="paypal">
-                        PayPal
-                    </label><br>
-                    <label>
-                        <input type="radio" name="metodo_pago" value="transferencia_bancaria">
-                        Transferencia Bancaria
-                    </label><br>
-                    <label>
-                        <input type="radio" name="metodo_pago" value="efectivo">
-                        Efectivo (Contraentrega)
-                    </label><br>
-                    <div class="form-container" align="center">
-                    <h2>Información de Contacto</h2>
-                    <label for="correo">Correo electrónico:</label>
-                    <input type="email" name="correo" id="correo" required><br>
-        
-                    <label for="telefono">Teléfono:</label>
-                    <input type="tel" name="telefono" id="telefono" required><br>
-        
-                    <label for="direccion">Dirección:</label>
-                    <input type="text" name="direccion" id="direccion" required><br>
-        
-                    <label for="ciudad">Ciudad:</label>
-                    <input type="text" name="ciudad" id="ciudad" required><br>
-        
-                    <label for="barrio">Barrio:</label>
-                    <input type="text" name="barrio" id="barrio" required><br>
-                </div>
-                </div>
-            <input type="submit" value="Confirmar Pago">
-        </form>
-        
-</div>
-</body>
-</html>
+body{
+    background-color: white;
+    width: 100%;
+}
+.wrap {
+    display: flex;
+    background-color: white;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+#form {
+    display: flex;
+    padding: 20px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    width: 40%;
+    height: auto;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.input{
+    width: 50%;
+    height: 40px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 10px 0px 20px;
+}
+.select {
+    width: 78%;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: flex;
+    margin: 10px 0px 20px;
+
+}
+#ciudades, #tipocarrera{
+    width: 100%;
+}
+.numerodire{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+.numerodire input{
+    width: 20%;
+}
+#home{
+    width: 78%;
+}
+.button {
+    width: 100%;
+    height: 40px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #218838;
+}
+
+

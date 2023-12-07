@@ -20,11 +20,27 @@ $conexion->set_charset("utf8");
 </head>
 <?php include_once("header.php"); ?>
 <body>
-
-  <div class="title1">
-    <h1>Productos</h1>
+<div class="title1">
+    <h1>Todo lo que necesitas</h1>
     <p></p>
   </div>
+  <div class="pri">
+  <aside>
+    <nav>
+      
+      <ul>
+      <li><a id="categoria-todos">Todo</a></li>
+        <li><a id="categoria-aseo">Aseo</a></li>
+        <li><a id="categoria-alimento">Alimento</a></li>
+        <li><a id="categoria-juguetes">Juguetes</a></li>
+        <li><a id="categoria-medicamentos">Medicamentos</a></li>
+        <li><a id="categoria-accesorios">Accesoriso</a></li>
+        <li><a id="categoria-higiene">Higiene y cuidado</a></li>
+      </ul>
+    </nav>
+  </aside>
+<div class="main" style="width: 85%;">
+ 
   <div class="contenedor" name="contenedor" id="contenedor">
   <?php 
     /*$producto = new Producto();
@@ -33,6 +49,8 @@ $conexion->set_charset("utf8");
     ?>
 
 
+  </div>
+  </div>
   </div>
   <div id="modal" class="modal">
   </div>
@@ -61,5 +79,4 @@ $conexion->set_charset("utf8");
 
 <script src="carrito.js"></script>
 <script src="./js/getproducts.js"></script>
-
 </html>

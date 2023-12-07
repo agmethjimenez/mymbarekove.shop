@@ -130,12 +130,13 @@ require_once("../controller/password.php");
     </div>
     <script>
         function cambioClave(event) {
+    event.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+
     let recaptchaResponse = grecaptcha.getResponse();
 
     if (!recaptchaResponse) {
         mesage("Por favor, complete el reCAPTCHA", "is-danger");
-        event.preventDefault();
-        return false;
+        return;
     }
 
     let id = <?php echo $_SESSION['identificacion']; ?>;
@@ -143,46 +144,52 @@ require_once("../controller/password.php");
     let clavenueva = document.getElementById("passwordnueva").value;
     let clavenueva2 = document.getElementById("passwordnueva2").value;
 
+    // Validar que los campos no estén vacíos
+    if (!id || !claveactual || !clavenueva || !clavenueva2) {
+        mesage("Por favor, complete todos los campos", "is-danger");
+        return;
+    }
+    if (claveactual == clavenueva) {
+        mesage("Contraseña actual es igual a la nueva, cambiela", "is-danger");
+        return;
+    }
+    if (clavenueva != clavenueva2) {
+        mesage("La contraseñas nuevas deben ser iguales", "is-danger");
+        return;
+        
+    }
+
     const jsonData = {
         "identificacion": id,
         "claveactual": claveactual,
         "clavenueva": clavenueva,
-        "clavenuevados": clavenueva2,
-    }
+        "clavenueva2": clavenueva2, 
+    };
 
     fetch('http://localhost/mymbarekove.shop/mymba/mymba/controller/password.php', {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(jsonData)
+        body: JSON.stringify(jsonData),
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error('Error al actualizar contraseña');
-        }
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log(data);
-        alert("Contraseña actualizada exitosamente");
-        mesage("!Contraseña actualizada!", "is-primary");
-
-        // Redirige a login.php después de actualizar la contraseña
-        window.location.href = "login.php";
-
-        event.preventDefault();
-        return false;
+        if (data.exito) {
+            alert(data.mensaje);
+            mesage(data.mensaje, "is-primary");
+            window.location.href = "logout.php";
+        } else {
+            alert(data.mensaje);
+            mesage(data.mensaje, "is-danger");
+        }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert("Error al actualizar");
-        mesage("!Error al actualizar contraseña", "is-danger");
-        event.preventDefault();
-        return false;
+        mesage("Error en la solicitud", "is-danger");
     });
 }
+
 
 function mesage(m, e) {
     let bot = document.querySelector(".boton2");

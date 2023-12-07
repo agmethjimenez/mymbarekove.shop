@@ -34,7 +34,7 @@ class Producto
                 echo "<p>" . $row['nombre'] . "</p>";
                 echo "<p>⭐️⭐️⭐️⭐️⭐️</p>";
                 echo "<p class='precio'>$" . $row['precio'] . "</p>";
-                echo '<button class="comprar">Comprar</button>';
+                echo '<button class="comprar" onclick="agregarAlCarrito(\'' . $row['nombre'] . '\',' . $row['precio'] . ',\'' . $row['idProducto'] . '\',1,\'' . $imagenBLOB . '\')">Comprar</button>';
                 echo '<button class="detalles" id="detalles"><a href="../catalogo/paginaproducto.php?id=' . $row['idProducto'] . '" class="dety">Detalles</a></button>';
                 echo '</div>';
                 echo '</div>';
@@ -64,7 +64,7 @@ class Producto
             echo '<div class="contenido"><p>Contenido: '. $row['contenido'] .'</p></div>';
             echo '<div class="marca"><p>Marca: '. $row['marca'] .'</p></div>';   
             echo '<div class="disponibles"><p>Disponible: '. $row['cantidadDisponible'] .'</p></div>';
-            echo '<button class="comprar">Comprar</button>'; 
+            echo '<button class="comprar" onclick="agregarAlCarrito(\'' . $row['nombre'] . '\',' . $row['precio'] . ',\'' . $row['idProducto'] . '\',1,\'' . $imagenBLOB . '\')">Comprar</button>';
             echo '</div>';           
         }
 
