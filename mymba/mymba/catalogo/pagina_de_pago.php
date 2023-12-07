@@ -31,7 +31,7 @@
         </table>
     </div>
     <div class="wrap">
-    <form action="" id="form" onsubmit="EnviarDatosenvio()">
+    <form action="" id="form" onsubmit="return EnviarDatosenvio()">
         <h1 class="title">Informacion Pedido</h1>
         <div class="select is-success">
         <select name="ciudades" id="ciudades" required>     
@@ -64,13 +64,13 @@
             </select></div> 
             <div class="numerodire">
             <i class="fa-solid fa-street-view"></i>
-            <input type="text" class="input is-success" id="calle" placeholder="Numero" required>
+            <input type="text" class="input is-success" id="calle" placeholder="ej: 22 bis" required>
             <i class="fa-solid fa-hashtag"></i>
        <input type="text" class="input is-success" id="numero1" placeholder="#" required>
        <i class="fa-solid fa-minus"></i>
        <input type="text" class="input is-success" id="numero2" placeholder="-" required>
        </div>   
-       <input type="text" class="input is-success" id="home" placeholder="Torre/Apto-Casa" required>
+       <input type="text" class="input is-success" id="home" placeholder="Torre/Apto-Casa" >
        <button class="button is-success">Realizar Pedido</button>
     </form>
 </div>

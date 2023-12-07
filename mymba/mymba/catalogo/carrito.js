@@ -146,27 +146,30 @@ document
 
 
   function EnviarDatosenvio() {
-    let tipodireccion = document.getElementById("tipocarrera").value ;
-    let calle = document.getElementById("calle").value;
-    let numerodireccion1 = document.getElementById("numero1").value;
-    let numerodireccion2 = document.getElementById("numero2").value;
-    let home = document.getElementById("home").value;
-    let direccionreal = `${tipodireccion} ${calle} #${numerodireccion1} -${numerodireccion2} ${home}`;
-    let datos = {
-        direccion: direccionreal,
-        detalles: carritoProductos,
-    };
-    fetch('http://localhost/mymbarekove.shop/mymba/mymba/controller/pedido.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(datos),
-    })
+let cciudad = document.getElementById("ciudades").value;
+let tipodireccion = document.getElementById("tipocarrera").value;
+let calle = document.getElementById("calle").value;
+let numerodireccion1 = document.getElementById("numero1").value;
+let numerodireccion2 = document.getElementById("numero2").value;
+let home = document.getElementById("home").value;
+let direccionreal = `${tipodireccion} ${calle} #${numerodireccion1}-${numerodireccion2} ${home}`;
+let datos = {
+    ciudad: cciudad,
+    direccion: direccionreal,
+    detalles: carritoProductos,
+};
+fetch('http://localhost/mymbarekove.shop/mymba/mymba/controller/pedido.php', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(datos),
+})
     .then(response => response.json())
     .then(data => {
         if (data.exito) {
             alert('PEDIDO EXITOSO: ' + data.mensaje);
+            document.getElementById("form").reset();
         } else {
             alert('ERROR EN EL PEDIDO: ' + data.mensaje);
         }
@@ -174,5 +177,6 @@ document
     .catch(error => {
         console.error('Error en la solicitud fetch:', error);
     });
+    return false;
 }
 

@@ -54,6 +54,8 @@
                 <div class="con2-1">
                     <label for="" class="label">Nombre</label>
                     <input class="input is-primary" type="text" name="nombre">
+                    <label for="" class="label">Stock</label>
+                    <input class="input is-primary" type="text" name="stock">
                 </div>
                 <div class="con2-2">
                     <label for="" class="label">Descripcion</label>
@@ -116,6 +118,7 @@
             </div>
             <div class="con5">
                 <div class="con5-1">
+               
                     <label for="" class="label">Imagen del producto</label>
                     <input type="file" class="file is-primary" name="imagen">
                 </div>
@@ -126,43 +129,50 @@
 
 
             <?php
-            if ($_SERVER["REQUEST_METHOD"] === "POST") {
-                $id_producto = $_POST['id'];
-                $proveedor = $_POST['proveedor'];
-                $nombreproducto = $_POST['nombre'];
-                $descripcion = $_POST['descripcion'];
-                $contenido = $_POST['contenido'];
-                $precio = $_POST['precio'];
-                $marca = $_POST['marca'];
-                $categoria = $_POST['categoria'];
-                if ($_FILES['imagen']['error'] === 0) {
-                    $imagen = ($_FILES["imagen"]["tmp_name"]);
-                    $img = addslashes(file_get_contents($imagen));
-                } else {
-                    echo "Error al subir la imagen.";
-                    exit();
-                }
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $id_producto = $_POST['id'];
+    $proveedor = $_POST['proveedor'];
+    $nombreproducto = $_POST['nombre'];
+    $descripcion = $_POST['descripcion'];
+    $contenido = $_POST['contenido'];
+    $precio = $_POST['precio'];
+    $marca = $_POST['marca'];
+    $categoria = $_POST['categoria'];
+    $stock = $_POST['stock'];
 
+    // Verificamos si se ha enviado un archivo
+    if ($_FILES['imagen']['error'] === 0) {
+        $nombre_archivo = $_FILES["imagen"]["name"];
+        $ruta_destino = "../../catalogo/imgs/productos/" . $nombre_archivo;
 
-                $sqli = "INSERT INTO `productos` (`idProducto`, `proveedor`, `nombre`, `descripcionP`, `contenido`, `precio`,`marca`,`categoria`,`imagen`) VALUES ('$id_producto', '$proveedor', '$nombreproducto', '$descripcion', '$contenido', '$precio','$marca','$categoria', '$img')";
-                $resultado = mysqli_query($conexion, $sqli);
-                if ($resultado == true) {
-                    echo '<div class="message is-primary" id="message">';
-                    echo '<p>Insercion de producto exitosa</p>';
-                    echo '<a href="productos.php" class="button is-primary">Volver</a>';
-                    echo '</div>';
-                } else {
-                    echo "Error al agregar el usuario: ";
-                    echo '<div class="message is-danger" id="message">';
-                    echo '<p>Insercion de producto no realizada</p>';
-                    echo $conexion->error;
-                    echo '<a href="provedores.php" class="button is-primary">Volver</a>';
-                    echo '</div>';
-                }
+        if (move_uploaded_file($_FILES["imagen"]["tmp_name"], $ruta_destino)) {
+            // Solo necesitas una inserción en la base de datos
+            $sqli = "INSERT INTO `productos` (`idProducto`, `proveedor`, `nombre`, `descripcionP`, `contenido`, `precio`, `marca`, `categoria`, `cantidadDisponible`, `imagen`, `activo`) VALUES ('$id_producto', '$proveedor', '$nombreproducto', '$descripcion', '$contenido', '$precio', '$marca', '$categoria', '$stock', '$nombre_archivo', 1)";
+
+            // Ya tienes la conexión incluida en algún lugar anterior
+            $resultado = mysqli_query($conexion, $sqli);
+
+            if ($resultado === true) {
+                echo '<div class="message is-primary" id="message">';
+                echo '<p>Inserción de producto exitosa</p>';
+                echo '<a href="productos.php" class="button is-primary">Volver</a>';
+                echo '</div>';
+            } else {
+                echo "Error al agregar el producto: " . mysqli_error($conexion);
+                echo '<div class="message is-danger" id="message">';
+                echo '<p>Inserción de producto no realizada</p>';
+                echo '<a href="provedores.php" class="button is-primary">Volver</a>';
+                echo '</div>';
             }
+        } else {
+            echo "Error al mover el archivo.";
+        }
+    } else {
+        echo "Error al subir la imagen.";
+    }
+}
+?>
 
-
-            ?>
     </div>
     </form>
 </body>

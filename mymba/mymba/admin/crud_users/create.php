@@ -93,7 +93,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $hashed = password_hash($contraseña, PASSWORD_BCRYPT);
 
-    $sqli = "INSERT INTO usuarios VALUES('','$id_usuario','$cod_id','$primernombre','$segundonombre','$primerapellido','$segundoapellido','$telefono','$email','$hashed');";
+    $sqli = "INSERT INTO usuarios VALUES(NULL,'$id_usuario','$cod_id','$primernombre','$segundonombre','$primerapellido','$segundoapellido','$telefono','$email',1,'$hashed');";
 
 if ($conexion->query($sqli) === true) {
     echo '<div class="message is-primary" id="message">';

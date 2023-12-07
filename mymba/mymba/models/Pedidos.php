@@ -4,13 +4,13 @@ $database = new Database();
 $conexion = $database->connect();
 
 class Pedido{
-    public function Traerpedido($id_usuario,$id_pedido, $direccion, $producto, $cantidad, $total){
+    public function Traerpedido($id_usuario,$id_pedido,$ciudad, $direccion, $producto, $cantidad, $total){
         global $conexion;
         $conexion->begin_transaction();
         try {
-        $sql = "INSERT INTO pedidos VALUES (?,?,?,CURDATE(),3)";
+        $sql = "INSERT INTO pedidos VALUES (?,?,?,?,CURDATE(),3)";
         $bin = $conexion->prepare($sql);
-        $bin->bind_param("sss",$id_pedido,$id_usuario, $direccion);
+        $bin->bind_param("ssss",$id_pedido,$id_usuario,$ciudad, $direccion);
         $bin->execute();
 
         $sql2 = "INSERT INTO detallepedido VALUES(?,?,?,?)";

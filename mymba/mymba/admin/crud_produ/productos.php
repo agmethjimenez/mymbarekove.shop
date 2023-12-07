@@ -17,7 +17,7 @@
         <a href="create.php" class="button is-primary">Nuevo producto</a>
     </div>
     <div class="tata">
-        <table class="table is-bordered">
+        <table class="table" style="width: 90%;">
             <thead>
                 <tr>
                     <th>Proveedores</h1>

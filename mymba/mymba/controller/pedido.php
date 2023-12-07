@@ -15,6 +15,7 @@ switch($metodo){
         try {
             $id_usuario = $_SESSION['id_usuario'];
             $id_pedido = substr(uniqid(), 0, 10);
+            $ciudad = $pedido_data['ciudad'];
             $direccion = $pedido_data['direccion'];
             $detalles = $pedido_data['detalles'];
             
@@ -23,7 +24,7 @@ switch($metodo){
                 $cantidad = $producto['cantidad'];
                 $total = $producto['total'];
 
-                $pedido->Traerpedido($id_usuario, $id_pedido, $direccion,$id_producto, $cantidad, $total);
+                $pedido->Traerpedido($id_usuario, $id_pedido,$ciudad, $direccion,$id_producto, $cantidad, $total);
             }
 
             echo json_encode(array('exito' => true, 'mensaje' => 'Pedido exitoso'));

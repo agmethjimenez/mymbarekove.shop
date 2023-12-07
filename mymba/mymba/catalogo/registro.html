@@ -21,7 +21,7 @@
   </head>
   <body>
     <div class="container">
-      <form action="registro.php" method="POST" onsubmit="return validar()">
+      <form action="registro.php" method="POST" onsubmit="validar()">
         <div class="tittle"><h1>Registro</h1></div>
         <div class="con1">
           <div class="field">
@@ -194,7 +194,7 @@
         <div class="g-recaptcha" data-sitekey="6LelmxwpAAAAAFS3KlCNxJf9TfDpe70SP2y0Ie3w"></div>
 
         <div class="boton">
-          <input type="submit"id="submit" value="Registrarse" onclick="validar()"/>
+          <input type="submit"id="submit" value="Registrarse"/>
         </div>
         
         <p class="error" id="error"></p>
@@ -205,16 +205,26 @@
     <script>
       function validar(){
 
+      var respuestaRecaptcha = grecaptcha.getResponse();
       let password1 = document.getElementById("password").value;
       let password2 = document.getElementById("confirmPassword").value;
       let error = document.getElementById("error");
 
       error.innerHTML=""
 
+      if (respuestaRecaptcha.length === 0) {
+      alert("Por favor, completa la validación reCAPTCHA.");
+      event.preventDefault();
+      return false;
+    }
+
       if (password2 != password1) {
         error.innerHTML = "La contraseñas no coinciden";
-        
+        event.preventDefault();
+        return false;
+
       }
+      return true
       }
 
     </script>

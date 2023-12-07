@@ -1,6 +1,25 @@
 <?php
 require_once("../database/conexion.php");
 class Admin{
+    public function Registro($username, $email, $password){
+        global $conexion;
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $id_admin = substr(uniqid(), 0, 10);
+        $sql = "INSERT INTO administradores VALUES (?,?,?,?)";
+        $bin = $conexion->prepare($sql);
+        $bin->bind_param("ssss",$id_admin,$username,$email,$hashedPassword);
+
+        if($bin->execute()){
+            echo '<div class="message is-primary" id="message">';
+            echo '<p>Administrador registrado</p>';
+            echo '</div>';
+        }else{
+            echo '<div class="message is-danger" id="message">';
+            echo '<p>Administrador no registrado</p>';
+            echo '</div>';
+        }
+
+    }
     public function IniciarSesion($correo,$contraseña){
         global $conexion;
         $error_message = " ";
