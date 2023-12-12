@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 30-11-2023 a las 01:41:39
+-- Tiempo de generación: 12-12-2023 a las 02:12:13
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 7.4.33
 
@@ -40,7 +40,9 @@ CREATE TABLE `administradores` (
 --
 
 INSERT INTO `administradores` (`id`, `username`, `email`, `clave`, `activo`) VALUES
-('432534634', 'carlos567', 'carlosgo@mymba.com', '$2y$10$uWOFT6G7WEhqHPV63c7yiu0W0RlphP.2EL8ZY.E.1AV6oVfz0p2fG', 1);
+('432534634', 'carlos567', 'carlosgo@mymba.com', '$2y$10$uWOFT6G7WEhqHPV63c7yiu0W0RlphP.2EL8ZY.E.1AV6oVfz0p2fG', 1),
+('6571f15f04', 'jhorman43', 'jhorman@gmail.com', '$2y$10$ItOpGi4SKkXxUAeDoVnH6u7o5kzyN/GnZAM3e6qM/KGilrPCvSuZu', 1),
+('6576374227', 'test1', 'test@gmail.com', '$2y$10$TxUefpGtxOpMr7Kndo0PQunQO9hXpo4BVihcOZ0uMJfDKrwjsmBBS', 1);
 
 -- --------------------------------------------------------
 
@@ -109,10 +111,30 @@ CREATE TABLE `detallepedido` (
 --
 
 INSERT INTO `detallepedido` (`idPedido`, `idProducto`, `cantidad`, `total`) VALUES
-('45436', '1', 3, 42335),
-('45436', '12334', 1, 76999),
-('645654', '33523', 1, 16920),
-('6747', '7456', 2, 110000);
+('6571cd829b', '6435', 11, 3141567),
+('6571d02097', '6435', 11, 3141567),
+('6571d5b0bc', '32449', 2, 56000),
+('6571d5b0bc', '6435', 14, 3998358),
+('6571d5b0bc', '7456', 2, 110000),
+('657206c784', '1', 3, 600000),
+('657206c784', '12334', 2, 153998),
+('657206c784', '1346', 7, 80500),
+('657206c784', '32449', 1, 28000),
+('657206c784', '33523', 2, 33840),
+('6574d4601c', '1', 3, 600000),
+('6574d4601c', '12334', 2, 153998),
+('6574d4601c', '1346', 7, 80500),
+('6574d4601c', '32449', 1, 28000),
+('6574d4601c', '33523', 2, 33840),
+('657615a3d1', '5555', 2, 11111110),
+('65761960eb', '1346', 2, 23000),
+('65761960eb', '33523', 2, 33840),
+('657636c242', '1346', 4, 46000),
+('657636c242', '32449', 2, 56000),
+('657636c242', '33523', 2, 33840),
+('6577aed400', '6435', 7, 1999179),
+('6577aed400', '7343', 3, 9435),
+('6577aed400', '7456', 2, 110000);
 
 -- --------------------------------------------------------
 
@@ -133,7 +155,8 @@ INSERT INTO `estados` (`codEst`, `estado`) VALUES
 (1, 'Cancelado'),
 (2, 'En proceso'),
 (3, 'Finalizado'),
-(4, 'Pendiente');
+(4, 'Pendiente'),
+(5, 'Vencido');
 
 -- --------------------------------------------------------
 
@@ -169,7 +192,9 @@ INSERT INTO `marcas` (`idMarca`, `marca`) VALUES
 
 CREATE TABLE `pedidos` (
   `idPedido` varchar(11) COLLATE utf8mb4_general_ci NOT NULL,
-  `usuario` int DEFAULT NULL,
+  `usuario` int NOT NULL,
+  `ciudad` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `direccion` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `fecha` date DEFAULT NULL,
   `estado` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -178,10 +203,16 @@ CREATE TABLE `pedidos` (
 -- Volcado de datos para la tabla `pedidos`
 --
 
-INSERT INTO `pedidos` (`idPedido`, `usuario`, `fecha`, `estado`) VALUES
-('45436', 13, '2023-09-12', 3),
-('645654', 18, '2023-10-05', 3),
-('6747', 12, '2023-09-19', 3);
+INSERT INTO `pedidos` (`idPedido`, `usuario`, `ciudad`, `direccion`, `fecha`, `estado`) VALUES
+('6571cd829b', 673, 'Bogota', 'Carrera 98 #2-20 Int 20 Apto 501', '2023-12-07', 1),
+('6571d02097', 673, 'Barranquilla', 'Via 31 #332-20 ', '2023-12-07', 2),
+('6571d5b0bc', 673, 'Manizales', 'Carrera 12 #4-56 ', '2023-12-07', 3),
+('657206c784', 673, 'Buga', 'Calle 12 Sur #44-56 ', '2023-12-07', 4),
+('6574d4601c', 673, 'Palmira', 'Calle 76 Norte #21-23 ', '2023-12-09', 3),
+('657615a3d1', 673, 'Cartagena', 'Avenida Carrera 56 #64-66 ', '2023-12-10', 3),
+('65761960eb', 673, 'Bogota', 'Carrera 98 #2-20 Int 20 Apto 501', '2023-12-10', 3),
+('657636c242', 673, 'Cali', 'Avenida Calle e #rw-rew ', '2023-12-10', 3),
+('6577aed400', 24, 'Bogota', 'Calle 65 #21-23 ', '2023-12-11', 1);
 
 -- --------------------------------------------------------
 
@@ -208,12 +239,13 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`idProducto`, `proveedor`, `nombre`, `descripcionP`, `contenido`, `precio`, `marca`, `categoria`, `cantidadDisponible`, `imagen`, `activo`) VALUES
-('1', '3123', 'Purgante Canisan', 'Purgante para gato 100 EFECTIVOI', '2.5 ML', 200000, '1', '1', 54, 'purgante canisan 2,5ml.jpg', 1),
+('1', '3123', 'Purgante Canisan', 'Purgante para gato 100 EFECTIVOI', '2.5 ML', 200000, '1', '1', 70, '156397-800-auto.jpg', 1),
 ('12334', '103', 'Artri-Vet Suplemento Alimentic', 'ARTRI-VET es un suplemento alimenticio, cuya fórmula contiene ingredientes coadyuvantes en el regeneramiento articular, especial para el tratamiento y prevención de problemas articulares y enfermedade', '60 TAB', 76999, '10', '4', 45, '5959459405940000013-min.jpg', 1),
 ('1346', '103', 'Royal Canin-SHN Starter M&B Do', 'Es especial para la salud digestiva: Resultado de la investigación de Royal Canin, start complex es una combinación exclusiva de sustancias nutricionales presentes en la leche materna, reforzada con n', '145 G', 11500, '4', '2', 54, '111103887-min.jpg', 1),
 ('32449', '102', 'Royal Canin lata gastrointesti', 'El Royal Canin Dog Lata Gastro Intestinal es un alimento para perros de alta energía, altamente digestible, apetecible, completo y equilibrado . Especies: Caninos.\r\nSeguridad Digestiva. Ayuda a manten', '385 GR', 28000, '4', '2', 54, '00030111470713e-cf.jpg', 1),
 ('33523', '105', 'Basti Cat - Arena Estandar', 'Basti Cat - Arena Estandar, es un producto con una aglomeración consistente, fácil de limpiar y muy agradable para tu mascota', '4 KG', 16920, '9', '6', 76, '68936_161035_Basti_Cat_Arena_Est.jpg', 1),
 ('42356', '242435', 'Juguete de goma', 'el mejor', '500 LB', 10000, '5', '2', 34, '', 0),
+('5555', '4323', 'Comida mojada', 'comida mojada', '2LB', 5555555, '10', '5', 77, '111101967-min.jpg', 1),
 ('6435', '242435', 'Diamond Naturals Perros Adulto', 'Diamond Naturals Perros Adultos Light es un concentrado para perros Adultos Premium elaborado con ingredientes de alta calidad para proporcionar una nutrición completa y balanceada pero con menos calo', '3 LB', 285597, '7', '2', 64, '111100193_ed-min.jpg', 1),
 ('7343', '104', 'Pedigree-SHN Starter M&B Dog W', 'Pedigree - Alimento Húmedo Para Perro Adulto Raza Pequeña Pollo Sobre, es 100% completo y balanceado. Con los nutrientes necesarios para que tu perro tenga una vida sana y feliz. Incluye comida húmeda', '100 GR', 3145, '8', '2', 29, '1475_189662_Pedigree___Alimento.jpg', 1),
 ('7456', '242435', 'Dog Chow Adultos', 'Comida con vitaminas y nutrientes para tu mascota', '8 KG', 55000, '2', '2', 35, 'dog chow adulto raza pequeña 8kg.jpg', 1);
@@ -258,7 +290,8 @@ INSERT INTO `proveedores` (`idProveedor`, `nombreP`, `ciudad`, `correo`, `telefo
 ('242435', 'Foot Pet SA', 'New York', 'petfoot@fpa.usa', '1283726', 'SI'),
 ('245', 'FOO S.A', 'Bogota', 'foo.sa@gmail.com', '3143667879', 'NO'),
 ('3123', 'Juguetes Bogota', 'Bogota', 'juguebog@mail.com', '2346347', 'NO'),
-('4323', 'Empresa Distribuidora SAS', 'Bogota', 'empresa@gmail.com', '76242432', 'SI');
+('4323', 'Empresa Distribuidora SAS', 'Bogota', 'empresa@gmail.com', '76242432', 'SI'),
+('7544', 'Sood S.AS.', 'Bogota', 'sooscompany@outlook.com', '77755553', 'NO');
 
 -- --------------------------------------------------------
 
@@ -306,13 +339,13 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `identificacion`, `tipoId`, `primerNombre`, `segundoNombre`, `primerApellido`, `segundoApellido`, `telefono`, `email`, `activo`, `clave`) VALUES
-(10, '1023836283', 4, 'Jose', 'Luis', 'Restrepo', 'Mora', '3144343689', 'josdeluis@gmail.com', 1, '$2y$10$hXDuetOuM9LbbjpIz0YbYuVdMPhUr8ayZBy1676Z08KNQZ31M3hVy'),
+(10, '1023836283', 4, 'Jose', 'Luis', 'Restrepo', 'Rojas', '3144343689', 'josdeluis@gmail.com', 1, '$2y$10$hXDuetOuM9LbbjpIz0YbYuVdMPhUr8ayZBy1676Z08KNQZ31M3hVy'),
 (11, '1735283734', 1, 'Juan', 'Angel', 'Llanos', 'Grisales', '3125679283', 'juanllaqno@gmail.com', 1, '$2y$10$G0/TZu5ZZDIN.gyQyRQ8EO1WTZX2YW9F/gIC/yTQRguytNOQTE0I2'),
-(12, '102836234', 1, 'Ezequiel', 'Santiago', 'Cruz', 'Perez', '3103287363', 'santiperez@gmail.com', 1, '$2y$10$w7Zv7e1abxrZCn3ktc2xAeHnhf7O4PKsu5xpGiraY7wFmAkYlznm6'),
+(12, '102836234', 1, 'Ezequiel', 'Santiago', 'De Cruz', 'Perez', '3103287363', 'santiperez@gmail.com', 1, '$2y$10$jUOl2ts4hKy0u4PHWjw7RuPV6p9mPT7pWNTjMq.j1Dlf2QhwUuwZy'),
 (13, '45652838', 1, 'Juan', 'David', 'Gonzales', 'Suarez', '3046789120', 'suarezjuan35@gmail.com', 1, '$2y$10$AFHB9BYzgieiQW8.VlB6KOdgjWNZZkG.ccX1OCdAEmLoaAkiG769m'),
 (16, '1937635434', 1, 'Juan', 'David', 'Gonzales', 'Duran', '311029376', 'juandavid1234@gmail.com', 1, '$2y$10$ft08kV6V4ad7vCf93lXFDeeXXS/jXXDFQMdnN1fvhbF.SIvzEvlT6'),
 (18, '131225467457', 1, 'Jose', 'Daniel', 'Perez', 'Urrego', '30006352', 'josead@gmail.com', 1, '$2y$10$DGEM7OFEuLpYgEao9c83euGUz7I70KaAlEadtR/QKgaYFzFPTe986'),
-(24, '346273293', 1, 'Julio', 'Steven', 'Zambrano', 'Cruz', '3023443235', 'juliozambra@outlook.com', 1, '$2y$10$oByubwyngAuqmFAjumw5z.ewU6qRqv527VUA8uuMbVPGDCNAXYeD6'),
+(24, '346273293', 1, 'Julio', 'Ernesto', 'Zambrano', 'Cruz', '3023443235', 'juliozambra@outlook.com', 1, '$2y$10$fcq2J0n4ACvP.ZAv3HoDQe0Nokka7dGOz.xydMfohX8Ib6bYfWwtS'),
 (36, '23778423', 2, 'Jose', 'Francisco', 'Jimenez', 'Gonzales', '3016542312', 'jose@outlook.com', 1, '$2y$10$KRSOGijg8Q6MMshNFRKrUuuPuvRM7pi7YMJYyRr2/Er7rJhso6nxG'),
 (38, '43274832423', 1, 'Andy', 'Alejandro', 'Cifuentes', 'Cruzes', '3149873215', 'andy@gmail.com', 1, '$2y$10$y0/tt3iBgVCR78iMArJsQedHOmqQn/GH25TZnHGofIGsunn6F0232'),
 (42, '1032406273', 1, 'Luz', 'Mery', 'Castro', 'Hernandez', '3058103503', 'luz.mery@gmail.com', 1, '$2y$10$5LiYFFtY9Mr4EbjRUtOOAOhcZ5lJwLjgiUnGzAv6G1RWkjQ7IdOsC'),
@@ -321,7 +354,10 @@ INSERT INTO `usuarios` (`id`, `identificacion`, `tipoId`, `primerNombre`, `segun
 (656, '9836273623', 1, 'Luan', 'Luis', 'Gonzales', 'Duran', '3114234567', 'LUANLUIS@GMAIL.COM', 1, '$2y$10$gMXGT5r7bG/4dBhf.Szdj.hsQpscXsUoYR4HflO7oZzXLynWxOdaS'),
 (657, '41455854', 1, 'Ezequiel', 'Esteban', 'Gonzales', 'Trujillo', '3147894588', 'ezequiel@gmail.com', 1, '$2y$10$cDQleOQ19sNoC8a.FmLeJuE/pPXrLO34YDUqULJ.rwa19zSj0gpGK'),
 (658, '3473658345', 1, 'Jose', 'Steven', 'Restrepo', 'Perez', '3125635855', 'joser@gmail.com', 1, '$2y$10$LB81p89bHu/.pxl/Rtp44e4b1JAflbxx5cIfVjWR4KiXrTp0OAQTy'),
-(671, '3213244342', 1, 'Juan', 'Alberto', 'Jimenez', 'Rosa', '6043127456', 'delarodsa@hotmail.com', 1, '$2y$10$A0STF0haGEPIMIhL5jJXKOrMf98QQ/Wah4ojBcTWP76k0JuOAvG9.');
+(671, '3213244342', 1, 'Juan', 'Alberto', 'Jimenez', 'Rosa', '6043127456', 'delarodsa@hotmail.com', 1, '$2y$10$A0STF0haGEPIMIhL5jJXKOrMf98QQ/Wah4ojBcTWP76k0JuOAvG9.'),
+(673, '1027400956', 1, 'Agmeth', '', 'Jimenez', 'Castro', '3124376338', 'agmeth.jimenez2005@gmail.com', 1, '$2y$10$1HmlrHzMDOg/xxxTSC27WenHrxb4bHq8/eacKt3HWjblekaq/.Zuq'),
+(677, '3534545', 2, 'Juan', 'Steven', 'Restrep', 'Restrepo', '343256546', 'resctrepo@gmail.com', 1, '$2y$10$TADbwTFRtpOToTYmeLUvs.DDvXGUp/ryK60tofls9VnvmzDgEOMbu'),
+(679, '45465646', 2, 'Enemigo', 'Publico', 'Publico', 'Publico', '3116458759', 'ememigopiluco@gmail.com', 1, '$2y$10$GcX7gMzcLzjR/Jc5Vyd5uOVt886J2cIdj0sDM6BdY2Gs2Af8V5516');
 
 --
 -- Índices para tablas volcadas
@@ -331,7 +367,8 @@ INSERT INTO `usuarios` (`id`, `identificacion`, `tipoId`, `primerNombre`, `segun
 -- Indices de la tabla `administradores`
 --
 ALTER TABLE `administradores`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- Indices de la tabla `asesores`
@@ -431,7 +468,7 @@ ALTER TABLE `asesoria`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=673;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=680;
 
 --
 -- Restricciones para tablas volcadas

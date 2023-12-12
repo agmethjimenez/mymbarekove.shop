@@ -33,6 +33,7 @@ require_once("../controller/users.php");
                 <li><a id="verinfo">Ver Información</a></li>
                 <li><a href="cambiarclave.php" id="cambiarclave">Cambiar Clave</a></li>
                 <li><a id="actualizar">Actualizar Información</a></li>
+                <li><a href="./pedido/verpedidos.php">Ver pedidos</a></li>
                 <li><a href="logout.php">Salir</a></li>
             </ul>
         </div>
