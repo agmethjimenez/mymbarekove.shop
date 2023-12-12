@@ -75,8 +75,6 @@ $conexion->set_charset("utf8");
     <div class="col-2">
       <h3>LO ULTIMO</h3>
       <form action="">
-        <input type="text" class="text" placeholder="Ingrese su correo"><br>
-        <button type="submit" class="submit">Suscribirse</button>
       </form>
     </div>
     <div class="col-3">

@@ -3,6 +3,7 @@ include_once '../../database/conexion.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,20 +13,23 @@ include_once '../../database/conexion.php';
     <link rel="stylesheet" href="../crud_produ/estyles/cri.css">
     <title>Administradores</title>
 </head>
+
 <body>
     <div class="tata">
-    <table class="table">
-    <thead>
+        <table class="table">
+            <thead>
                 <tr>
-                    <th>Administradores</h1></th>
+                    <th>Administradores</h1>
+                    </th>
                     <th><input type="search" class="input"></th>
+                    <th></th>
                     <th> <a href="registro.php" class="button is-primary">Nuevo administrador</a></th>
                 </tr>
                 <tr>
                     <th>ID</th>
                     <th>Username</th>
-                    <th>Email</th>  
-                    <th>Acciones</th>  
+                    <th>Email</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,7 +51,8 @@ include_once '../../database/conexion.php';
                 ?>
 
             </tbody>
-    </table>
+        </table>
     </div>
 </body>
+
 </html>

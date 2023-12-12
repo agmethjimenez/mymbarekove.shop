@@ -8,7 +8,7 @@ class Pedido{
         global $conexion;
         $conexion->begin_transaction();
         try {
-        $sql = "INSERT INTO pedidos VALUES (?,?,?,?,CURDATE(),3)";
+        $sql = "INSERT INTO pedidos VALUES (?,?,?,?,CURDATE(),4)";
         $bin = $conexion->prepare($sql);
         $bin->bind_param("ssss",$id_pedido,$id_usuario,$ciudad, $direccion);
         $bin->execute();
