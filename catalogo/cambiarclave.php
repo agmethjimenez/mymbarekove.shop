@@ -147,7 +147,7 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
         return;
     }
 
-    let id = <?php echo $_SESSION['identificacion']; ?>;
+    let id = <?php echo $_SESSION['id_usuario']; ?>;
     let claveactual = document.getElementById("passwordactual").value;
     let clavenueva = document.getElementById("passwordnueva").value;
     let clavenueva2 = document.getElementById("passwordnueva2").value;
@@ -183,6 +183,9 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
     })
     .then(response => response.json())
     .then(data => {
+        if (data.noexito) {
+            mesage(data.mensaje, "is-primary");
+        }
         if (data.exito) {
             alert(data.mensaje);
             mesage(data.mensaje, "is-primary");

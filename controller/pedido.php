@@ -8,6 +8,13 @@ $pedido = new Pedido();
 $metodo = $_SERVER['REQUEST_METHOD'];
 
 switch($metodo){
+    case 'GET':
+        $jsonData = file_get_contents('php://input');
+        $usuario_data = json_decode($jsonData, true);
+
+        echo json_encode($pedido->GetPedidos());
+        break;
+
     case 'POST':
         $jsonData = file_get_contents('php://input');
         $pedido_data = json_decode($jsonData, true);
@@ -18,14 +25,16 @@ switch($metodo){
             $ciudad = $pedido_data['ciudad'];
             $direccion = $pedido_data['direccion'];
             $detalles = $pedido_data['detalles'];
+            $totalP = $pedido_data['totalp'];
             
             foreach ($detalles as $producto) {
                 $id_producto = $producto['id'];
                 $cantidad = $producto['cantidad'];
                 $total = $producto['total'];
 
-                $pedido->Traerpedido($id_usuario, $id_pedido,$ciudad, $direccion,$id_producto, $cantidad, $total);
             }
+            $pedido->Traerpedido($id_usuario, $id_pedido,$ciudad, $direccion,$detalles,$totalP);
+
 
             echo json_encode(array('exito' => true, 'mensaje' => 'Pedido exitoso'));
         } catch (Exception $e) {

@@ -8,7 +8,7 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
     exit();
 }
     $id_users = $_SESSION['id_usuario'];
-    $sql = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha, e.estado FROM pedidos as p 
+    $sql = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha,p.total, e.estado FROM pedidos as p 
     INNER JOIN estados as e ON p.estado = e.codEst WHERE p.usuario = '$id_users'";
     $result = $conexion->query($sql);
 
@@ -96,9 +96,11 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
                 echo '<div class="order" id="order1">';
                 echo '<div class="order-info">';
                 echo '<h2>Pedido #'. $row['idPedido'].'</h2>';
+                echo '<p class="date">Total: COP $'.$row['total'].'</p>';
                 echo '<p class="date">Fecha del Pedido:'.$row['fecha'].'</p>';
                 echo '<p class="date">Direccion:'. $row['direccion'].'</p>';
                 echo '<p class="date">Ciudad:'. $row['ciudad'].'</p>';
+
                 echo '<p class="status" data-estado="Finalizado">Estado: '.$row['estado'].'</p>';
                 echo '</div>';
                 echo '<a href="detallepedido.php?id='.$row['idPedido'].'" class="details-link">Ver Detalles</a>';

@@ -1,4 +1,3 @@
-
 let carritoProductos =   JSON.parse(localStorage.getItem("carritoProductos")) || [];
 
 function agregarAlCarrito(nombre, precio, id, cantidad = 1, imagen) {
@@ -142,10 +141,14 @@ document
   }
 
 
-
+  
 
 
   function EnviarDatosenvio() {
+let sumaTotal = 0;
+for (let i = 0; i < carritoProductos.length; i++) {
+   sumaTotal += carritoProductos[i].total;  
+}
 let cciudad = document.getElementById("ciudades").value;
 let tipodireccion = document.getElementById("tipocarrera").value;
 let calle = document.getElementById("calle").value;
@@ -157,6 +160,7 @@ let datos = {
     ciudad: cciudad,
     direccion: direccionreal,
     detalles: carritoProductos,
+    totalp: sumaTotal
 };
 fetch('http://localhost/mymbarekove.shop/controller/pedido.php', {
     method: 'POST',

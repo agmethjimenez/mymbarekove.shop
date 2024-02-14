@@ -12,14 +12,11 @@ session_start();
     <div class="logo-container">
       <img class="logo" src="imgs/productos/Copia de Logo veterinaria animado azul rosado.png" alt="Logo">
     </div>
-    <div class="field">
-      <p class="control has-icons-left has-icons-left">
-        <input class="input is-rounded" id="searchin" type="search" placeholder="¿Que producto buscas">
-        <span class="icon is-small is-left">
-          <i class="fas fa-search"></i>
-        </span>
-      </p>
+    <div class="ssa" style="display: flex; justify-content: center; align-items: center;">
+        <input class="input is-primary" id="searchin" type="search" placeholder="¿Que producto buscas">
+        <button class="button is-black" id="buscarbtn" onclick="buscarProductos()">Buscar</button>  
     </div>
+        
 
     <nav class="navigation">
       <div class="cart-container">
@@ -59,14 +56,14 @@ session_start();
             $nombre = $_SESSION['usuario_nombre'];
             $apellido = $_SESSION['usuario_apellido'];
         
-            echo '<span class="tag is-primary is-medium" id="user">  <i class="fa-solid fa-circle-user fa-lg"></i><a href="perfil.php">' . $nombre . ' ' . $apellido . '</a></span> ';
+            echo '<span class="tag is-link is-medium" id="user">  <i class="fa-solid fa-circle-user fa-lg"></i><a href="perfil.php">' . $nombre . ' ' . $apellido . '</a></span> ';
             echo '<form action="./logout.php" method="post">';
             echo '<button type="submit" class="acceso">Salir</button>';
             echo '</form>';
         } 
         else {
             echo '<button class="acceso"><a href="./login.php">Acceder</a></button>';
-            echo '<button class="acceso"><a href="./registro.html">Registrarse</a></button>';
+            echo '<button class="acceso"><a href="./registro.php">Registrarse</a></button>';
         }
         ?>
       </nav>

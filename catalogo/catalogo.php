@@ -65,23 +65,7 @@ $conexion->set_charset("utf8");
     <a href="../admin/crud_users/crud.php" class="button is-link">Administrar Usuarios</a>
     <a href="../admin/admin_action/registro.php" class="button is-link">Administrar Administradores</a>
   </div>
-  <div class="foter">
-    <div class="col-1">
-      <h3>ENLACES</h3>
-      <a href="#">Acerca de</a>
-      <a href="#">Servicios</a>
-      <a href="#">Tienda</a>
-    </div>
-    <div class="col-2">
-      <h3>LO ULTIMO</h3>
-      <form action="">
-      </form>
-    </div>
-    <div class="col-3">
-      <h3>CONTACTO</h3>
-      <p>3124376338 <br>rekovesistem@mail.com</p>
-    </div>
-  </div>
+  <?php include_once 'footer.php' ?>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

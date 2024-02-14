@@ -29,7 +29,7 @@ class Producto
             while ($row = $result->fetch_assoc()) {
                 $imagenBLOB = $row["imagen"];
                 echo '<div class="producto">';
-                echo '<img src="./imgs/productos/'. $imagenBLOB .'" alt="">';
+                echo '<img src="'. $imagenBLOB .'" alt="">';
                 echo '<div class="informacion">';
                 echo "<p>" . $row['nombre'] . "</p>";
                 echo "<p>⭐️⭐️⭐️⭐️⭐️</p>";

@@ -80,7 +80,7 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
        <input type="text" class="input is-success" id="numero2" placeholder="-" required>
        </div>   
        <input type="text" class="input is-success" id="home" placeholder="Torre/Apto-Casa" >
-       <button type="submit" class="button is-success">Realizar Pedido</button>
+       <button type="submit" class="button is-black">Realizar Pedido</button>
        <!--<div id="paypal-button-container"></div>-->
        
     </form>
@@ -92,16 +92,9 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
 </body>
 
 
+<script src="https://www.paypal.com/sdk/js?client-id=AXQFJwWBjQV3Hj3-eoEAIsMnkeihyoXhn_ejJSSvEN-2J0Dboodk93HqtbgaH9kMjAfJu8wYUm3VA7oE&currency=COP"></script>
 
 <script>
-    paypal.Buttons({
-    createOrder: function(data, actions) {
-      // Lógica para crear la orden en tu backend
-    },
-    onApprove: function(data, actions) {
-      // Lógica para aprobar la transacción en tu backend
-    }
-  }).render('#paypal-button-container');
     let productos = JSON.parse(localStorage.getItem("carritoProductos"));
     let tbody = document.getElementById("tablecart");
 
@@ -116,25 +109,8 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
         `;
         tbody.appendChild(row);
     });
-
-    fetch('mercadopago.php', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ productos: productos }),
-})
-.then(response => response.json())
-.then(data => {
-    // Redirigir al usuario a la URL de pago de Mercado Pago
-    window.location.href = data.url_pago;
-})
-.catch(error => {
-    console.error('Error:', error);
-});
-    
-
 </script>
 
 <script src="carrito.js"></script>
+
 </html>
