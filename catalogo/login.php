@@ -63,7 +63,10 @@ $conexion->set_charset("utf8");
           </p>
         </div>
         <div>
-          ¿No estas registrado?<a href="./registro.html"> !Hazlo ahora¡</a>
+          ¿No estas registrado?<a href="./registro.php"> !Hazlo ahora¡</a>
+        </div>
+        <div>
+          ¿Olvidaste tu contraseña?<a href="./passwordback/solicitar.php">Click aqui!</a>
         </div>
         <div class="field">
           <p class="control">

@@ -185,7 +185,14 @@ header {
   }
   #searchin{
     width: 300px;
+    background-color: #fff;
+    padding: .6rem;
+    border-radius:15px 0px 0px 15px;
+    border: 1px solid #000;
   
+  }
+  #buscarbtn{
+    border-radius: 0px 15px 15px 0px;
   }
   @keyframes decreaseWidth{
     form{
@@ -273,7 +280,13 @@ header {
 }
 #user{
   height: 35px;
+  list-style: none;
   }
+#user a{
+  color: #000;
+  text-decoration: none;
+
+}
 .title1{
   padding: 15px;
     width: 100%;
@@ -405,64 +418,7 @@ h1 {
   }
 }
 
-    .foter{
-        margin-top: 150px;
-        width: 100%;
-        padding: 100px;
-        background-color: #333;
-        display: flex;
-        height: auto;
-        display: flex;
-        flex-wrap: wrap;
-        margin-bottom: 0px;
-        bottom: 0px;
-        gap: 15px;
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    }
-    .foter div{
-        text-align: center;
-
-    }
-    .col-1{
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      transform: translateX(45px);
-    }
-    .col-2{
-        flex-grow: 2;
-    }
-    .footer div h3{
-        font-weight: 200;
-        margin-bottom: 30px;
-        letter-spacing: 1px;
-    }
-    .col-1 a{
-        display: block;
-        text-decoration: none;
-        color: #efefef;
-        margin-top: 10px;
-        font-family: 'Oxygen', sans-serif;
-    }
-    form input{
-        width: 200px;
-        height: 40px;
-        border-radius: 15px;
-        text-align: center;
-        margin-top: 20px;
-        margin-bottom: 40px;
-        outline: none;
-        border: none;
-    }
-    form button{
-        background: transparent;
-        border: 2px solid #fff;
-        color: #Fff;
-        border-radius: 30px;
-        padding: 10px 30px;
-        font-size: 12px;
-        cursor: pointer;
-    }
+    
     
 
 

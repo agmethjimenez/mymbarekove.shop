@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 12-12-2023 a las 02:12:13
+-- Tiempo de generación: 14-02-2024 a las 11:56:14
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 7.4.33
 
@@ -96,6 +96,31 @@ INSERT INTO `categorias` (`categoria`, `descripcion`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `credenciales`
+--
+
+CREATE TABLE `credenciales` (
+  `id` int NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `token` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `codigo` int DEFAULT NULL,
+  `fecha_cambio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `credenciales`
+--
+
+INSERT INTO `credenciales` (`id`, `email`, `token`, `codigo`, `fecha_cambio`, `password`) VALUES
+(680, 'aurelio2000@mail.com', NULL, 0, '2024-01-21 22:57:16', '$2y$10$TC1XEjJOGupQ1R5kVnIAce25Rf3rKf0eCIoW7.YtbBK5g/6a.FRhy'),
+(683, 'josdeluis@gmail.com', NULL, 0, '2024-01-21 22:57:16', '$2y$10$GyYT8Z6KwiYwsV8KcZma3O70alVk/NlwFybSzzzqqjnZsDHg7u2QG'),
+(698, 'jhoiber@gmail.com', NULL, 0, '2024-01-21 22:57:16', '$2y$10$/Lpc6TxnSAVkcwW.U8Yy0./R4kEax7ECr4vzyz7ULC4u/itVozbD6'),
+(699, 'agmeth.jimenez2005@gmail.com', '6f290d057a2d6c635caf7f5c0c82a1cb', 6110, '2024-02-06 12:25:10', '$2y$10$h8XKfowES1OvODjs6VsK5eqUcZXwKucakx0QvlkCiY.aMVcvD/b3e');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `detallepedido`
 --
 
@@ -111,30 +136,13 @@ CREATE TABLE `detallepedido` (
 --
 
 INSERT INTO `detallepedido` (`idPedido`, `idProducto`, `cantidad`, `total`) VALUES
-('6571cd829b', '6435', 11, 3141567),
-('6571d02097', '6435', 11, 3141567),
-('6571d5b0bc', '32449', 2, 56000),
-('6571d5b0bc', '6435', 14, 3998358),
-('6571d5b0bc', '7456', 2, 110000),
-('657206c784', '1', 3, 600000),
-('657206c784', '12334', 2, 153998),
-('657206c784', '1346', 7, 80500),
-('657206c784', '32449', 1, 28000),
-('657206c784', '33523', 2, 33840),
-('6574d4601c', '1', 3, 600000),
-('6574d4601c', '12334', 2, 153998),
-('6574d4601c', '1346', 7, 80500),
-('6574d4601c', '32449', 1, 28000),
-('6574d4601c', '33523', 2, 33840),
-('657615a3d1', '5555', 2, 11111110),
-('65761960eb', '1346', 2, 23000),
-('65761960eb', '33523', 2, 33840),
-('657636c242', '1346', 4, 46000),
-('657636c242', '32449', 2, 56000),
-('657636c242', '33523', 2, 33840),
-('6577aed400', '6435', 7, 1999179),
-('6577aed400', '7343', 3, 9435),
-('6577aed400', '7456', 2, 110000);
+('65cabc388e', '12334', 2, 153998),
+('65cabc388e', '1346', 3, 34500),
+('65cc2f2912', '12334', 2, 153998),
+('65cc2f2912', '1346', 3, 34500),
+('65cc2f2912', '32449', 1, 28000),
+('65cc2f2912', '6435', 3, 856791),
+('65cc2f2912', '7343', 2, 6290);
 
 -- --------------------------------------------------------
 
@@ -196,6 +204,7 @@ CREATE TABLE `pedidos` (
   `ciudad` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `direccion` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `fecha` date DEFAULT NULL,
+  `total` decimal(14,0) NOT NULL,
   `estado` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -203,16 +212,41 @@ CREATE TABLE `pedidos` (
 -- Volcado de datos para la tabla `pedidos`
 --
 
-INSERT INTO `pedidos` (`idPedido`, `usuario`, `ciudad`, `direccion`, `fecha`, `estado`) VALUES
-('6571cd829b', 673, 'Bogota', 'Carrera 98 #2-20 Int 20 Apto 501', '2023-12-07', 1),
-('6571d02097', 673, 'Barranquilla', 'Via 31 #332-20 ', '2023-12-07', 2),
-('6571d5b0bc', 673, 'Manizales', 'Carrera 12 #4-56 ', '2023-12-07', 3),
-('657206c784', 673, 'Buga', 'Calle 12 Sur #44-56 ', '2023-12-07', 4),
-('6574d4601c', 673, 'Palmira', 'Calle 76 Norte #21-23 ', '2023-12-09', 3),
-('657615a3d1', 673, 'Cartagena', 'Avenida Carrera 56 #64-66 ', '2023-12-10', 3),
-('65761960eb', 673, 'Bogota', 'Carrera 98 #2-20 Int 20 Apto 501', '2023-12-10', 3),
-('657636c242', 673, 'Cali', 'Avenida Calle e #rw-rew ', '2023-12-10', 3),
-('6577aed400', 24, 'Bogota', 'Calle 65 #21-23 ', '2023-12-11', 1);
+INSERT INTO `pedidos` (`idPedido`, `usuario`, `ciudad`, `direccion`, `fecha`, `total`, `estado`) VALUES
+('65cabc388e', 699, 'Bogota', 'Avenida Calle 72 #32-21 ', '2024-02-12', 188498, 2),
+('65cc2f2912', 699, 'Bogota', 'Carrera 45 #65-20 ', '2024-02-13', 1079579, 4);
+
+--
+-- Disparadores `pedidos`
+--
+DELIMITER $$
+CREATE TRIGGER `actualizaCantidadDisponible` AFTER UPDATE ON `pedidos` FOR EACH ROW BEGIN
+    DECLARE idPedidoVar CHAR(10);
+    DECLARE estadoVar INT;
+
+    -- Obtener el idPedido y el estado después de la actualización
+    SELECT NEW.idPedido, NEW.estado INTO idPedidoVar, estadoVar;
+
+    -- Verificar si el estado cambió a "En proceso" (id 2)
+    IF estadoVar = 2 THEN
+        -- Actualizar la cantidad disponible de productos en la tabla detallepedido
+        -- Restar la cantidad de cada producto en detallepedido de su respectivo producto en la tabla productos
+        UPDATE productos
+        SET cantidadDisponible = cantidadDisponible - (
+            SELECT cantidad
+            FROM detallepedido
+            WHERE idPedido = idPedidoVar
+              AND productos.idProducto = detallepedido.idProducto
+        )
+        WHERE idProducto IN (
+            SELECT idProducto
+            FROM detallepedido
+            WHERE idPedido = idPedidoVar
+        );
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -240,8 +274,8 @@ CREATE TABLE `productos` (
 
 INSERT INTO `productos` (`idProducto`, `proveedor`, `nombre`, `descripcionP`, `contenido`, `precio`, `marca`, `categoria`, `cantidadDisponible`, `imagen`, `activo`) VALUES
 ('1', '3123', 'Purgante Canisan', 'Purgante para gato 100 EFECTIVOI', '2.5 ML', 200000, '1', '1', 70, '156397-800-auto.jpg', 1),
-('12334', '103', 'Artri-Vet Suplemento Alimentic', 'ARTRI-VET es un suplemento alimenticio, cuya fórmula contiene ingredientes coadyuvantes en el regeneramiento articular, especial para el tratamiento y prevención de problemas articulares y enfermedade', '60 TAB', 76999, '10', '4', 45, '5959459405940000013-min.jpg', 1),
-('1346', '103', 'Royal Canin-SHN Starter M&B Do', 'Es especial para la salud digestiva: Resultado de la investigación de Royal Canin, start complex es una combinación exclusiva de sustancias nutricionales presentes en la leche materna, reforzada con n', '145 G', 11500, '4', '2', 54, '111103887-min.jpg', 1),
+('12334', '103', 'Artri-Vet Suplemento Alimentic', 'ARTRI-VET es un suplemento alimenticio, cuya fórmula contiene ingredientes coadyuvantes en el regeneramiento articular, especial para el tratamiento y prevención de problemas articulares y enfermedade', '60 TAB', 76999, '10', '4', 38, '5959459405940000013-min.jpg', 1),
+('1346', '103', 'Royal Canin-SHN Starter M&B Do', 'Es especial para la salud digestiva: Resultado de la investigación de Royal Canin, start complex es una combinación exclusiva de sustancias nutricionales presentes en la leche materna, reforzada con n', '145 G', 11500, '4', '2', 46, '111103887-min.jpg', 1),
 ('32449', '102', 'Royal Canin lata gastrointesti', 'El Royal Canin Dog Lata Gastro Intestinal es un alimento para perros de alta energía, altamente digestible, apetecible, completo y equilibrado . Especies: Caninos.\r\nSeguridad Digestiva. Ayuda a manten', '385 GR', 28000, '4', '2', 54, '00030111470713e-cf.jpg', 1),
 ('33523', '105', 'Basti Cat - Arena Estandar', 'Basti Cat - Arena Estandar, es un producto con una aglomeración consistente, fácil de limpiar y muy agradable para tu mascota', '4 KG', 16920, '9', '6', 76, '68936_161035_Basti_Cat_Arena_Est.jpg', 1),
 ('42356', '242435', 'Juguete de goma', 'el mejor', '500 LB', 10000, '5', '2', 34, '', 0),
@@ -330,34 +364,18 @@ CREATE TABLE `usuarios` (
   `segundoApellido` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `telefono` varchar(12) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `email` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
-  `activo` tinyint NOT NULL DEFAULT '1',
-  `clave` varchar(270) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `activo` tinyint NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `identificacion`, `tipoId`, `primerNombre`, `segundoNombre`, `primerApellido`, `segundoApellido`, `telefono`, `email`, `activo`, `clave`) VALUES
-(10, '1023836283', 4, 'Jose', 'Luis', 'Restrepo', 'Rojas', '3144343689', 'josdeluis@gmail.com', 1, '$2y$10$hXDuetOuM9LbbjpIz0YbYuVdMPhUr8ayZBy1676Z08KNQZ31M3hVy'),
-(11, '1735283734', 1, 'Juan', 'Angel', 'Llanos', 'Grisales', '3125679283', 'juanllaqno@gmail.com', 1, '$2y$10$G0/TZu5ZZDIN.gyQyRQ8EO1WTZX2YW9F/gIC/yTQRguytNOQTE0I2'),
-(12, '102836234', 1, 'Ezequiel', 'Santiago', 'De Cruz', 'Perez', '3103287363', 'santiperez@gmail.com', 1, '$2y$10$jUOl2ts4hKy0u4PHWjw7RuPV6p9mPT7pWNTjMq.j1Dlf2QhwUuwZy'),
-(13, '45652838', 1, 'Juan', 'David', 'Gonzales', 'Suarez', '3046789120', 'suarezjuan35@gmail.com', 1, '$2y$10$AFHB9BYzgieiQW8.VlB6KOdgjWNZZkG.ccX1OCdAEmLoaAkiG769m'),
-(16, '1937635434', 1, 'Juan', 'David', 'Gonzales', 'Duran', '311029376', 'juandavid1234@gmail.com', 1, '$2y$10$ft08kV6V4ad7vCf93lXFDeeXXS/jXXDFQMdnN1fvhbF.SIvzEvlT6'),
-(18, '131225467457', 1, 'Jose', 'Daniel', 'Perez', 'Urrego', '30006352', 'josead@gmail.com', 1, '$2y$10$DGEM7OFEuLpYgEao9c83euGUz7I70KaAlEadtR/QKgaYFzFPTe986'),
-(24, '346273293', 1, 'Julio', 'Ernesto', 'Zambrano', 'Cruz', '3023443235', 'juliozambra@outlook.com', 1, '$2y$10$fcq2J0n4ACvP.ZAv3HoDQe0Nokka7dGOz.xydMfohX8Ib6bYfWwtS'),
-(36, '23778423', 2, 'Jose', 'Francisco', 'Jimenez', 'Gonzales', '3016542312', 'jose@outlook.com', 1, '$2y$10$KRSOGijg8Q6MMshNFRKrUuuPuvRM7pi7YMJYyRr2/Er7rJhso6nxG'),
-(38, '43274832423', 1, 'Andy', 'Alejandro', 'Cifuentes', 'Cruzes', '3149873215', 'andy@gmail.com', 1, '$2y$10$y0/tt3iBgVCR78iMArJsQedHOmqQn/GH25TZnHGofIGsunn6F0232'),
-(42, '1032406273', 1, 'Luz', 'Mery', 'Castro', 'Hernandez', '3058103503', 'luz.mery@gmail.com', 1, '$2y$10$5LiYFFtY9Mr4EbjRUtOOAOhcZ5lJwLjgiUnGzAv6G1RWkjQ7IdOsC'),
-(43, '324356', 3, 'John', 'Stuart', 'Domingo', 'Chandlers', '12734645', 'johnstuart@gmail.com', 1, '$2y$10$cKRL0gS6ah6LAs9IoykBbu.8kQS3pT6EkD.O8rjFddFfz1V22dZUC'),
-(655, '1010223456', 1, 'Alberto', 'David', 'Gonzales', 'Jimenez', '6014332392', 'alberto@gmail.com', 1, '$2y$10$cO8qTFIMBxZ7yyuiNoIyEef7HHJiSMOhkJrfYIdAG0yagy5HWbacW'),
-(656, '9836273623', 1, 'Luan', 'Luis', 'Gonzales', 'Duran', '3114234567', 'LUANLUIS@GMAIL.COM', 1, '$2y$10$gMXGT5r7bG/4dBhf.Szdj.hsQpscXsUoYR4HflO7oZzXLynWxOdaS'),
-(657, '41455854', 1, 'Ezequiel', 'Esteban', 'Gonzales', 'Trujillo', '3147894588', 'ezequiel@gmail.com', 1, '$2y$10$cDQleOQ19sNoC8a.FmLeJuE/pPXrLO34YDUqULJ.rwa19zSj0gpGK'),
-(658, '3473658345', 1, 'Jose', 'Steven', 'Restrepo', 'Perez', '3125635855', 'joser@gmail.com', 1, '$2y$10$LB81p89bHu/.pxl/Rtp44e4b1JAflbxx5cIfVjWR4KiXrTp0OAQTy'),
-(671, '3213244342', 1, 'Juan', 'Alberto', 'Jimenez', 'Rosa', '6043127456', 'delarodsa@hotmail.com', 1, '$2y$10$A0STF0haGEPIMIhL5jJXKOrMf98QQ/Wah4ojBcTWP76k0JuOAvG9.'),
-(673, '1027400956', 1, 'Agmeth', '', 'Jimenez', 'Castro', '3124376338', 'agmeth.jimenez2005@gmail.com', 1, '$2y$10$1HmlrHzMDOg/xxxTSC27WenHrxb4bHq8/eacKt3HWjblekaq/.Zuq'),
-(677, '3534545', 2, 'Juan', 'Steven', 'Restrep', 'Restrepo', '343256546', 'resctrepo@gmail.com', 1, '$2y$10$TADbwTFRtpOToTYmeLUvs.DDvXGUp/ryK60tofls9VnvmzDgEOMbu'),
-(679, '45465646', 2, 'Enemigo', 'Publico', 'Publico', 'Publico', '3116458759', 'ememigopiluco@gmail.com', 1, '$2y$10$GcX7gMzcLzjR/Jc5Vyd5uOVt886J2cIdj0sDM6BdY2Gs2Af8V5516');
+INSERT INTO `usuarios` (`id`, `identificacion`, `tipoId`, `primerNombre`, `segundoNombre`, `primerApellido`, `segundoApellido`, `telefono`, `email`, `activo`) VALUES
+(680, '5442343', 4, 'Aurelio', 'Gilberto', 'Andaluz', 'Sanchez', '2322423435', 'aurelio2000@mail.com', 1),
+(683, '1119873234', 1, 'Jose', 'Luis', 'Restrepo', 'Perez', '3121010762', 'josdeluis@gmail.com', 1),
+(698, '1023836283', 2, 'Joiber', 'Daniel', 'Moreno', 'Sepulveda', '3112225464', 'jhoiber@gmail.com', 1),
+(699, '1027400956', 1, 'Agmeth', 'Emilio', 'Jimenez', 'Castro', '3124376338', 'agmeth.jimenez2005@gmail.com', 1);
 
 --
 -- Índices para tablas volcadas
@@ -389,6 +407,13 @@ ALTER TABLE `asesoria`
 --
 ALTER TABLE `categorias`
   ADD PRIMARY KEY (`categoria`);
+
+--
+-- Indices de la tabla `credenciales`
+--
+ALTER TABLE `credenciales`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indices de la tabla `detallepedido`
@@ -468,7 +493,7 @@ ALTER TABLE `asesoria`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=680;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=700;
 
 --
 -- Restricciones para tablas volcadas
@@ -480,6 +505,12 @@ ALTER TABLE `usuarios`
 ALTER TABLE `asesoria`
   ADD CONSTRAINT `assor_pk` FOREIGN KEY (`id_asesor`) REFERENCES `asesores` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `user_pk` FOREIGN KEY (`id_cliente`) REFERENCES `usuarios` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Filtros para la tabla `credenciales`
+--
+ALTER TABLE `credenciales`
+  ADD CONSTRAINT `id_idpk` FOREIGN KEY (`id`) REFERENCES `usuarios` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Filtros para la tabla `detallepedido`

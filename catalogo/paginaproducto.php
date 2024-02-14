@@ -21,5 +21,6 @@ include_once("../models/Productos.php");
     $producto->detallesProducto($id);  
     ?>
     </main>
+    <?php include_once 'footer.php'; ?>
 </body>
 </html>

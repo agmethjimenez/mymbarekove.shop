@@ -1,4 +1,4 @@
-<?
+<?php
 include '../../database/conexion.php';
 $database = new Database();
 $conexion = $database->connect();
