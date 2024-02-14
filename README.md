@@ -1,3 +1,6 @@
-# Sitio-web-Kius
-Sitio web oficial de Venta de comida y productos para mascotas "El Kius"
-Estoy probando como tengo un bobo al lao
+# Mymba Rekove Shop
+
+Tienda de productos
+
+## Documentación
+Encuentra la documentación completa [aquí](https://drive.google.com/drive/folders/1lq1ZXAz2i4OTs_51Ov8F_ja-CMl1KgOZ?usp=sharing).
