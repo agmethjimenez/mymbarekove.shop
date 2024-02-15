@@ -61,6 +61,7 @@ $conexion->set_charset("utf8");
       <span id="cerrar-panel"></span>
     </div>
     <a href="../admin/crud_produ/productos.php" class="button is-link">Administrar Productos</a>
+    <a href="../admin/pedidos/pedidos.php" class="button is-link">Administrar Pedidos</a>
     <a href="../admin/crud_provedores/provedores.php" class="button is-link">Administrar Proveedores</a>
     <a href="../admin/crud_users/crud.php" class="button is-link">Administrar Usuarios</a>
     <a href="../admin/admin_action/registro.php" class="button is-link">Administrar Administradores</a>

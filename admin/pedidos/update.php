@@ -169,13 +169,34 @@ if($pedido['estad'] = "Pendiente" ){
                         <?php $eee = "SELECT*FROM estados";
                         $resultestados = $conexion->query($eee);
                         while($estados1 = $resultestados->fetch_assoc()){
+                            $estadoID = $estados1['codEst'];
                             $estado2 = $estados1['estado'];
-                            echo '<option value="'.$estado2.'">'.$estado2.'</option>'; 
+                            echo '<option value="'.$estadoID.'">'.$estado2.'</option>'; 
                         } ?>
                     </select>
                     </div>
                     <button class="button is-warning" type="submit">Cambiar</button>
+                    <?php
+                if(isset($_POST['estado'])){
+                $estadoaActualizar = $_POST['estado'];
+                $ActualizarEstado = "UPDATE pedidos SET estado = ? WHERE idPedido = ?";
+                $BinAP = $conexion->prepare($ActualizarEstado);
+                $BinAP->bind_param("ss",$estadoaActualizar,$idPedido);
+                if($BinAP->execute()){
+                    echo '<div class="message is-primary" id="message">';
+                    echo '<p>Estado cambiado</p>';
+                    echo '</div>';
+                }else{
+                    echo '<div class="message is-danger" id="message">';
+                    echo '<p>Pedido no cambiado de estado</p>';
+                    echo '</div>';
+                }
+
+                }
+                
+                ?>
                 </form>
+                
             </div>
         </div>
         <table  class="table" id="order-details">
@@ -228,7 +249,7 @@ if($pedido['estad'] = "Pendiente" ){
         }
         ?>
         <h1></h1>
-        <a class="button is-warning" href="verpedidos.php" class="details-link">Volver</a>
+        <a class="button is-warning" href="pedidos.php" class="details-link">Volver</a>
         <div class="modal" id="myModal">
     <div class="modal-content">
         <p>¿Estás seguro de cancelar el pedido? Ten en cuenta que no podras deshacer esta accion.</p>
