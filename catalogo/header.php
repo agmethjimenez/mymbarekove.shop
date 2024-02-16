@@ -20,7 +20,11 @@ session_start();
 
     <nav class="navigation">
       <div class="cart-container">
+        
         <img class="carrito" src="imgs/productos/carshop.png" alt="carrito-compras">
+        <div class="addcart" id="addcart">
+          <p id="numcarrito" style="color: white;"></p>
+        </div>
         <div id="carritoFlotante" class="carrito-flotante">
           <div class="car-head">
             <h1>CARRITO DE COMPRAS</h1>
@@ -38,8 +42,7 @@ session_start();
       <input type="checkbox" id="menu-toggle">
       <nav class="nav2">
 
-        <a class="infoin" href="../index.html"></i>Inicio</a>
-        <a class="infoin" href="https://www.instagram.com/mymbarekove/">Contáctanos</a>
+        <a class="infoin" href="../index.php"></i>Inicio</a>
         <?php
         if (isset($_SESSION['id_admin']) && isset($_SESSION['username'])) {
             $idAdministrador = $_SESSION['id_admin'];

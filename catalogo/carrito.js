@@ -1,5 +1,5 @@
 let carritoProductos =   JSON.parse(localStorage.getItem("carritoProductos")) || [];
-
+numerito();
 function agregarAlCarrito(nombre, precio, id, cantidad = 1, imagen) {
   const productoExistente = carritoProductos.find((producto) => producto.nombre === nombre);
 
@@ -17,7 +17,7 @@ function agregarAlCarrito(nombre, precio, id, cantidad = 1, imagen) {
     });
     console.log(carritoProductos);
   }
-
+  numerito();
   savelocal();
   actualizarCarrito();
   const carritoFlotante = document.getElementById("carritoFlotante");
@@ -92,10 +92,12 @@ function actualizarCarrito() {
   } else {
     console.error("La variable carritoProductos no está definida.");
   }
+  numerito();
 }
 // Agregamos el evento click para abrir el contenedor flotante al hacer clic en la imagen de clase "carrito"
 document.querySelector(".carrito").addEventListener("click", () => {
   mostrarCarrito();
+  numerito()
 });
 
 // Agregamos eventos para el botón de "Comprar" en cada producto
@@ -122,7 +124,8 @@ document
         (producto) => producto.nombre !== nombreProducto
       );
       savelocal();
-      mostrarCarrito(); // Actualizamos el contenido del carrito
+      mostrarCarrito(); 
+      numerito();// Actualizamos el contenido del carrito
       actualizarCarrito(); // Actualizamos el carrito en la página principal
     }
   });
@@ -140,7 +143,16 @@ document
     localStorage.setItem("carritoProductos", JSON.stringify(carritoProductos));
   }
 
+  function numerito() {
+    let divNumero = document.getElementById("addcart");
+    let numCarrito = document.getElementById("numcarrito");
 
+    let numeroAEstablecer = carritoProductos.length;
+
+    numCarrito.innerText = numeroAEstablecer;
+
+    divNumero.style.display = numeroAEstablecer > 0 ? 'flex' : 'none';
+}
   
 
 
