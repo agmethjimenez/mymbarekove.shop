@@ -58,7 +58,7 @@ aside nav ul li{
   background-color: #594A3C;
   padding: 20px;
   text-decoration: none;
-  width: 100%;
+  width: 50px;
 }
 aside nav ul li a{
   font-weight: 700;
@@ -191,9 +191,24 @@ header {
     border: 1px solid #000;
   
   }
+  @media (max-width: 767px){
+    #searchin{
+    width: 200px;
+    background-color: #fff;
+    padding: .6rem;
+    border-radius:15px 0px 0px 15px;
+    border: 1px solid #000;
+    }
+  }
   #buscarbtn{
     border-radius: 0px 15px 15px 0px;
   }
+  @media(max-width: 767px){
+    #buscarbtn{
+      border-radius: 0px 12px 12px 0px;
+    }
+  }
+
   @keyframes decreaseWidth{
     form{
       width: 300px;
@@ -221,12 +236,14 @@ header {
     width: 30px;
     height: 30px;
     z-index: 1;
+    position: relative;
   }
   @media (max-width: 767px){
     .carrito{
       width: 25px;
       height: 25px;
       margin-right: 0px;
+      position: relative;
     }
   }
   .carrito-quitar{
@@ -283,10 +300,63 @@ header {
   list-style: none;
   }
 #user a{
-  color: #000;
+  color: white;
   text-decoration: none;
 
 }
+/*#addcart{
+  display: none;
+  color: white;
+  border-radius: 50%;
+  background-color: #594A3C;
+  width: 19px;
+  height: 19px;
+  transform: translateX(15%);
+  transform: translateY(-15%);
+  align-items: center;
+}
+#numcarrito{
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+}*/
+#addcart {
+  display: none;
+  color: white;
+  border-radius: 50%;
+  background-color: #594A3C;
+  width: 19px;
+  height: 19px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 23px;
+  right: 294px;
+}
+@media (max-width: 780px){
+  #addcart{
+    display: none;
+    color: white;
+    border-radius: 50%;
+    background-color: #594A3C;
+    width: 19px;
+    height: 19px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 23px;
+    right: 42px;
+  }
+}
+
+#numcarrito {
+  font-weight: bold;
+  font-size: 14px;
+  margin: 0;
+}
+
 .title1{
   padding: 15px;
     width: 100%;
@@ -508,7 +578,7 @@ h1 {
       }
 #admin a{
   text-decoration: none;
-  color: #000;
+  color: white;
 }
 .panel{
   display: none;

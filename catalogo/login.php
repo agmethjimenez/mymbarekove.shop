@@ -4,7 +4,11 @@ require_once("../models/Usuarios.php");
 require_once("../database/conexion.php");
 require_once("../models/Administrador.php");
 $conexion->set_charset("utf8");
-
+if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && isset($_SESSION['usuario_apellido'])) {
+  echo '<script>alert("Ya has iniciado sesión.");</script>';
+  echo '<script>window.location.href = "catalogo.php";</script>';
+  exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

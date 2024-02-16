@@ -30,17 +30,15 @@
                 </tr>
             </thead>
             <tbody id="pedidoTableBody">
-                <!-- Datos de pedidos se mostrarán aquí -->
             </tbody>
         </table>
     </div>
 
     <script>
-        // Fetch para obtener los datos de pedidos
+
         fetch('http://localhost/mymbarekove.shop/controller/pedido.php')
             .then(response => response.json())
             .then(data => {
-                // Manipular los datos y construir filas de la tabla
                 const tableBody = document.getElementById('pedidoTableBody');
 
                 data.forEach(pedido => {
