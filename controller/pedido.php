@@ -20,7 +20,7 @@ switch($metodo){
         $pedido_data = json_decode($jsonData, true);
 
         try {
-            $id_usuario = $_SESSION['id_usuario'];
+            $id_usuario = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : (isset($_COOKIE['id_usuario']) ? $_COOKIE['id_usuario'] : null);
             $id_pedido = substr(uniqid(), 0, 10);
             $ciudad = $pedido_data['ciudad'];
             $direccion = $pedido_data['direccion'];

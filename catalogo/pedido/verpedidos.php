@@ -4,10 +4,15 @@ $database = new Database();
 $conexion = $database->connect();
 session_start();
 if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])) {
-    header("Location: login.php");
-    exit();
-}
+    if (!isset($_COOKIE['usuario_nombre']) || !isset($_COOKIE['usuario_apellido']) || !isset($_COOKIE['id_usuario'])) {
+        header("Location: login.php");
+        exit();
+    } else {
+        $id_users = $_COOKIE['id_usuario'];
+    }
+} else {
     $id_users = $_SESSION['id_usuario'];
+}
     $sql = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha,p.total, e.estado FROM pedidos as p 
     INNER JOIN estados as e ON p.estado = e.codEst WHERE p.usuario = '$id_users'";
     $result = $conexion->query($sql);

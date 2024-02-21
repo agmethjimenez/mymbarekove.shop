@@ -72,6 +72,22 @@ class Pedido{
             return json_encode($respuesta);
         }
     }
+    public function actualizarTotal($idpedido){
+        global $conexion;
+        $tottQuery = "SELECT SUM(dp.total) AS total_pedido FROM detallepedido as dp WHERE dp.idPedido = '$idpedido'";
+        $resultTott = $conexion->query($tottQuery);
+        // Verificar si la consulta fue exitosa
+        if ($resultTott) {
+            // Obtener el resultado como un array asociativo
+            $totalRow = $resultTott->fetch_assoc();
+            // Obtener el total
+            $total_pedido = $totalRow['total_pedido'];
+            $actualizartotal = "UPDATE pedidos SET total = ? WHERE idPedido = ?";
+            $binactualizartotal = $conexion->prepare($actualizartotal);
+            $binactualizartotal->bind_param("ss", $total_pedido, $idpedido);
+            $binactualizartotal->execute();
+        }
+    }
 
     public function GetPedidos(){
         global $conexion;

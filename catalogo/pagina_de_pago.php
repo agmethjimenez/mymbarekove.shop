@@ -15,8 +15,8 @@
 <body>
 <?php
 include_once("header.php");
-if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])) {
-
+if ((!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido']) || !isset($_SESSION['id_usuario'])) &&
+    (!isset($_COOKIE['usuario_nombre']) || !isset($_COOKIE['usuario_apellido']) || !isset($_COOKIE['id_usuario']))) {
     header("Location: login.php");
     exit();
 }

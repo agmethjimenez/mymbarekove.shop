@@ -1,17 +1,34 @@
 <?php
 include_once '../../database/conexion.php';
+include_once '../../models/Pedidos.php';
+$obpedido = new Pedido();
 $database = new Database();
 $conexion = $database->connect();
 session_start();
 
-if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])) {
-    header("Location: login.php");
-    exit();
+if (
+    !isset($_SESSION['usuario_nombre']) || 
+    !isset($_SESSION['usuario_apellido']) || 
+    !isset($_SESSION['id_usuario'])
+) {
+    if (
+        !isset($_COOKIE['usuario_nombre']) || 
+        !isset($_COOKIE['usuario_apellido']) || 
+        !isset($_COOKIE['id_usuario'])
+    ) {
+        header("Location: login.php");
+        exit();
+    } else {
+        $_SESSION['usuario_nombre'] = $_COOKIE['usuario_nombre'];
+        $_SESSION['usuario_apellido'] = $_COOKIE['usuario_apellido'];
+        $_SESSION['id_usuario'] = $_COOKIE['id_usuario'];
+    }
 }
 
 if (isset($_GET['id'])) {
     $idPedido = $_GET['id'];
-    $idUsuario = $_SESSION['id_usuario'];
+    $idUsuario = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : $_COOKIE['id_usuario'];   
+
 
     // Consulta para obtener detalles del pedido
     $sqlDetalles = "SELECT dp.idProducto, p.nombre, p.precio, dp.cantidad, dp.total 
@@ -87,8 +104,9 @@ if($pedido['estad'] = "Pendiente" ){
         margin: 20px auto;
         background-color: #fff;
         padding: 20px;
-        height: 100%;
+        height: auto;
         border-radius: 8px;
+        overflow-y: auto;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     .order {
@@ -232,6 +250,7 @@ if($pedido['estad'] = "Pendiente" ){
         
             // Imprimir el total
             echo "<h1><strong>Total:$$total_pedido</strong></h1>";
+            $obpedido->actualizarTotal($idPedido);
         } else {
             // Manejar el error si la consulta no fue exitosa
             echo "Error en la consulta: " . $conexion->error;
