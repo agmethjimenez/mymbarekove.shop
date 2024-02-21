@@ -1,7 +1,9 @@
 <?php
 include_once '../../database/conexion.php';
+include_once '../../models/Pedidos.php';
 $database = new Database();
 $conexion = $database->connect();
+$obpedido = new Pedido();
 
 if(isset($_GET['pedido']) && isset($_GET['producto'])){
     $idpedido = $_GET['pedido'];
@@ -23,12 +25,14 @@ if(isset($_GET['pedido']) && isset($_GET['producto'])){
     $bin->bind_param("sss",$precioproducto,$idpedido,$idproducto);
 
     if($bin->execute()){
+       
         echo'<script>alert("Restado exitosamente del pedido")</script>';
         header('Location: detallepedido.php?id='. $idpedido .'');
         /*echo '<div class="message is-primary" id="message">';
         echo '<p>Producto borrado exitosamente</p>';
         echo '<a class="button is-primary" href="login.php">Inicia Sesion</a>';
         echo '</div>';*/
+        $obpedido->actualizarTotal($idpedido);
     }else{
         echo '<div class="message is-primary" id="message">';
         echo '<p>No restado</p>';

@@ -1,5 +1,7 @@
 <?php
 include_once '../../database/conexion.php';
+include_once '../../models/Pedidos.php';
+$obpedido = new Pedido();
 $database = new Database();
 $conexion = $database->connect();
 
