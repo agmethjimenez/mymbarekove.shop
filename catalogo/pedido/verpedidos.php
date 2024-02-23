@@ -38,6 +38,8 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
             color: #fff;
             text-align: center;
             padding: 10px;
+            display: flex;
+            justify-content: space-between;
         }
 
         .container {
@@ -91,7 +93,9 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
 </head>
 <body>
     <header>
+        <span><a href="../catalogo.php">Volver</a></span>
         <h1>Tus Pedidos</h1>
+        <H1></H1>
     </header>
 
     <div class="container">

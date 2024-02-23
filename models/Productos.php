@@ -54,7 +54,7 @@ class Producto
         if($result->num_rows > 0){
             $imagenBLOB = $row['imagen'];
             echo '<div class="imagenpro">';
-            echo '<img src="./imgs/productos/'. $imagenBLOB .'" alt="">';
+            echo '<img src="'. $imagenBLOB .'" alt="">';
             echo '</div>';
             echo '<div class="detalles">';
             echo '<div class="nombre"><h4>'. $row['nombre'] .'</h4></div>';

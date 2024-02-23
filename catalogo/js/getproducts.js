@@ -26,7 +26,7 @@ fetch(url, {
       productosFiltradosPorBusqueda.forEach(producto => {
           let divproducto = document.createElement("div");
           divproducto.className = "producto";
-          divproducto.innerHTML = `<img src="./imgs/productos/${producto.imagen}" alt="">
+          divproducto.innerHTML = `<img src="${producto.imagen}" alt="">
           <div class="informacion">
           <p>${producto.nombre}</p>
           <p class="precio">$${producto.precio} </p>

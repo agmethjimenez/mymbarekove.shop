@@ -101,7 +101,7 @@ if ((!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido']
     productos.forEach((product) => {
         let row = document.createElement("tr");
         row.innerHTML = `
-            <td><img src="./imgs/productos/${product.imagen}" alt="" width="50px"></td>
+            <td><img src="${product.imagen}" alt="" width="50px"></td>
             <td>${product.nombre}</td>
             <td>$${product.precio}</td>
             <td>${product.cantidad}</td>

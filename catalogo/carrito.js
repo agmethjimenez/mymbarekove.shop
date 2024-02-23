@@ -57,7 +57,7 @@ function mostrarCarrito() {
     itemDiv.innerHTML = `
     <div>
     
-      <p><img src="./imgs/productos/${item.imagen}" alt="" width="50px">${item.nombre} - Cantidad: ${item.cantidad} - Precio: $${
+      <p><img src="${item.imagen}" alt="" width="50px">${item.nombre} - Cantidad: ${item.cantidad} - Precio: $${
       item.total
     }</p></div>
     <div>
