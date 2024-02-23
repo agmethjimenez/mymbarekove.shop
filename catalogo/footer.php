@@ -23,7 +23,7 @@
     <div class="content has-text-centered">
       <p>
         &copy; 2024 Mymba Rekove Shop. Todos los derechos reservados. <br>
-        Terminos y Condiciones
+        <a href="../terminos.php">Terminos y Condiciones</a>
       </p>
       <p>
         Teléfono: 1234567890 | Correo : shopmymbarekove@gmail.com</a>

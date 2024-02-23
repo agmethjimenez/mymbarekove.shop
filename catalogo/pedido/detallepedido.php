@@ -263,6 +263,7 @@ if($pedido['estad'] = "Pendiente" ){
         <?php } ?>
         <?php if($pruebapedido){?>
         <a class="button is-danger" id="btncancelarpedido" onclick="openModal()" class="details-link">Cancelar Pedido</a>
+<!--<a href="imprimirpdf.php?pedido=<?php echo $idPedido ?>" class="button is-link">Imprimir</a>-->
         <?php }?>
         <div class="modal" id="myModal">
     <div class="modal-content">

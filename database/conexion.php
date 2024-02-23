@@ -1,7 +1,7 @@
 <?php
 class Database{
     private $servername = "localhost";
-    private $database = "mymba";
+    private $database = "mymba2";
     private $username = "root";
     private $password = "";
     private $conn;
