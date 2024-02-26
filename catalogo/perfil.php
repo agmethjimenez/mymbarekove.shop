@@ -23,7 +23,7 @@ require_once("../controller/users.php");
     session_start();
     $usuario = new Usuario();
 
-    $id = $_SESSION['id_usuario'];
+    $id = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : $_COOKIE['id_usuario'];
     $usuario->verDatos($id);
     ?>
     <div class="wrapper">

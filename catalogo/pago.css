@@ -8,7 +8,7 @@ body{
     width: 100%;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: auto;
 }
 
 #form {
@@ -76,6 +76,23 @@ body{
 
 .button:hover {
     background-color: #218838;
+}
+#botonmas, #botonmenos, #botonquitar{
+    width: 10px;
+}
+#options{
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: white;
+}
+#options div{
+    margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+#vaciar{
+    width: 120px;
 }
 
 

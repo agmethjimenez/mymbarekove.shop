@@ -8,29 +8,33 @@ $pedido = new Pedido();
 $metodo = $_SERVER['REQUEST_METHOD'];
 
 switch($metodo){
-    case 'POST':
+    case 'GET':
         $jsonData = file_get_contents('php://input');
-        $pedido_data = json_decode($jsonData, true);
+        $usuario_data = json_decode($jsonData, true);
 
-        try {
-            $id_usuario = $_SESSION['id_usuario'];
-            $id_pedido = substr(uniqid(), 0, 10);
-            $ciudad = $pedido_data['ciudad'];
-            $direccion = $pedido_data['direccion'];
-            $detalles = $pedido_data['detalles'];
-            
-            foreach ($detalles as $producto) {
-                $id_producto = $producto['id'];
-                $cantidad = $producto['cantidad'];
-                $total = $producto['total'];
+        echo json_encode($pedido->GetPedidos());
+        break;
 
-                $pedido->Traerpedido($id_usuario, $id_pedido,$ciudad, $direccion,$id_producto, $cantidad, $total);
+        case 'POST':
+            $jsonData = file_get_contents('php://input');
+            $pedido_data = json_decode($jsonData, true);
+    
+            try {
+                $pedido = new Pedido(); // Reemplaza 'ruta_hacia_tu_clase_pedido.php' con la ruta correcta
+                $id_usuario = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : (isset($_COOKIE['id_usuario']) ? $_COOKIE['id_usuario'] : null);
+                $id_pedido = substr(uniqid(), 0, 10);
+                $ciudad = $pedido_data['ciudad'];
+                $direccion = $pedido_data['direccion'];
+                $detalles = $pedido_data['detalles'];
+                $totalP = $pedido_data['totalp'];
+                $datospago = $pedido_data['datospago'];
+    
+                $respuesta = $pedido->Traerpedido($id_usuario, $id_pedido, $ciudad, $direccion, $detalles, $totalP, $datospago);
+    
+                echo $respuesta;
+            } catch (Exception $e) {
+                // En caso de error, devuelve un mensaje de error
+                echo json_encode(array('exito' => false, 'mensaje' => 'Error en el pedido: ' . $e->getMessage()));
             }
-
-            echo json_encode(array('exito' => true, 'mensaje' => 'Pedido exitoso'));
-        } catch (Exception $e) {
-            // En caso de error, devuelve un mensaje de error
-            echo json_encode(array('exito' => false, 'mensaje' => 'Error en el pedido: ' . $e->getMessage()));
-        }
-    break;
+        break;
 }

@@ -1,37 +1,77 @@
 <?php
+require '../vendor/autoload.php';
 require_once("../database/conexion.php");
 $database = new Database();
 $conexion = $database->connect();
+
 class Usuario
 {
 
     public function registrarse($id_usuario, $tipoid, $name1, $name2, $lastname1, $lastname2, $telefono, $email, $clave)
-    {
-        $hashedPassword = password_hash($clave, PASSWORD_BCRYPT);
-        global $conexion;
+{
+    $hashedPassword = password_hash($clave, PASSWORD_BCRYPT);
+    global $conexion;
 
-        $sql = "INSERT INTO usuarios (identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email,activo,clave)
-            VALUES (?,?,?,?,?,?,?,?,1,?)";
-        $bin = $conexion->prepare($sql);
-        $bin->bind_param("sssssssss",$id_usuario,$tipoid,$name1,$name2,$lastname1,$lastname2,$telefono,$email,$hashedPassword);
-        if ($bin->execute()) {
-            echo "Registro exitoso";
+    $conexion->begin_transaction();
+
+    include_once '../catalogo/verificarcorreo.php';
+    if($enviado) {
+    $sql = "INSERT INTO usuarios (identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email, activo)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
+    $bin = $conexion->prepare($sql);
+    $bin->bind_param("ssssssss", $id_usuario, $tipoid, $name1, $name2, $lastname1, $lastname2, $telefono, $email);
+
+    if ($bin->execute()) { 
+        $token = bin2hex(random_bytes(16));
+        $id_aut = $conexion->insert_id;
+        $sql2 = "INSERT INTO credenciales (id, email,token, codigo, fecha_cambio, password) VALUES (?, ?, ?, ?,NOW(), ?)";
+        $bin2 = $conexion->prepare($sql2);
+        $bin2->bind_param("sssss", $id_aut, $email,$token,$codigo, $hashedPassword);
+
+        if ($bin2->execute()) {
+            echo '<div class="message is-primary" id="message">';
+            echo '<p>Registrado</p>';
+            echo '<a class="button is-primary" href="login.php">Inicia Sesion</a>';
+            echo '</div>';
+
         } else {
-            echo "Error al registrar el usuario", $conexion->error ;
+            echo '<div class="message is-danger" id="message">';
+            echo '<p>Error al registrar el usuario de credenciales: ' . $bin2->error . '</p>';
+            echo '</div>';
+            $conexion->rollback();
+            return;
         }
+
+    } else {
+        echo "Error al registrar el usuario: " . $conexion->error;
+        $conexion->rollback();
+        return;
     }
+    $conexion->commit();
+}else{
+    echo '<div class="message is-danger" id="message">';
+    echo '<p>Error al verificar correo' . $bin2->error . '</p>';
+    echo '</div>';
+   
+}
+}
+
+
+    
 
     public function inicioSesion($correo, $contraseña)
     {
         global $conexion;
         $error_message = " ";
-        $query = "SELECT * FROM usuarios WHERE email='$correo' AND activo = 1";
+        $query = "SELECT u.id,u.primerNombre,u.primerApellido,u.email,cr.password FROM usuarios as u
+        LEFT JOIN credenciales as cr ON u.id = cr.id
+        WHERE u.activo = 1 and u.email = '$correo'";
         $result = $conexion->query($query);
 
         if ($result !== false) {
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
-                $hashedPassword = $row['clave'];
+                $hashedPassword = $row['password'];
 
                 if (password_verify($contraseña, $hashedPassword)) {
                     $_SESSION['id_usuario'] = $row['id'];
@@ -61,6 +101,7 @@ class Usuario
         $con = $conexion->query($sql);
         if($con->num_rows>0){
             $row=$con->fetch_assoc();
+            $_SESSION['iduser'] = $row['id'];
             $_SESSION['identificacion'] = $row['identificacion'];
             $_SESSION['tipoid'] = $row['tipoId'];
             $_SESSION['nombre1'] = $row['primerNombre'];
@@ -84,30 +125,45 @@ class Usuario
     public function cambiarClave($id, $passwordactual, $passwordnueva, $passwordnueva2) {
         global $conexion;
         if ($passwordnueva != $passwordnueva2) {
-            echo "Las contraseñas no coinciden";
-            return;
+            return ['encontrado' => false, 'mensaje' => 'Las contraseñas no coinciden'];
         }
-        $query = "SELECT clave FROM usuarios WHERE identificacion = ?";
+        $query = "SELECT password FROM credenciales WHERE id = ?";
         $stmt = $conexion->prepare($query);
         $stmt->bind_param("s", $id);
         $stmt->execute();
         $result = $stmt->get_result();
     
         if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $hashedPassword = $row['clave'];
+            $sqlverificar = "SELECT * FROM credenciales WHERE id = ? AND TIMESTAMPDIFF(DAY, fecha_cambio, NOW()) > 30";
+            $binver = $conexion->prepare($sqlverificar);
+            $binver->bind_param("s", $id);
+            $binver->execute();
+            $result2 = $binver->get_result();
+            if ($result2->num_rows > 0) {
+                $row = $result->fetch_assoc();
+            $hashedPassword = $row['password'];
     
             if (password_verify($passwordactual, $hashedPassword)) {
+                $token = bin2hex(random_bytes(16));
                 $hashedNuevaPassword = password_hash($passwordnueva, PASSWORD_BCRYPT);
-                $sql = "UPDATE usuarios SET clave = ? WHERE identificacion = ?";
+                $sql = "UPDATE credenciales SET password = ?,token = ?, fecha_cambio = NOW() WHERE id = ?";
                 $stmt = $conexion->prepare($sql);
-                $stmt->bind_param("ss", $hashedNuevaPassword, $id);
+                $stmt->bind_param("sss", $hashedNuevaPassword,$token, $id);
                 $stmt->execute();
+                return ['encontrado' => true, 'mensaje' => 'Clave actualizada'];
             } else {
                 echo $conexion->error;
+                return ['encontrado' => false, 'mensaje' => 'La contraseña actual no coincide, asegurate de que sea la correcta'];
             }
+                
+            }else{
+                return ['encontrado' => false, 'mensaje' => 'La contraseña solo se puede cambiar luego de 30 dias del ultimo cambio'];
+
+            }
+            
         } else {
             echo "Usuario no encontrado";
+            return ['encontrado' => false, 'mensaje' => 'Usuario no encontrado'];
         }
         $stmt->close();
     }

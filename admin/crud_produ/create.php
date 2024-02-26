@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="./estyles/norm.css">
-    <title>Document</title>
+    <title>Agregar Producto</title>
 </head>
 
 <body>
@@ -25,7 +25,7 @@
             <div class="con1">
                 <div class="con1-1">
                     <label for="" class="label">ID Producto</label>
-                    <input class="input is-primary" type="text" name="id">
+                    <input class="input is-primary" type="text" name="id" value = "<?php echo rand(1000,9999); ?> " readonly>
                 </div>
                 <div class="con1-2">
                     <label for="" class="label">Proveedor</label>
@@ -120,7 +120,7 @@
                 <div class="con5-1">
                
                     <label for="" class="label">Imagen del producto</label>
-                    <input type="file" class="file is-primary" name="imagen">
+                    <input class="input is-primary" type="text" name="direccion">
                 </div>
             </div>
             <div class="butcon">
@@ -139,15 +139,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $marca = $_POST['marca'];
     $categoria = $_POST['categoria'];
     $stock = $_POST['stock'];
+    $direccionimg = $_POST['direccion'];
 
-    // Verificamos si se ha enviado un archivo
-    if ($_FILES['imagen']['error'] === 0) {
-        $nombre_archivo = $_FILES["imagen"]["name"];
-        $ruta_destino = "../../catalogo/imgs/productos/" . $nombre_archivo;
+   
 
-        if (move_uploaded_file($_FILES["imagen"]["tmp_name"], $ruta_destino)) {
+        
             // Solo necesitas una inserción en la base de datos
-            $sqli = "INSERT INTO `productos` (`idProducto`, `proveedor`, `nombre`, `descripcionP`, `contenido`, `precio`, `marca`, `categoria`, `cantidadDisponible`, `imagen`, `activo`) VALUES ('$id_producto', '$proveedor', '$nombreproducto', '$descripcion', '$contenido', '$precio', '$marca', '$categoria', '$stock', '$nombre_archivo', 1)";
+            $sqli = "INSERT INTO `productos` (`idProducto`, `proveedor`, `nombre`, `descripcionP`, `contenido`, `precio`, `marca`, `categoria`, `cantidadDisponible`, `imagen`, `activo`) VALUES ('$id_producto', '$proveedor', '$nombreproducto', '$descripcion', '$contenido', '$precio', '$marca', '$categoria', '$stock', '$direccionimg', 1)";
 
             // Ya tienes la conexión incluida en algún lugar anterior
             $resultado = mysqli_query($conexion, $sqli);
@@ -164,12 +162,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 echo '<a href="provedores.php" class="button is-primary">Volver</a>';
                 echo '</div>';
             }
-        } else {
-            echo "Error al mover el archivo.";
-        }
-    } else {
-        echo "Error al subir la imagen.";
-    }
+        
+    
 }
 ?>
 

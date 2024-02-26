@@ -4,7 +4,11 @@ require_once("../models/Usuarios.php");
 require_once("../database/conexion.php");
 require_once("../models/Administrador.php");
 $conexion->set_charset("utf8");
-
+if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && isset($_SESSION['usuario_apellido'])) ||
+    (isset($_COOKIE['id_usuario']) && isset($_COOKIE['usuario_nombre']) && isset($_COOKIE['usuario_apellido']))) {
+    echo '<script>alert("Ya has iniciado sesión."); window.location.href = "catalogo.php";</script>';
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,7 +67,10 @@ $conexion->set_charset("utf8");
           </p>
         </div>
         <div>
-          ¿No estas registrado?<a href="./registro.html"> !Hazlo ahora¡</a>
+          ¿No estas registrado?<a href="./registro.php"> !Hazlo ahora¡</a>
+        </div>
+        <div>
+          ¿Olvidaste tu contraseña?<a href="./passwordback/solicitar.php">Click aqui!</a>
         </div>
         <div class="field">
           <p class="control">

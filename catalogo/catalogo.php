@@ -18,7 +18,19 @@ $conexion->set_charset("utf8");
   <link rel="stylesheet" href="./css/estilo.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 </head>
-<?php include_once("header.php"); ?>
+<?php include_once("header.php"); 
+echo json_encode($_SESSION['carrito']) ;
+
+if (isset($_SESSION['carrito'])) {
+    $productos = $_SESSION['carrito'];
+
+    echo "<ul>";
+    foreach ($productos as $producto) {
+        echo "<li>" . $producto['nombre'] . " (" . $producto['cantidad'] . " unidades) - Precio: $" . $producto['precio'] . "</li>";
+    }
+    echo "</ul>";
+}
+?>
 <body>
 <div class="title1">
     <h1>Todo lo que necesitas</h1>
@@ -61,32 +73,18 @@ $conexion->set_charset("utf8");
       <span id="cerrar-panel"></span>
     </div>
     <a href="../admin/crud_produ/productos.php" class="button is-link">Administrar Productos</a>
+    <a href="../admin/pedidos/pedidos.php" class="button is-link">Administrar Pedidos</a>
     <a href="../admin/crud_provedores/provedores.php" class="button is-link">Administrar Proveedores</a>
     <a href="../admin/crud_users/crud.php" class="button is-link">Administrar Usuarios</a>
     <a href="../admin/admin_action/registro.php" class="button is-link">Administrar Administradores</a>
   </div>
-  <div class="foter">
-    <div class="col-1">
-      <h3>ENLACES</h3>
-      <a href="#">Acerca de</a>
-      <a href="#">Servicios</a>
-      <a href="#">Tienda</a>
-    </div>
-    <div class="col-2">
-      <h3>LO ULTIMO</h3>
-      <form action="">
-      </form>
-    </div>
-    <div class="col-3">
-      <h3>CONTACTO</h3>
-      <p>3124376338 <br>rekovesistem@mail.com</p>
-    </div>
-  </div>
+  <?php include_once 'footer.php' ?>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="carrito.js"></script>
 <script src="./js/getproducts.js"></script>
+<script src="./js/guardarcarrito.js"></script>
 <script>
   document.getElementById("abrir-panel").addEventListener("click",function(){
     document.getElementById("panel").style.display = "flex";

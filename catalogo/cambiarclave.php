@@ -5,10 +5,24 @@ require_once("../controller/password.php");
 
 session_start();
 
-if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])) {
+if (
+    !isset($_SESSION['id_usuario']) || 
+    !isset($_SESSION['usuario_nombre']) || 
+    !isset($_SESSION['usuario_apellido'])
+) {
+    // Si no hay variables de sesión, verifica la existencia de cookies
+    if (!isset($_COOKIE['id_usuario'])) {
+        // Redirige a la página de inicio de sesión
+        header("Location: login.php");
+        exit();
+    } else {
+        // Asigna el valor de la cookie a $_SESSION['id_usuario'] si no está definido
+        $_SESSION['id_usuario'] = $_SESSION['id_usuario'] ?? $_COOKIE['id_usuario'] ?? null;
 
-    header("Location: login.php");
-    exit();
+        // Asigna los valores de las cookies a las variables de sesión
+        $_SESSION['usuario_nombre'] = $_COOKIE['usuario_nombre'] ?? null;
+        $_SESSION['usuario_apellido'] = $_COOKIE['usuario_apellido'] ?? null;
+    }
 }
 
 ?>
@@ -147,7 +161,7 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
         return;
     }
 
-    let id = <?php echo $_SESSION['identificacion']; ?>;
+    let id = <?php echo $_SESSION['id_usuario']; ?>;
     let claveactual = document.getElementById("passwordactual").value;
     let clavenueva = document.getElementById("passwordnueva").value;
     let clavenueva2 = document.getElementById("passwordnueva2").value;
@@ -183,6 +197,9 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
     })
     .then(response => response.json())
     .then(data => {
+        if (data.noexito) {
+            mesage(data.mensaje, "is-primary");
+        }
         if (data.exito) {
             alert(data.mensaje);
             mesage(data.mensaje, "is-primary");

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="./estyles/norm.css">
-    <title>Document</title>
+    <title>Actualizar Producto</title>
 </head>
 <body>
 <div class="contenedor">
@@ -132,13 +132,11 @@ if ($result) {
     </div>
     <div class="con5">
         <label for="" class="label">Imagen</label>
+        <input class="input is-primary" type="text" value="<?php echo isset($roe['imagen']) ? $roe['imagen'] : ''; ?>" name="direccion">
 
         <?php $imagenBLOB = isset($roe["imagen"]) ? $roe['imagen']:'';
-        echo '<img src="../../catalogo/imgs/productos/' .$imagenBLOB. '" alt="Imagen de Producto" width="200px">';
+        echo '<img src="' .$imagenBLOB. '" alt="Imagen de Producto" width="200px">';
                 ?>
-        <label for="" class="label">Nueva imagen</label>
-        <input type="file" name="imagen">
-
     </div>
     <div class="butcon">
     <button class="button is-success" type="submit">Actualizar</button>
@@ -156,17 +154,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $marca = $_POST['marca'];
     $categoria = $_POST['categoria'];
     $stock = $_POST['stock'];
+    $imagen = $_POST['direccion'];
 
-    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-        $imagen = $_FILES['imagen'];
-        $img = $imagen["name"];  // Corregido el nombre de la variable
-        $ruta_destino = "../../catalogo/imgs/productos/" . $img;  // Corregido el nombre de la variable
-        move_uploaded_file($imagen["tmp_name"], $ruta_destino);
-
-        $sqli = "UPDATE productos SET `idProducto` = '$ida', `proveedor` = '$proveedor', `nombre` = '$nombre', `descripcionP` = '$descripcion', `contenido` = '$contenido', `precio` = '$precio', `marca` = '$marca', `categoria` = '$categoria', `cantidadDisponible`= '$stock', `imagen`='$img' WHERE `productos`.`idProducto` = '$ida'";
-    } else {
-        $sqli = "UPDATE productos SET `idProducto` = '$ida', `proveedor` = '$proveedor', `nombre` = '$nombre', `descripcionP` = '$descripcion', `contenido` = '$contenido', `precio` = '$precio', `marca` = '$marca', `categoria` = '$categoria', `cantidadDisponible`= '$stock' WHERE `productos`.`idProducto` = '$ida'";
-    }
+    
+    $sqli = "UPDATE productos SET `idProducto` = '$ida', `proveedor` = '$proveedor', `nombre` = '$nombre', `descripcionP` = '$descripcion', `contenido` = '$contenido', `precio` = '$precio', `marca` = '$marca', `categoria` = '$categoria', `cantidadDisponible`= '$stock', `imagen`='$imagen' WHERE `productos`.`idProducto` = '$ida'";
+   
     $resultado = mysqli_query($conexion, $sqli);
     
     if ($resultado == true) {

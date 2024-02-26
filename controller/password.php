@@ -24,9 +24,14 @@ switch($metodo){
                     header('Content-Type: application/json', true, 400);
                     echo json_encode(array('exito' => false, 'mensaje' => 'Las contraseñas no coinciden'));
                 } else {
-                    $usuario->cambiarClave($usuario_id, $claveactual, $clavenueva, $clavenueva2);
-                    header('Content-Type: application/json');
-                    echo json_encode(array('exito' => true, 'mensaje' => 'Clave actualizada'));
+                    $result = $usuario->cambiarClave($usuario_id, $claveactual, $clavenueva, $clavenueva2);
+                    if ($result['encontrado']) {
+                        header('Content-Type: application/json');
+                        echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));
+                    } else {
+                        header('Content-Type: application/json', true, 400);
+                        echo json_encode(array('noexito' => true, 'mensaje' => $result['mensaje']));
+                    }
                 }
             } catch (Exception $e) {
                 header('Content-Type: application/json', true, 400);

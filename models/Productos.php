@@ -6,7 +6,7 @@ class Producto
         global $conexion;
         $sql = "SELECT p.idProducto, pr.nombreP as proveedor,p.nombre,p.precio, ca.descripcion as categoria, p.imagen from productos as p 
         INNER JOIN proveedores as pr ON p.proveedor = pr.idProveedor 
-        INNER JOIN categorias as ca ON p.categoria = ca.categoria WHERE p.activo = 1";
+        INNER JOIN categorias as ca ON p.categoria = ca.categoria WHERE p.activo = 1 AND p.cantidadDisponible > 1";
 
     $resultados = array();
 
@@ -29,7 +29,7 @@ class Producto
             while ($row = $result->fetch_assoc()) {
                 $imagenBLOB = $row["imagen"];
                 echo '<div class="producto">';
-                echo '<img src="./imgs/productos/'. $imagenBLOB .'" alt="">';
+                echo '<img src="'. $imagenBLOB .'" alt="">';
                 echo '<div class="informacion">';
                 echo "<p>" . $row['nombre'] . "</p>";
                 echo "<p>⭐️⭐️⭐️⭐️⭐️</p>";
@@ -54,7 +54,7 @@ class Producto
         if($result->num_rows > 0){
             $imagenBLOB = $row['imagen'];
             echo '<div class="imagenpro">';
-            echo '<img src="./imgs/productos/'. $imagenBLOB .'" alt="">';
+            echo '<img src="'. $imagenBLOB .'" alt="">';
             echo '</div>';
             echo '<div class="detalles">';
             echo '<div class="nombre"><h4>'. $row['nombre'] .'</h4></div>';
