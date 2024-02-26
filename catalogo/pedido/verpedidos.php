@@ -1,4 +1,37 @@
-text-align: center;
+<?php
+include_once '../../database/conexion.php';
+$database = new Database();
+$conexion = $database->connect();
+session_start();
+if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])) {
+    header("Location: login.php");
+    exit();
+}
+    $id_users = $_SESSION['id_usuario'];
+    $sql = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha, e.estado FROM pedidos as p 
+    INNER JOIN estados as e ON p.estado = e.codEst WHERE p.usuario = '$id_users'";
+    $result = $conexion->query($sql);
+
+
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tus Pedidos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #F2E2CE ;
+        }
+
+        header {
+            background-color: #594A3C;
+            color: #fff;
+            text-align: center;
             padding: 10px;
         }
 
