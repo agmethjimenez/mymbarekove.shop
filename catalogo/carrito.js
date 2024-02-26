@@ -153,9 +153,10 @@ document
     let numeroAEstablecer = carritoProductos.length;
 
     numCarrito.innerText = numeroAEstablecer;
-
     divNumero.style.display = numeroAEstablecer > 0 ? 'flex' : 'none';
 }
+  
+
 function sumarCantidad(id) {
   const producto = carritoProductos.find(item => item.id === id);
 
@@ -235,7 +236,6 @@ function EnviarDatosCarrito() {
   EnviarDatosCarrito();
 
   function EnviarDatosenvio() {
-  
 let sumaTotal = 0;
 for (let i = 0; i < carritoProductos.length; i++) {
    sumaTotal += carritoProductos[i].total;  

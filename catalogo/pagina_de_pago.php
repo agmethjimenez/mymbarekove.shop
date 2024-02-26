@@ -92,7 +92,7 @@ if ((!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido']
        
     
 
-       <!--<div id="paypal-button-container"></div>-->
+
        
     </form>
     <?php
@@ -129,11 +129,13 @@ if ((!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido']
 
 
 <script src="https://www.paypal.com/sdk/js?client-id=AXQFJwWBjQV3Hj3-eoEAIsMnkeihyoXhn_ejJSSvEN-2J0Dboodk93HqtbgaH9kMjAfJu8wYUm3VA7oE&currency=COP"></script>
+
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 
 <script>
     function tablear(){
-        let productos = JSON.parse(localStorage.getItem("carritoProductos"));
+
+    let productos = JSON.parse(localStorage.getItem("carritoProductos"));
     let tbody = document.getElementById("tablecart");
     let options = document.getElementById("options");
     tbody.innerHTML = "";
@@ -161,7 +163,7 @@ if ((!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido']
 `;
       options.appendChild(divtotalyvaciar);
     });
-    }
+}
     tablear();
     
 

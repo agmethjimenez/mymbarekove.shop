@@ -20,6 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $verificarStmt->bind_param("ss", $idPedido, $idproducto);
         $verificarStmt->execute();
         
+
+        $verificarStmt->bind_result($idPedidoExistente, $idProductoExistente, $cantidadExistente, $precioExistente);
+
+        $verificarStmt->fetch();
+    
         // Bind the result
         $verificarStmt->bind_result($idPedidoExistente, $idProductoExistente, $cantidadExistente, $precioExistente);
 

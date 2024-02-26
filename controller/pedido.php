@@ -15,6 +15,7 @@ switch($metodo){
         echo json_encode($pedido->GetPedidos());
         break;
 
+
         case 'POST':
             $jsonData = file_get_contents('php://input');
             $pedido_data = json_decode($jsonData, true);
@@ -37,4 +38,7 @@ switch($metodo){
                 echo json_encode(array('exito' => false, 'mensaje' => 'Error en el pedido: ' . $e->getMessage()));
             }
         break;
+
+        
+
 }
