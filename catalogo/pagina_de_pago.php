@@ -87,11 +87,16 @@ if ((!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido']
        <i class="fa-solid fa-minus"></i>
        <input type="text" class="input is-success" name="numero2" id="numero2" placeholder="-" required>
        </div>   
+<<<<<<< HEAD
        <input type="text" class="input is-success" name="home" id="home" placeholder="Torre/Apto-Casa" >
        <button type="submit"  name="checkdirection" class="button is-black">Añadir Direccion</button>
        
     
 
+=======
+       <input type="text" class="input is-success" id="home" placeholder="Torre/Apto-Casa" >
+       <button type="submit" class="button is-black">Realizar Pedido</button>
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
        <!--<div id="paypal-button-container"></div>-->
        
     </form>
@@ -129,11 +134,17 @@ if ((!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido']
 
 
 <script src="https://www.paypal.com/sdk/js?client-id=AXQFJwWBjQV3Hj3-eoEAIsMnkeihyoXhn_ejJSSvEN-2J0Dboodk93HqtbgaH9kMjAfJu8wYUm3VA7oE&currency=COP"></script>
+<<<<<<< HEAD
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 
 <script>
     function tablear(){
         let productos = JSON.parse(localStorage.getItem("carritoProductos"));
+=======
+
+<script>
+    let productos = JSON.parse(localStorage.getItem("carritoProductos"));
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
     let tbody = document.getElementById("tablecart");
     let options = document.getElementById("options");
     tbody.innerHTML = "";
@@ -151,6 +162,7 @@ if ((!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido']
             <td>$${product.total}</td>
             <td><button class="button is-black" id="botonquitar" onclick="eliminarProducto('${product.id}')"><i class="fa-solid fa-trash"></i></button></td>
         `;
+<<<<<<< HEAD
 
         tbody.appendChild(row);
         
@@ -166,6 +178,10 @@ if ((!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido']
     
 
     
+=======
+        tbody.appendChild(row);
+    });
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
 </script>
 
 <script src="carrito.js"></script>

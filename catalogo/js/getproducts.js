@@ -25,13 +25,20 @@ fetch(url, {
       // Mostrar productos filtrados
       productosFiltradosPorBusqueda.forEach(producto => {
           let divproducto = document.createElement("div");
+<<<<<<< HEAD
           const precioFormateado = producto.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+=======
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
           divproducto.className = "producto";
           divproducto.innerHTML = `<img src="${producto.imagen}" alt="">
           <div class="informacion">
           <p>${producto.nombre}</p>
+<<<<<<< HEAD
           
           <p class="precio">$${precioFormateado} </p>
+=======
+          <p class="precio">$${producto.precio} </p>
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
           <button class="comprar" onclick="agregarAlCarrito('${producto.nombre}',${producto.precio},'${producto.idProducto}',1,'${producto.imagen}')">Comprar</button>
           <button class="detalles" id="detalles"><a href="../catalogo/paginaproducto.php?id=${producto.idProducto}" class="dety">Detalles</a></button>
           </div>`;

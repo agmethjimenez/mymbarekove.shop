@@ -109,6 +109,11 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
                 echo '<p class="date">Fecha del Pedido:'.$row['fecha'].'</p>';
                 echo '<p class="date">Direccion:'. $row['direccion'].'</p>';
                 echo '<p class="date">Ciudad:'. $row['ciudad'].'</p>';
+<<<<<<< HEAD
+=======
+
+                echo '<p class="status" data-estado="Finalizado">Estado: '.$row['estado'].'</p>';
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
                 echo '</div>';
                 echo '<a href="detallepedido.php?id='.$row['idPedido'].'" class="details-link">Ver Detalles</a>';
                 echo '</div>'; 

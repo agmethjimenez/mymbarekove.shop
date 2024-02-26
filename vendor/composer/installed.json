@@ -1,6 +1,7 @@
 {
     "packages": [
         {
+<<<<<<< HEAD
             "name": "doctrine/annotations",
             "version": "1.14.3",
             "version_normalized": "1.14.3.0",
@@ -501,6 +502,8 @@
             "install-path": "../doctrine/persistence"
         },
         {
+=======
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
             "name": "dompdf/dompdf",
             "version": "v2.0.4",
             "version_normalized": "2.0.4.0",
@@ -636,6 +639,7 @@
             "install-path": "../masterminds/html5"
         },
         {
+<<<<<<< HEAD
             "name": "mercadopago/dx-php",
             "version": "2.6.2",
             "version_normalized": "2.6.2.0",
@@ -690,6 +694,8 @@
             "install-path": "../mercadopago/dx-php"
         },
         {
+=======
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
             "name": "phenx/php-font-lib",
             "version": "0.5.6",
             "version_normalized": "0.5.6.0",
@@ -870,6 +876,7 @@
             "install-path": "../phpmailer/phpmailer"
         },
         {
+<<<<<<< HEAD
             "name": "psr/cache",
             "version": "1.0.1",
             "version_normalized": "1.0.1.0",
@@ -922,6 +929,8 @@
             "install-path": "../psr/cache"
         },
         {
+=======
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
             "name": "sabberworm/php-css-parser",
             "version": "v8.5.1",
             "version_normalized": "8.5.1.0",

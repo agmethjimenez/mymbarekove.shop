@@ -3,7 +3,11 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
+<<<<<<< HEAD
         'reference' => 'd1fe0a4b0cbdb24cddc6c12736d92c36116358d2',
+=======
+        'reference' => '2aad6ba66199c1f80c6c0573df4008b806a95226',
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,12 +17,17 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
+<<<<<<< HEAD
             'reference' => 'd1fe0a4b0cbdb24cddc6c12736d92c36116358d2',
+=======
+            'reference' => '2aad6ba66199c1f80c6c0573df4008b806a95226',
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+<<<<<<< HEAD
         'doctrine/annotations' => array(
             'pretty_version' => '1.14.3',
             'version' => '1.14.3.0',
@@ -73,6 +82,8 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+=======
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
         'dompdf/dompdf' => array(
             'pretty_version' => 'v2.0.4',
             'version' => '2.0.4.0',
@@ -91,6 +102,7 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+<<<<<<< HEAD
         'mercadopago/dx-php' => array(
             'pretty_version' => '2.6.2',
             'version' => '2.6.2.0',
@@ -100,6 +112,8 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+=======
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
         'phenx/php-font-lib' => array(
             'pretty_version' => '0.5.6',
             'version' => '0.5.6.0',
@@ -127,6 +141,7 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+<<<<<<< HEAD
         'psr/cache' => array(
             'pretty_version' => '1.0.1',
             'version' => '1.0.1.0',
@@ -136,6 +151,8 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+=======
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
         'sabberworm/php-css-parser' => array(
             'pretty_version' => 'v8.5.1',
             'version' => '8.5.1.0',
