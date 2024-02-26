@@ -1,4 +1,3 @@
-
 let carritoProductos =   JSON.parse(localStorage.getItem("carritoProductos")) || [];
 numerito();
 function agregarAlCarrito(nombre, precio, id, cantidad = 1, imagen) {

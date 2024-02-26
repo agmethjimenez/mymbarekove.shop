@@ -3,7 +3,7 @@
 //$database = new Database();
 //$conexion = $database->connect();
 
-class Pedido{
+class Pedido {
     /*public function Traerpedido($id_usuario,$id_pedido,$ciudad, $direccion, $producto, $cantidad, $total){
         global $conexion;
         $conexion->begin_transaction();
@@ -71,6 +71,38 @@ class Pedido{
         $respuesta = array('exito' => false, 'mensaje' => 'Error en la transacción: ' . $e->getMessage());
         return json_encode($respuesta);
     }
+    public function actualizarTotal($idpedido){
+        global $conexion;
+        $tottQuery = "SELECT SUM(dp.total) AS total_pedido FROM detallepedido as dp WHERE dp.idPedido = '$idpedido'";
+        $resultTott = $conexion->query($tottQuery);
+        // Verificar si la consulta fue exitosa
+        if ($resultTott) {
+            // Obtener el resultado como un array asociativo
+            $totalRow = $resultTott->fetch_assoc();
+            // Obtener el total
+            $total_pedido = $totalRow['total_pedido'];
+            $actualizartotal = "UPDATE pedidos SET total = ? WHERE idPedido = ?";
+            $binactualizartotal = $conexion->prepare($actualizartotal);
+            $binactualizartotal->bind_param("ss", $total_pedido, $idpedido);
+            $binactualizartotal->execute();
+        }
+    }
+
+    public function GetPedidos(){
+        global $conexion;
+        $sql = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha, p.total, e.estado FROM pedidos as p 
+        INNER JOIN estados as e ON p.estado = e.codEst;";
+
+    $resultados = array();
+
+        if ($resultado = $conexion->query($sql)) {
+            while ($fila = $resultado->fetch_assoc()) {
+                $resultados[] = $fila;
+            }
+            $resultado->free();
+        }
+        return $resultados;
+}
 }
     public function actualizarTotal($idpedido){
         global $conexion;
