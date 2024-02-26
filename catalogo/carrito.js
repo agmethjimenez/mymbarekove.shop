@@ -153,16 +153,10 @@ document
     let numeroAEstablecer = carritoProductos.length;
 
     numCarrito.innerText = numeroAEstablecer;
-<<<<<<< HEAD
-=======
-
     divNumero.style.display = numeroAEstablecer > 0 ? 'flex' : 'none';
 }
   
->>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
 
-    divNumero.style.display = numeroAEstablecer > 0 ? 'flex' : 'none';
-}
 function sumarCantidad(id) {
   const producto = carritoProductos.find(item => item.id === id);
 
@@ -242,10 +236,6 @@ function EnviarDatosCarrito() {
   EnviarDatosCarrito();
 
   function EnviarDatosenvio() {
-<<<<<<< HEAD
-  
-=======
->>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
 let sumaTotal = 0;
 for (let i = 0; i < carritoProductos.length; i++) {
    sumaTotal += carritoProductos[i].total;  

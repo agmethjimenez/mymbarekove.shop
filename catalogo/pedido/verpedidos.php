@@ -4,16 +4,11 @@ $database = new Database();
 $conexion = $database->connect();
 session_start();
 if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])) {
-    if (!isset($_COOKIE['usuario_nombre']) || !isset($_COOKIE['usuario_apellido']) || !isset($_COOKIE['id_usuario'])) {
-        header("Location: login.php");
-        exit();
-    } else {
-        $id_users = $_COOKIE['id_usuario'];
-    }
-} else {
-    $id_users = $_SESSION['id_usuario'];
+    header("Location: login.php");
+    exit();
 }
-    $sql = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha,p.total, e.estado FROM pedidos as p 
+    $id_users = $_SESSION['id_usuario'];
+    $sql = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha, e.estado FROM pedidos as p 
     INNER JOIN estados as e ON p.estado = e.codEst WHERE p.usuario = '$id_users'";
     $result = $conexion->query($sql);
 
@@ -38,8 +33,6 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
             color: #fff;
             text-align: center;
             padding: 10px;
-            display: flex;
-            justify-content: space-between;
         }
 
         .container {
@@ -93,9 +86,7 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
 </head>
 <body>
     <header>
-        <span><a href="../catalogo.php">Volver</a></span>
         <h1>Tus Pedidos</h1>
-        <H1></H1>
     </header>
 
     <div class="container">
@@ -105,15 +96,9 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
                 echo '<div class="order" id="order1">';
                 echo '<div class="order-info">';
                 echo '<h2>Pedido #'. $row['idPedido'].'</h2>';
-                echo '<p class="date">Total: COP $'.$row['total'].'</p>';
                 echo '<p class="date">Fecha del Pedido:'.$row['fecha'].'</p>';
                 echo '<p class="date">Direccion:'. $row['direccion'].'</p>';
                 echo '<p class="date">Ciudad:'. $row['ciudad'].'</p>';
-<<<<<<< HEAD
-=======
-
-                echo '<p class="status" data-estado="Finalizado">Estado: '.$row['estado'].'</p>';
->>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
                 echo '</div>';
                 echo '<a href="detallepedido.php?id='.$row['idPedido'].'" class="details-link">Ver Detalles</a>';
                 echo '</div>'; 

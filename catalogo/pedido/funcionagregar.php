@@ -20,12 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $verificarStmt->bind_param("ss", $idPedido, $idproducto);
         $verificarStmt->execute();
         
-<<<<<<< HEAD
+
         $verificarStmt->bind_result($idPedidoExistente, $idProductoExistente, $cantidadExistente, $precioExistente);
 
         $verificarStmt->fetch();
-        
-=======
+    
         // Bind the result
         $verificarStmt->bind_result($idPedidoExistente, $idProductoExistente, $cantidadExistente, $precioExistente);
 
@@ -33,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $verificarStmt->fetch();
         
         // Check if there are any rows with the same idPedido and idProducto
->>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
         if ($idPedidoExistente !== null) {
             echo json_encode(['bien' => false, 'mensaje' => 'El producto ya está agregado']);
         } else {
