@@ -2,6 +2,11 @@
     "require": {
         "phpmailer/phpmailer": "^6.9",
         "tecnickcom/tcpdf": "^6.6",
+<<<<<<< HEAD
+        "dompdf/dompdf": "^2.0",
+        "mercadopago/dx-php": "^2.6"
+=======
         "dompdf/dompdf": "^2.0"
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
     }
 }

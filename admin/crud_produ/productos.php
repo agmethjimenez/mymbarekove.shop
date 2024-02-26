@@ -65,7 +65,7 @@
 
                         $imagenBLOB = $row["imagen"];
 
-                        echo '<td><img src="../../catalogo/imgs/productos/'. $imagenBLOB .'" alt="" width="70px"></td>';
+                        echo '<td><img src="'. $imagenBLOB .'" alt="" width="70px"></td>';
                         echo '<td><a href="update.php?id=' . $row["idProducto"] . '" class="button is-link">Editar</a> <a href="delete.php?id=' . $row["idProducto"] . '" class="button is-danger">Desactivar</a></td>';
 
                         echo "</tr>";

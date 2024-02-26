@@ -187,6 +187,10 @@ if($pedido['estad'] = "Pendiente" ){
                 <p class="date">Fecha del Pedido: <?php echo $pedido['fecha']; ?></p>
                 <p class="date">Direccion: <?php echo $pedido['direccion']; ?></p>
                 <p class="date">Ciudad: <?php echo $pedido['ciudad']; ?></p>
+<<<<<<< HEAD
+            </div>
+        </div>
+=======
                 <p class="status" data-estado=<?php echo $pedido['estad'] ?>>Estado: <?php echo $pedido['estad']; ?></p>
             </div>
         </div>
@@ -200,6 +204,7 @@ if($pedido['estad'] = "Pendiente" ){
             $pruebaeditarpedido = true;
         }
         ?>
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
         <table  class="table" id="order-details">
             <thead>
                 <tr>
@@ -208,9 +213,12 @@ if($pedido['estad'] = "Pendiente" ){
                     <th>Precio</th>
                     <th>Cantidad</th>
                     <th>Total</th>
+<<<<<<< HEAD
+=======
                     <?php if($pruebapedido){ ?>
                     <th>Acciones</th>
                          <?php } ?>
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
                     
                 </tr>
             </thead>
@@ -224,9 +232,12 @@ if($pedido['estad'] = "Pendiente" ){
                         echo '<td>$' . htmlspecialchars($detalle['precio']) . '</td>';
                         echo '<td>' . htmlspecialchars($detalle['cantidad']) . '</td>';
                         echo '<td>$' . htmlspecialchars($detalle['total']) . '</td>';
+<<<<<<< HEAD
+=======
                         if ($pruebapedido) {
                         echo '<td><a href="borrarproducto.php?pedido='. $idPedido.'&producto='. $detalle['idProducto'] .'" class="button is-black">Quitar</a><a href="restarproducto.php?pedido='. $idPedido.'&producto='. $detalle['idProducto'] .'" class="button is-black">-</a> <a href="sumarproducto.php?pedido='. $idPedido.'&producto='. $detalle['idProducto'] .'" class="button is-black">+</a> </td>' ;
                         }
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
                         echo '<td>';
                         echo '</tr>';
                     }
@@ -258,6 +269,8 @@ if($pedido['estad'] = "Pendiente" ){
         ?>
         <h1></h1>
         <a class="button is-warning" href="verpedidos.php" class="details-link">Volver a Tus Pedidos</a>
+<<<<<<< HEAD
+=======
         <?php if($pruebaeditarpedido){ ?>
         <a href="agregarapedido.php?pedido=<?php echo $idPedido  ?>" class="button is-link" class="details-link">Agregar</a>
         <?php } ?>
@@ -265,6 +278,7 @@ if($pedido['estad'] = "Pendiente" ){
         <a class="button is-danger" id="btncancelarpedido" onclick="openModal()" class="details-link">Cancelar Pedido</a>
 <!--<a href="imprimirpdf.php?pedido=<?php echo $idPedido ?>" class="button is-link">Imprimir</a>-->
         <?php }?>
+>>>>>>> 0e7a01b82411c8aa111d8d161d543b831ca461ee
         <div class="modal" id="myModal">
     <div class="modal-content">
         <p>¿Estás seguro de cancelar el pedido? Ten en cuenta que no podras deshacer esta accion.</p>

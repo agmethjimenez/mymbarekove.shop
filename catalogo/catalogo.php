@@ -18,7 +18,19 @@ $conexion->set_charset("utf8");
   <link rel="stylesheet" href="./css/estilo.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 </head>
-<?php include_once("header.php"); ?>
+<?php include_once("header.php"); 
+echo json_encode($_SESSION['carrito']) ;
+
+if (isset($_SESSION['carrito'])) {
+    $productos = $_SESSION['carrito'];
+
+    echo "<ul>";
+    foreach ($productos as $producto) {
+        echo "<li>" . $producto['nombre'] . " (" . $producto['cantidad'] . " unidades) - Precio: $" . $producto['precio'] . "</li>";
+    }
+    echo "</ul>";
+}
+?>
 <body>
 <div class="title1">
     <h1>Todo lo que necesitas</h1>
@@ -72,6 +84,7 @@ $conexion->set_charset("utf8");
 
 <script src="carrito.js"></script>
 <script src="./js/getproducts.js"></script>
+<script src="./js/guardarcarrito.js"></script>
 <script>
   document.getElementById("abrir-panel").addEventListener("click",function(){
     document.getElementById("panel").style.display = "flex";

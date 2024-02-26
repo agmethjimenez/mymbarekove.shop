@@ -6,7 +6,7 @@ class Producto
         global $conexion;
         $sql = "SELECT p.idProducto, pr.nombreP as proveedor,p.nombre,p.precio, ca.descripcion as categoria, p.imagen from productos as p 
         INNER JOIN proveedores as pr ON p.proveedor = pr.idProveedor 
-        INNER JOIN categorias as ca ON p.categoria = ca.categoria WHERE p.activo = 1";
+        INNER JOIN categorias as ca ON p.categoria = ca.categoria WHERE p.activo = 1 AND p.cantidadDisponible > 1";
 
     $resultados = array();
 

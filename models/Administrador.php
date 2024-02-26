@@ -54,5 +54,12 @@ class Admin{
         }
 
     }
+
+    public function AgregarMarca($nombre) {
+        global $conexion;
+        $sql = "INSERT INTO marcas (marca) VALUES (?)";
+    
+        return $conexion->prepare($sql)->execute([$nombre]);
+    }
 }
 ?>
