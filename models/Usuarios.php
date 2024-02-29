@@ -15,47 +15,37 @@ class Usuario
     $conexion->begin_transaction();
 
     include_once '../catalogo/verificarcorreo.php';
-    if($enviado) {
-    $sql = "INSERT INTO usuarios (identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email, activo)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
-    $bin = $conexion->prepare($sql);
-    $bin->bind_param("ssssssss", $id_usuario, $tipoid, $name1, $name2, $lastname1, $lastname2, $telefono, $email);
 
-    if ($bin->execute()) { 
-        $token = bin2hex(random_bytes(16));
-        $id_aut = $conexion->insert_id;
-        $sql2 = "INSERT INTO credenciales (id, email,token, codigo, fecha_cambio, password) VALUES (?, ?, ?, ?,NOW(), ?)";
-        $bin2 = $conexion->prepare($sql2);
-        $bin2->bind_param("sssss", $id_aut, $email,$token,$codigo, $hashedPassword);
+    if ($enviado) {
+        $sql = "INSERT INTO usuarios (identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email, activo)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
+        $bin = $conexion->prepare($sql);
+        $bin->bind_param("ssssssss", $id_usuario, $tipoid, $name1, $name2, $lastname1, $lastname2, $telefono, $email);
 
-        if ($bin2->execute()) {
-            echo '<div class="message is-primary" id="message">';
-            echo '<p>Registrado</p>';
-            echo '<a class="button is-primary" href="login.php">Inicia Sesion</a>';
-            echo '</div>';
+        if ($bin->execute()) {
+            $token = bin2hex(random_bytes(16));
+            $id_aut = $conexion->insert_id;
+            $sql2 = "INSERT INTO credenciales (id, email, token, codigo, fecha_cambio, password) VALUES (?, ?, ?, ?, NOW(), ?)";
+            $bin2 = $conexion->prepare($sql2);
+            $codigo = rand(1000,9999); // ¡Asegúrate de tener un valor adecuado para $codigo!
+            $bin2->bind_param("sssss", $id_aut, $email, $token, $codigo, $hashedPassword);
+
+            if ($bin2->execute()) {
+                $conexion->commit();
+                return ["success" => true, "mensaje" => "Registrado"];
+            } else {
+                $conexion->rollback();
+                return ["success" => false, "mensaje" => "Error al registrar"];
+            }
 
         } else {
-            echo '<div class="message is-danger" id="message">';
-            echo '<p>Error al registrar el usuario de credenciales: ' . $bin2->error . '</p>';
-            echo '</div>';
             $conexion->rollback();
-            return;
+            return ["success" => false, "mensaje" => "Error al registrar el usuario: " . $conexion->error];
         }
-
     } else {
-        echo "Error al registrar el usuario: " . $conexion->error;
-        $conexion->rollback();
-        return;
+        return ["success" => false, "mensaje" => "Error al verificar correo"];
     }
-    $conexion->commit();
-}else{
-    echo '<div class="message is-danger" id="message">';
-    echo '<p>Error al verificar correo' . $bin2->error . '</p>';
-    echo '</div>';
-   
 }
-}
-
 
     
 

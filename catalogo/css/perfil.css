@@ -1,18 +1,21 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
-*{
+
+* {
     margin: 0;
     padding: 0;
 }
-body{
+
+body {
     font-family: 'Oxygen', sans-serif;
     background-color: #F2E2CE;
 }
-.wrapper{
+
+.wrapper {
     display: flex;
 }
-#options{
+
+#options {
     padding: 15px;
     background-color: #594A3C;
     width: 20%;
@@ -21,6 +24,7 @@ body{
     flex-direction: column;
     position: static;
 }
+
 #options ul {
     height: 100vh;
     display: flex;
@@ -38,49 +42,102 @@ body{
     background-color: white;
     text-decoration: none;
 }
+
 #options ul li a {
     text-decoration: none;
     color: #000000;
 }
-.titulo{
+
+.titulo {
     font-weight: bold;
     font-size: 34px;
 }
-.info{
+
+.info {
     display: flex;
     flex-grow: 2;
     padding: 30px;
     flex-direction: column;
     gap: 5%;
 }
-.info .inf strong{
-    font-size: 25px
+
+.info .inf strong {
+    font-size: 25px;
 }
-.info .inf{
+
+.info .inf {
     font-size: 20px;
 }
-.actualizardatos{
+
+.actualizardatos {
     height: 100vh;
     display: none;
     flex-grow: 2;
     padding: 30px;
     flex-direction: column;
     gap: 5%;
+    overflow-y: auto;
 }
-.actualizardatos form{
+
+.actualizardatos form {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    gap: 50px;
+    gap: 20px;
     flex-direction: column;
 }
-.input{
-    width: 400px;
+
+.input {
+    width: 100%;
+    max-width: 400px;
 }
-.actualizardatos form .con1,.con2,.con3,.con4{
+
+.actualizardatos form .con1,
+.actualizardatos form .con2,
+.actualizardatos form .con3,
+.actualizardatos form .con4 {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
 }
-#message{
+
+#message {
     padding: 20px;
+}
+
+/* Aplicar estilos específicos para pantallas más pequeñas */
+@media screen and (max-width: 768px) {
+    .wrapper {
+        flex-direction: column;
+    }
+
+    #options {
+        height: auto;
+        width: auto;
+        order: 2;
+    }
+
+    #options ul {
+        height: auto;
+    }
+
+    #options ul li {
+        margin-bottom: 10px;
+    }
+
+    .actualizardatos,
+    .info {
+        padding: 20px;
+    }
+
+    .input {
+        max-width: 100%;
+    }
+
+    .actualizardatos form .con1,
+    .actualizardatos form .con2,
+    .actualizardatos form .con3,
+    .actualizardatos form .con4 {
+        flex-direction: column;
+    }
 }

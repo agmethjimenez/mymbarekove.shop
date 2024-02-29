@@ -502,7 +502,7 @@ cursor: pointer;
     </style>
 </head>
 <body>
-    <header>
+    <!--<header>
         <ul id="navegar">
             <li algin="right">
                 <div>
@@ -527,7 +527,7 @@ cursor: pointer;
             </li>
             <li class="right-item"><a href="catalogo/catalogo.php">Tienda</a></li>
         </ul>
-    </header>
+    </header>-->
 
             <section class="hero_container">
                 <div class="hero_texts">

@@ -19,69 +19,96 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../imgs/productos/Copia de Logo veterinaria animado azul rosado.png">
+
     <title>Tus Pedidos</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #F2E2CE ;
-        }
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #F2E2CE;
+}
 
-        header {
-            background-color: #594A3C;
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-        }
+header {
+    background-color: #594A3C;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
 
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-        .order {
-            border-bottom: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.order {
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .order-info {
-            flex: 1;
-        }
+.order-info {
+    flex: 1;
+}
 
-        .order h2 {
-            margin-bottom: 5px;
-        }
+.order h2 {
+    margin-bottom: 5px;
+}
 
-        .order .date {
-            color: #777;
-        }
+.order .date {
+    color: #777;
+}
 
-        .order .status {
-            font-weight: bold;
-            color: green; /* Puedes cambiar el color según el estado (cancelado, finalizado, etc.) */
-        }
+.order .status {
+    font-weight: bold;
+    color: green;
+}
 
-        .details-link {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-        }
-        .alert {
-            background-color: #ffcccc;
-            color: #cc0000;
-            text-align: center;
-            padding: 10px;
-            border-radius: 8px;
-        }
+.details-link {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.alert {
+    background-color: #ffcccc;
+    color: #cc0000;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* Estilos específicos para pantallas más pequeñas */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .order {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+
+    .details-link {
+        margin-top: 10px;
+    }
+    .order-info {
+                 flex: 1;
+                 font-size: 14px;
+            }
+}
+
     </style>
 </head>
 <body>

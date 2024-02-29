@@ -7,6 +7,7 @@ session_start();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
     <link rel="stylesheet" href="./css/estilo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" type="image/png" href="imgs/productos/Copia de Logo veterinaria animado azul rosado.png">
 </head>
 <header>
     <div class="logo-container">
@@ -14,25 +15,25 @@ session_start();
     </div>
     <div class="ssa" style="display: flex; justify-content: center; align-items: center;">
         <input class="input is-primary" id="searchin" type="search" placeholder="¿Que producto buscas">
-        <button class="button is-black" id="buscarbtn" onclick="buscarProductos()">Buscar</button>  
+        <button class="button is-black" id="buscarbtn" onclick="buscarProductos()"><i class="fa-solid fa-magnifying-glass"></i></button>  
     </div>
         
 
     <nav class="navigation">
       <div class="cart-container">
-        
-        <img class="carrito" src="imgs/productos/carshop.png" alt="carrito-compras">
+        <a class="carrito" id="carrito" href="pagina_de_pago.php" style="color: black;">
+        <i class="fa-solid fa-cart-shopping fa-2xl"></i>        </a>
         <div class="addcart" id="addcart">
           <p id="numcarrito" style="color: white;"></p>
         </div>
-        <div id="carritoFlotante" class="carrito-flotante">
+        <!--<div id="carritoFlotante" class="carrito-flotante">
           <div class="car-head">
             <h1>CARRITO DE COMPRAS</h1>
             <span id="carrito-cerrar">X</span>
           </div>
           <div class="carrito-contenido" id="carritoContenido"></div>
 
-        </div>
+        </div>-->
       </div>
       <label for="menu-toggle" class="menu-icon">
         <span class="bar"></span>
@@ -77,7 +78,8 @@ session_start();
           setcookie('usuario_apellido', $apellido, time() + 3600, '/');
       
           // Muestra la información del usuario y el botón de salida
-          echo '<span class="tag is-link is-medium" id="user"><i class="fa-solid fa-circle-user fa-lg"></i><a href="perfil.php">' . $nombre . ' ' . $apellido . '</a></span> ';
+          //echo '<span class="tag is-link is-medium" id="user"><i class="fa-solid fa-circle-user fa-lg"></i><a href="perfil.php">' . $nombre . ' ' . $apellido . '</a></span> ';
+          echo '<a href="perfil.php" style="color:black;"><i class="fa-solid fa-circle-user fa-2xl" style="color: #FFD43B;"></i></a>';
           echo '<form action="./logout.php" method="post">';
           echo '<button type="submit" class="acceso">Salir</button>';
           echo '</form>';

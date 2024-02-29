@@ -13,6 +13,8 @@ require_once("../controller/users.php");
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="./css/perfil.css">
+    <link rel="icon" type="image/png" href="imgs/productos/Copia de Logo veterinaria animado azul rosado.png">
+
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="./js/perfil.js"></script>
     <title>Perfil</title>

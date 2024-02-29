@@ -6,6 +6,16 @@ $usuario = new Usuario();
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 switch($metodo){
+    case 'POST':
+        $data = json_decode(file_get_contents('php://input'), true);
+        $result = $usuario->registrarse($data['identificacion'], $data['tipoid'], $data['nombre1'], $data['nombre2'], $data['apellido1'], $data['apellido2'], $data['telefono'], $data['email'], $data['password']);
+    
+        if ($result["success"]) {
+            echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));
+        } else {
+            echo json_encode(array('exito' => false, 'mensaje' => $result['mensaje']));
+        }
+        break;
     case 'PUT':
         $jsonData = file_get_contents('php://input');
         $usuario_data = json_decode($jsonData, true);

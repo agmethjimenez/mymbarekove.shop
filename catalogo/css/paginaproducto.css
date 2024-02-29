@@ -1,12 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
-body{
+
+body {
     background-color: white;
     height: 100vh;
+    margin: 0;
+    font-family: 'Oxygen', sans-serif;
 }
 
-main{
-    
+main {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -16,9 +18,10 @@ main{
     align-items: center;
     gap: 80px;
     width: 100%;
-overflow-y: auto;
+    overflow-y: auto;
 }
-.imagenpro{
+
+.imagenpro {
     height: 100vh;
     background-color: white;
     display: flex;
@@ -28,21 +31,23 @@ overflow-y: auto;
     padding: 40px;
     width: 40%;
 }
-.imagenpro img{
+
+.imagenpro img {
     width: 400px;
     object-fit: contain;
 }
-.detalles{
-    height: 100vh;
+
+.detalles {
+    height: auto;
     background-color: white;
     display: flex;
     flex-direction: column;
-    
     gap: 30px;
     padding: 60px;
     width: 35%;
 }
-.comprar{
+
+.comprar {
     background-color: #000;
     color: white;
     border-radius: 20px;
@@ -52,10 +57,42 @@ overflow-y: auto;
     cursor: pointer;
     padding: 1rem;
 }
-.detalles .descripcion p{
+
+.detalles .descripcion p {
     width: 400px;
 }
-.detalles .nombre h4{
+
+.detalles .nombre h4 {
     font-weight: bolder;
     font-size: 24px;
+}
+
+/* Aplicar estilos específicos para pantallas más pequeñas */
+@media screen and (max-width: 768px) {
+    main {
+        gap: 20px; /* Ajusta el espacio entre elementos en pantallas más pequeñas */
+    }
+    .imagenpro{
+        height: auto;
+    }
+
+    .imagenpro, .detalles {
+        width: auto; /* Haz que ambos ocupen el 100% del ancho en pantallas más pequeñas */
+        padding: 20px; /* Añade espacio alrededor de ambos en pantallas más pequeñas */
+    }
+
+    .imagenpro img {
+        width: 100%; /* Ajusta la imagen al ancho completo de su contenedor en pantallas más pequeñas */
+        max-width: none; /* Elimina el ancho máximo en pantallas más pequeñas */
+    }
+
+    .comprar {
+        width: 100%; /* Haz que el botón ocupe el 100% del ancho en pantallas más pequeñas */
+        max-width: none; /* Elimina el ancho máximo en pantallas más pequeñas */
+    }
+
+    .detalles .descripcion p {
+        width: 100%;
+        font-size: 15px; /* Haz que el texto ocupe el 100% del ancho en pantallas más pequeñas */
+    }
 }

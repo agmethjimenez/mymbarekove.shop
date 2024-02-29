@@ -1,6 +1,4 @@
 <?php
-//require_once("../../database/conexion.php");
-//require_once("C:/Program Files/Ampps/www/mymbarekove.shop/database/conexion.php");
 
 class Admin{
     public function Registro($username, $email, $password){
@@ -60,6 +58,21 @@ class Admin{
         $sql = "INSERT INTO marcas (marca) VALUES (?)";
     
         return $conexion->prepare($sql)->execute([$nombre]);
+    }
+    public function DesactivarUsuario($id){
+        global $conexion;
+        $desactivacion1 = "UPDATE usuarios SET activo = 0 WHERE id = ?";
+        
+        if ($conexion->prepare($desactivacion1)->execute([$id])) {
+            $desactivacion2 = "UPDATE credenciales SET activo = 0 WHERE id = ?";
+            if($conexion->prepare($desactivacion2)->execute([$id])){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
     }
 }
 ?>

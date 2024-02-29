@@ -51,7 +51,11 @@ class Producto
         WHERE p.idProducto = '$id'";
         $result = $conexion->query($sql);
         $row = $result->fetch_assoc();
+        
         if($result->num_rows > 0){
+            //$formatoPesos = new NumberFormatter('es-CO', NumberFormatter::CURRENCY);
+            //$precioFormateado = $formatoPesos->formatCurrency($row['precio'], 'COP');
+            $numeroFormateadoo = number_format($row['precio'], 0, ',', '.');
             $imagenBLOB = $row['imagen'];
             echo '<div class="imagenpro">';
             echo '<img src="'. $imagenBLOB .'" alt="">';
@@ -59,12 +63,12 @@ class Producto
             echo '<div class="detalles">';
             echo '<div class="nombre"><h4>'. $row['nombre'] .'</h4></div>';
             echo '<div class="categoria"><p>Categoria:'. $row['descripcion'] .' </p></div>';
-            echo '<div class="precio"><p>Precio: $'. $row['precio'] .'</p></div>';
+            echo '<div class="precio"><p>Precio: $'. $numeroFormateadoo .'</p></div>';
             echo '<div class="descripcion"><p>Descripcion:<br> '. $row['descripcionP'] .'</p></div>';
             echo '<div class="contenido"><p>Contenido: '. $row['contenido'] .'</p></div>';
             echo '<div class="marca"><p>Marca: '. $row['marca'] .'</p></div>';   
             echo '<div class="disponibles"><p>Disponible: '. $row['cantidadDisponible'] .'</p></div>';
-            echo '<button class="comprar" onclick="agregarAlCarrito(\'' . $row['nombre'] . '\',' . $row['precio'] . ',\'' . $row['idProducto'] . '\',1,\'' . $imagenBLOB . '\')">Comprar</button>';
+            echo '<button class="comprar" onclick="agregarAlCarrito(\'' . $row['nombre'] . '\',' . $row['precio'] . ',\'' . $row['idProducto'] . '\',1,\'' . $imagenBLOB . '\')">Agregar al carrito <i class="fa-solid fa-cart-plus fa-lg"></i></button>';
             echo '</div>';           
         }
 

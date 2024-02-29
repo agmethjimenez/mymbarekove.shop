@@ -79,6 +79,8 @@ if($pedido['estad'] = "Pendiente" ){
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="icon" type="image/png" href="../imgs/productos/Copia de Logo veterinaria animado azul rosado.png">
+
     <title>Detalle del Pedido</title>
     <style>
         /* Estilos CSS similares a los usados anteriormente */
@@ -100,22 +102,24 @@ if($pedido['estad'] = "Pendiente" ){
         padding: 10px;
     }
     .container {
-        max-width: 800px;
+        width: 60%;
         margin: 20px auto;
         background-color: #fff;
         padding: 20px;
-        height: auto;
+        /*height: auto;*/
         border-radius: 8px;
         overflow-y: auto;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
     }
     .order {
         border-bottom: 1px solid #ccc;
         padding: 10px;
         margin-bottom: 10px;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        justify-content: flex-start;
+        width: auto;
     }
     .order-info {
         flex: 1;
@@ -174,6 +178,26 @@ if($pedido['estad'] = "Pendiente" ){
         .button {
             margin: 0 10px;
         }
+        @media screen and (max-width: 768px) {
+            .container{
+                overflow-y: auto;
+                width: auto;
+                height: auto;
+                padding: 4px;
+            }
+            orderdetails{
+                font-size: 15px;
+            }
+            #orderdetails td{
+                padding: 3px;
+                font-size: 14px;
+            }
+            #orderdetails th{
+                padding: 3px;
+                font-size: 14px;
+            }
+            
+        }
 </style>
 <body>
     <header>
@@ -189,10 +213,10 @@ if($pedido['estad'] = "Pendiente" ){
                 <p class="date">Ciudad: <?php echo $pedido['ciudad']; ?></p>
             </div>
         </div>
-        <table  class="table" id="order-details">
+        <table  class="table" id="orderdetails">
             <thead>
                 <tr>
-                    <th>ID Producto</th>
+                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Precio</th>
                     <th>Cantidad</th>

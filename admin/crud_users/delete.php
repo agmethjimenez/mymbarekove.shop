@@ -1,6 +1,5 @@
 <?php
-$conexion = new mysqli("localhost", "root", "", "mymba", 3306);
-$conexion->set_charset("utf8");
+require '../../database/conexion.php';
 
 if($_SERVER["REQUEST_METHOD"] === "GET"){
 $id = $_GET['id'];
