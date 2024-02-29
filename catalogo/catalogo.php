@@ -19,12 +19,20 @@ $conexion->set_charset("utf8");
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 </head>
 <?php include_once("header.php"); 
-echo json_encode(isset($_SESSION['carrito'])) ;
 
 if (isset($_SESSION['carrito'])) {
     $productos = $_SESSION['carrito'];
+    //echo json_encode($productos);
 }
 ?>
+<style>
+  
+  body{
+    /*background: linear-gradient(135deg, #caa678, #f5f5f5 );*/
+    background-color: #e7c6b2;
+
+  }
+</style>
 <body>
 <div class="title1">
     <h1>Todo lo que necesitas</h1>

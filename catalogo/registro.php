@@ -29,7 +29,7 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
   </head>
   <body>
     <div class="container">
-      <form action="" method="POST" onsubmit="validar()">
+      <form action="" method="POST" onsubmit="Registrarse()">
         <div class="tittle"><h1>Registro</h1></div>
         <div class="con1">
           <div class="field">
@@ -106,11 +106,7 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
         <div class="con3">
           <div class="field">
             <div class="control has-icons-left has-icons-right">
-              <div
-                class="select"
-                id="tipoIdentificacion"
-                name="tipoIdentificacion"
-              >
+              <div class="select">
                 <select
                   name="tipoIdentificacion"
                   id="tipoIdentificacion"
@@ -202,12 +198,12 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
         <div class="g-recaptcha" data-sitekey="6LelmxwpAAAAAFS3KlCNxJf9TfDpe70SP2y0Ie3w"></div>
 
         <div class="boton">
-          <input type="submit"id="submit" value="Registrarse"/>
+          <input type="submit"id="submit"  value="Registrarse"/>
         </div>
         <?php
 require_once("../models/Usuarios.php");
 include_once("../database/conexion.php");
-if(isset($_POST['identificacion'], $_POST['tipoIdentificacion'], $_POST['nombre1'], $_POST['nombre2'],
+/*if(isset($_POST['identificacion'], $_POST['tipoIdentificacion'], $_POST['nombre1'], $_POST['nombre2'],
          $_POST['apellido1'], $_POST['apellido2'], $_POST['email'], $_POST['telefono'], $_POST['password'], $_POST['password2'])) {
 $id_usuario = $_POST['identificacion'];
 $cod_id = $_POST['tipoIdentificacion'];
@@ -221,33 +217,85 @@ $contrasena = $_POST['password'];
 $contraseña2 = $_POST['password2'];
   $usuario = new Usuario();
   $usuario->registrarse($id_usuario, $cod_id, $primernombre, $segundonombre, $primerapellido, $segundoapellido,$telefono, $email, $contrasena);
-}
+}*/
 
 
 ?>
         <p class="error" id="error"></p>
       </form>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="registro.js"></script>
     <script>
-      function validar(){
+      function Registrarse() {
+    var respuestaRecaptcha = grecaptcha.getResponse();
+    let passwordd1 = document.getElementById("password").value;
+    let passwordd2 = document.getElementById("confirmPassword").value;
+    let error = document.getElementById("error");
 
-      var respuestaRecaptcha = grecaptcha.getResponse();
-      let password1 = document.getElementById("password").value;
-      let password2 = document.getElementById("confirmPassword").value;
-      let error = document.getElementById("error");
+    error.innerHTML = "";
 
-      error.innerHTML=""
+    if (respuestaRecaptcha.length === 0) {
+        alert("Por favor, completa la validación reCAPTCHA.");
+        event.preventDefault();
+        return false;
+    } else if (passwordd1 !== passwordd2) {
+        alert("Las contraseñas no coinciden.");
+        event.preventDefault();
+        return false;
+    } else {
+        let nombre1 = document.getElementById("nombre1").value;
+        let nombre2 = document.getElementById("nombre2").value;
+        let apellido1 = document.getElementById("apellido1").value;
+        let apellido2 = document.getElementById("apellido2").value;
+        let tipoid = document.getElementById("tipoIdentificacion").value;
+        let identificacion = document.getElementById("identificacion").value;
+        let telefono = document.getElementById("telefono").value;
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
 
-      if (respuestaRecaptcha.length === 0) {
-      alert("Por favor, completa la validación reCAPTCHA.");
-      event.preventDefault();
-      return false;
+        let jsondata = {
+            "nombre1": nombre1,
+            "nombre2": nombre2,
+            "apellido1": apellido1,
+            "apellido2": apellido2,
+            "tipoid": tipoid,
+            "identificacion": identificacion,
+            "telefono": telefono,
+            "email": email,
+            "password": password
+        };
+
+        fetch('http://localhost/mymbarekove.shop/controller/users.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsondata)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.exito) {
+                console.log(data.mensaje);
+                alert("Usuario registrado exitosamente");
+                window.location.href = 'login.php';
+            } else {
+                console.error(data.mensaje);
+                alert("Error al registrar usuario: " + data.mensaje);
+                event.preventDefault();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            event.preventDefault();
+        });
+        event.preventDefault();
     }
+}
 
-      return true
-      }
+
+     
+
+
+      
 
     </script>
   </body>

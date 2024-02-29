@@ -25,16 +25,20 @@ fetch(url, {
       // Mostrar productos filtrados
       productosFiltradosPorBusqueda.forEach(producto => {
           let divproducto = document.createElement("div");
+          const formatoDolares = new Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP', 
+            minimumFractionDigits: 0, 
+          });
+          const precioFormateado = formatoDolares.format(producto.precio);
 
-          const precioFormateado = producto.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
 
           divproducto.className = "producto";
-          divproducto.innerHTML = `<img src="${producto.imagen}" alt="">
+          divproducto.innerHTML = `<a href="../catalogo/paginaproducto.php?id=${producto.idProducto}"><img src="${producto.imagen}" alt=""></a>
           <div class="informacion">
-          <p>${producto.nombre}</p>         
-          <p class="precio">$${precioFormateado} </p>       
-          <button class="comprar" onclick="agregarAlCarrito('${producto.nombre}',${producto.precio},'${producto.idProducto}',1,'${producto.imagen}')">Comprar</button>
-          <button class="detalles" id="detalles"><a href="../catalogo/paginaproducto.php?id=${producto.idProducto}" class="dety">Detalles</a></button>
+          <a id="nombreproducto" href="../catalogo/paginaproducto.php?id=${producto.idProducto}">${producto.nombre}</a>         
+          <p class="precio">${precioFormateado} </p>       
+          <button class="comprar" onclick="agregarAlCarrito('${producto.nombre}',${producto.precio},'${producto.idProducto}',1,'${producto.imagen}')">Agregar <i class="fa-solid fa-cart-plus fa-lg"></i></button>
           </div>`;
       
           div.append(divproducto);

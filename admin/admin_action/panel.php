@@ -3,60 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <title>Panel de Administrador</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
+        header {
+            background-color: #333;
+            color: white;
             text-align: center;
+            padding: 10px;
+            position: relative;
         }
 
-        .admin-option {
-            background-color: #3498db;
-            color: #fff;
+
+        header a {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            text-decoration: none;
+        }
+
+        main {
+            display: flex;
+        }
+
+        aside {
+            width: 250px;
+            height: 100vh;
+            background-color: #f4f4f4;
             padding: 20px;
-            margin: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
 
-        .admin-option:hover {
-            background-color: #2980b9;
+        section {
+            flex: 1;
+            padding: 20px;
+        }
+
+        aside h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        aside nav{
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        nav a {
+            display: flex;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #ddd;
+        }
+
+        .user-info {
+            flex: 1;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+
+            aside {
+                width: 100%;
+                height: auto;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>Panel de Administrador</h2>
+    <header>
+        <a href="../../catalogo/catalogo.php"><i class="fas fa-arrow-left"></i></a>
+        <h1>Panel de Administrador</h1>
+    </header>
 
-        <div class="admin-option">
-            <a class="button is-primary" href="http://localhost/mymbarekove.shop/mymba/mymba/admin/crud_produ/productos.php">Administrar Productos</a>
-        </div>
-
-        <div class="admin-option">
-            <a class="button is-primary" href="#">Administrar Proveedores</a>
-        </div>
-
-        <div class="admin-option">
-            <a class="button is-primary" href="#">Administrar Usuarios</a>
-        </div>
-
-        <div class="admin-option">
-            <a class="button is-primary" href="#">Agregar Administrador</a>
-        </div>
-    </div>
+    <main>
+        <aside>
+            <nav>
+                <a href="../pedidos/pedidos.php">Pedidos</a>
+                <a href="../crud_users/crud.php">Usuarios</a>
+                <a href="../crud_produ/productos.php">Productos</a>
+                <a href="../crud_provedores/provedores.php">Proveedores</a>
+                <a href="../admin_action/admins.php">Administradores</a>
+            </nav>
+        </aside>
+        <section class="user-info">
+        <h2>Información del Administrador</h2>
+            <p>Correo: admin@example.com</p>
+            <p>Nombre: Admin Nombre</p>
+            <p>ID: 123456</p>
+        </section>
+    </main>
 
 </body>
 </html>

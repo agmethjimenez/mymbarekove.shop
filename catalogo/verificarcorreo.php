@@ -48,7 +48,6 @@ try {
     // Enviar el correo
     $mail->send();
     $enviado = true; // Marcamos como true si se envió correctamente
-    echo '<script>alert("Correo varificado")</script>';
 } catch (Exception $e) {
     echo "Error al enviar el correo: {$mail->ErrorInfo}";
 }

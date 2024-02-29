@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 14-02-2024 a las 11:56:14
+-- Tiempo de generación: 29-02-2024 a las 01:20:23
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 7.4.33
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `mymba`
+-- Base de datos: `mymba2`
 --
 
 -- --------------------------------------------------------
@@ -28,10 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `administradores` (
-  `id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `username` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `clave` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `username` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `clave` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -52,9 +52,9 @@ INSERT INTO `administradores` (`id`, `username`, `email`, `clave`, `activo`) VAL
 
 CREATE TABLE `asesores` (
   `id` int NOT NULL,
-  `nombre` varchar(40) COLLATE utf8mb4_general_ci NOT NULL,
+  `nombre` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `apellido` int NOT NULL,
-  `especialidad` text COLLATE utf8mb4_general_ci NOT NULL
+  `especialidad` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -77,8 +77,8 @@ CREATE TABLE `asesoria` (
 --
 
 CREATE TABLE `categorias` (
-  `categoria` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
-  `descripcion` varchar(80) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `categoria` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `descripcion` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -101,11 +101,11 @@ INSERT INTO `categorias` (`categoria`, `descripcion`) VALUES
 
 CREATE TABLE `credenciales` (
   `id` int NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `token` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `token` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `codigo` int DEFAULT NULL,
   `fecha_cambio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -113,10 +113,14 @@ CREATE TABLE `credenciales` (
 --
 
 INSERT INTO `credenciales` (`id`, `email`, `token`, `codigo`, `fecha_cambio`, `password`) VALUES
-(680, 'aurelio2000@mail.com', NULL, 0, '2024-01-21 22:57:16', '$2y$10$TC1XEjJOGupQ1R5kVnIAce25Rf3rKf0eCIoW7.YtbBK5g/6a.FRhy'),
+(680, 'aurelio2000@mail.com', '2539c2c3e19d537e0603270d79171017', 9331, '2024-02-22 23:27:01', '$2y$10$TC1XEjJOGupQ1R5kVnIAce25Rf3rKf0eCIoW7.YtbBK5g/6a.FRhy'),
 (683, 'josdeluis@gmail.com', NULL, 0, '2024-01-21 22:57:16', '$2y$10$GyYT8Z6KwiYwsV8KcZma3O70alVk/NlwFybSzzzqqjnZsDHg7u2QG'),
 (698, 'jhoiber@gmail.com', NULL, 0, '2024-01-21 22:57:16', '$2y$10$/Lpc6TxnSAVkcwW.U8Yy0./R4kEax7ECr4vzyz7ULC4u/itVozbD6'),
-(699, 'agmeth.jimenez2005@gmail.com', '6f290d057a2d6c635caf7f5c0c82a1cb', 6110, '2024-02-06 12:25:10', '$2y$10$h8XKfowES1OvODjs6VsK5eqUcZXwKucakx0QvlkCiY.aMVcvD/b3e');
+(699, 'agmeth.jimenez2005@gmail.com', 'e0e296bd4923ec698c0887977f6ca6a5', 9112, '2024-02-26 17:45:23', '$2y$10$KMCXaEv1btZyx6QaLGOecOiRyGo.yzQ8POiM4CiThbHgMcOoSszoS'),
+(717, 'romeo@gmail.com', '953ffd0d7891c2f836c7394b846c68ca', 5982, '2024-02-29 00:55:23', '$2y$10$N2Hq/3407R/FfKH8BZMZEO3S99vJyWbY8ovDj7.nf9AzjJTsuhoAq'),
+(718, 'joseemilio@gmail.com', '05cf516a0366d0de0df31fb274da0caf', 3249, '2024-02-29 00:56:32', '$2y$10$UFiJKM9JSfKwwCQ7mbTF5uhNdDlki55EfzCWPZxS4L.p.mj8Tr0JG'),
+(719, 'segundon@mail.com', '651129532e967ab083a6d91ada971cbb', 1077, '2024-02-29 00:57:50', '$2y$10$j6nxmcPxJiLHbxGrsvlMbOX8lpvsVslo5oqNjPEOUWRl0wZJ8BD3y'),
+(722, 'luan@hotmail.com', '0fb17b5a7cd94efca266b719c315460c', 5588, '2024-02-29 01:01:10', '$2y$10$bjnpAnzCbMTSitwUTjclPulT/MDZn0aYV3Cttvd/soykMpNvKMW6e');
 
 -- --------------------------------------------------------
 
@@ -125,8 +129,8 @@ INSERT INTO `credenciales` (`id`, `email`, `token`, `codigo`, `fecha_cambio`, `p
 --
 
 CREATE TABLE `detallepedido` (
-  `idPedido` varchar(11) COLLATE utf8mb4_general_ci NOT NULL,
-  `idProducto` varchar(11) COLLATE utf8mb4_general_ci NOT NULL,
+  `idPedido` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `idProducto` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `cantidad` int DEFAULT NULL,
   `total` decimal(14,0) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -136,13 +140,8 @@ CREATE TABLE `detallepedido` (
 --
 
 INSERT INTO `detallepedido` (`idPedido`, `idProducto`, `cantidad`, `total`) VALUES
-('65cabc388e', '12334', 2, 153998),
-('65cabc388e', '1346', 3, 34500),
-('65cc2f2912', '12334', 2, 153998),
-('65cc2f2912', '1346', 3, 34500),
-('65cc2f2912', '32449', 1, 28000),
-('65cc2f2912', '6435', 3, 856791),
-('65cc2f2912', '7343', 2, 6290);
+('65de34b14d', '7456', 1, 55000),
+('65de34b14d', '9634 ', 2, 204600);
 
 -- --------------------------------------------------------
 
@@ -152,7 +151,7 @@ INSERT INTO `detallepedido` (`idPedido`, `idProducto`, `cantidad`, `total`) VALU
 
 CREATE TABLE `estados` (
   `codEst` int NOT NULL,
-  `estado` varchar(15) COLLATE utf8mb4_general_ci NOT NULL
+  `estado` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -173,8 +172,8 @@ INSERT INTO `estados` (`codEst`, `estado`) VALUES
 --
 
 CREATE TABLE `marcas` (
-  `idMarca` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `marca` varchar(35) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `idMarca` int NOT NULL,
+  `marca` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -182,15 +181,16 @@ CREATE TABLE `marcas` (
 --
 
 INSERT INTO `marcas` (`idMarca`, `marca`) VALUES
-('1', 'Canisan'),
-('10', 'QualiVet'),
-('2', 'Dog Chow'),
-('3', 'Smartbones SA'),
-('4', 'Royal Canin'),
-('5', 'Pet Spa'),
-('7', 'GANADOR PREMIUM'),
-('8', 'Pedigree'),
-('9', 'Basti cat');
+(1, 'Canisan'),
+(2, 'Dog Chow'),
+(3, 'Smartbones SA'),
+(4, 'Royal Canin'),
+(5, 'Pet Spa'),
+(7, 'GANADOR PREMIUM'),
+(8, 'Pedigree'),
+(9, 'Basti cat'),
+(10, 'QualiVet'),
+(11, 'KYRA');
 
 -- --------------------------------------------------------
 
@@ -199,12 +199,13 @@ INSERT INTO `marcas` (`idMarca`, `marca`) VALUES
 --
 
 CREATE TABLE `pedidos` (
-  `idPedido` varchar(11) COLLATE utf8mb4_general_ci NOT NULL,
+  `idPedido` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `usuario` int NOT NULL,
-  `ciudad` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `direccion` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `fecha` date DEFAULT NULL,
-  `total` decimal(14,0) NOT NULL,
+  `ciudad` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `direccion` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `fecha` timestamp NULL DEFAULT NULL,
+  `total` decimal(15,0) NOT NULL,
+  `detalles_pago` varchar(300) COLLATE utf8mb4_general_ci NOT NULL,
   `estado` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -212,9 +213,8 @@ CREATE TABLE `pedidos` (
 -- Volcado de datos para la tabla `pedidos`
 --
 
-INSERT INTO `pedidos` (`idPedido`, `usuario`, `ciudad`, `direccion`, `fecha`, `total`, `estado`) VALUES
-('65cabc388e', 699, 'Bogota', 'Avenida Calle 72 #32-21 ', '2024-02-12', 188498, 2),
-('65cc2f2912', 699, 'Bogota', 'Carrera 45 #65-20 ', '2024-02-13', 1079579, 4);
+INSERT INTO `pedidos` (`idPedido`, `usuario`, `ciudad`, `direccion`, `fecha`, `total`, `detalles_pago`, `estado`) VALUES
+('65de34b14d', 699, 'Bogota', 'Carrera 98 #2 -20 Int 20 Apto 501', '2024-02-27 19:14:57', 259600, '{\"payment_id\":\"1321396553\",\"status\":\"approved\",\"payment_type\":\"debit_card\",\"order_id\":\"16157797761\"}', 4);
 
 --
 -- Disparadores `pedidos`
@@ -255,16 +255,16 @@ DELIMITER ;
 --
 
 CREATE TABLE `productos` (
-  `idProducto` varchar(11) COLLATE utf8mb4_general_ci NOT NULL,
-  `proveedor` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `nombre` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `descripcionP` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `contenido` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `idProducto` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `proveedor` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nombre` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `descripcionP` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `contenido` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `precio` decimal(10,0) DEFAULT NULL,
-  `marca` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `categoria` varchar(15) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `marca` int DEFAULT NULL,
+  `categoria` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `cantidadDisponible` int NOT NULL,
-  `imagen` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `imagen` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -273,16 +273,19 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`idProducto`, `proveedor`, `nombre`, `descripcionP`, `contenido`, `precio`, `marca`, `categoria`, `cantidadDisponible`, `imagen`, `activo`) VALUES
-('1', '3123', 'Purgante Canisan', 'Purgante para gato 100 EFECTIVOI', '2.5 ML', 200000, '1', '1', 70, '156397-800-auto.jpg', 1),
-('12334', '103', 'Artri-Vet Suplemento Alimentic', 'ARTRI-VET es un suplemento alimenticio, cuya fórmula contiene ingredientes coadyuvantes en el regeneramiento articular, especial para el tratamiento y prevención de problemas articulares y enfermedade', '60 TAB', 76999, '10', '4', 38, '5959459405940000013-min.jpg', 1),
-('1346', '103', 'Royal Canin-SHN Starter M&B Do', 'Es especial para la salud digestiva: Resultado de la investigación de Royal Canin, start complex es una combinación exclusiva de sustancias nutricionales presentes en la leche materna, reforzada con n', '145 G', 11500, '4', '2', 46, '111103887-min.jpg', 1),
-('32449', '102', 'Royal Canin lata gastrointesti', 'El Royal Canin Dog Lata Gastro Intestinal es un alimento para perros de alta energía, altamente digestible, apetecible, completo y equilibrado . Especies: Caninos.\r\nSeguridad Digestiva. Ayuda a manten', '385 GR', 28000, '4', '2', 54, '00030111470713e-cf.jpg', 1),
-('33523', '105', 'Basti Cat - Arena Estandar', 'Basti Cat - Arena Estandar, es un producto con una aglomeración consistente, fácil de limpiar y muy agradable para tu mascota', '4 KG', 16920, '9', '6', 76, '68936_161035_Basti_Cat_Arena_Est.jpg', 1),
-('42356', '242435', 'Juguete de goma', 'el mejor', '500 LB', 10000, '5', '2', 34, '', 0),
-('5555', '4323', 'Comida mojada', 'comida mojada', '2LB', 5555555, '10', '5', 77, '111101967-min.jpg', 1),
-('6435', '242435', 'Diamond Naturals Perros Adulto', 'Diamond Naturals Perros Adultos Light es un concentrado para perros Adultos Premium elaborado con ingredientes de alta calidad para proporcionar una nutrición completa y balanceada pero con menos calo', '3 LB', 285597, '7', '2', 64, '111100193_ed-min.jpg', 1),
-('7343', '104', 'Pedigree-SHN Starter M&B Dog W', 'Pedigree - Alimento Húmedo Para Perro Adulto Raza Pequeña Pollo Sobre, es 100% completo y balanceado. Con los nutrientes necesarios para que tu perro tenga una vida sana y feliz. Incluye comida húmeda', '100 GR', 3145, '8', '2', 29, '1475_189662_Pedigree___Alimento.jpg', 1),
-('7456', '242435', 'Dog Chow Adultos', 'Comida con vitaminas y nutrientes para tu mascota', '8 KG', 55000, '2', '2', 35, 'dog chow adulto raza pequeña 8kg.jpg', 1);
+('1', '3123', 'Purgante Canisan', 'Purgante para gato 100 EFECTIVOI', '2.5 ML', 200000, 1, '1', 64, 'https://i.postimg.cc/tTP2SzDz/156397-800-auto.jpg', 1),
+('12334', '103', 'Artri-Vet Suplemento Alimentic', 'ARTRI-VET es un suplemento alimenticio, cuya fórmula contiene ingredientes coadyuvantes en el regeneramiento articular, especial para el tratamiento y prevención de problemas articulares y enfermedade', '60 TAB', 76999, 10, '4', 33, 'https://i.postimg.cc/Ss7cY1DH/5959459405940000013-min.jpg', 1),
+('1346', '103', 'Royal Canin-SHN Starter M&B Do', 'Es especial para la salud digestiva: Resultado de la investigación de Royal Canin, start complex es una combinación exclusiva de sustancias nutricionales presentes en la leche materna, reforzada con n', '145 G', 11500, 4, '2', 49, 'https://i.postimg.cc/hvDTL8Yv/111103887-min.jpg', 1),
+('3168 ', '103', 'Kyra - Alimento Completo Horneada Perro', 'Kyra - Alimento Completo Horneada Perro, es un alimento nutritivo de 500gr. Diseñado para perros de todas las edades y razas.', '500 G', 7200, 11, '2', 310, 'https://i.postimg.cc/50p9bQtx/f3ccdd27d2000e3f9255a7e3e2c48800-1706737511.avif', 1),
+('32449', '102', 'Royal Canin lata gastrointesti', 'El Royal Canin Dog Lata Gastro Intestinal es un alimento para perros de alta energía, altamente digestible, apetecible, completo y equilibrado . Especies: Caninos.\r\nSeguridad Digestiva. Ayuda a manten', '385 GR', 28000, 4, '2', 45, 'https://i.postimg.cc/VNtqmkMf/00030111470713e-cf.jpg', 1),
+('33523', '105', 'Basti Cat - Arena Estandar', 'Basti Cat - Arena Estandar, es un producto con una aglomeración consistente, fácil de limpiar y muy agradable para tu mascota', '4 KG', 16920, 9, '6', 76, 'https://i.postimg.cc/9FBNHJ28/68936-161035-Basti-Cat-Arena-Est.jpg', 1),
+('42356', '242435', 'Juguete de goma', 'el mejor', '500 LB', 10000, 5, '2', 34, '', 0),
+('5555', '4323', 'Comida mojada', 'comida mojada', '2LB', 5990, 10, '5', 77, 'https://i.postimg.cc/BQJMpHFx/111101967-min.jpg', 1),
+('5662 ', '242435', 'Royal Canin - Mini Puppy', 'Royal Canin - Mini Puppy, es ideal para el crecimiento es una fase muy importante de la vida del perro: es una época de grandes cambios, descubrimientos y nuevos encuentros. Durante este período clave, el sistema inmunológico del cachorro se desarrolla de forma gradual. Mini puppy ayuda a reforzar las defensas naturales del cachorro gracias a un complejo patentado* de antioxidantes que incluye vitamina E. Salud digestiva: Combinación de nutrientes con proteínas de gran calidad (L.I.P.)* y prebióticos (FOS) que favorece la salud digestiva y el equilibro de la flora intestinal, contribuyendo a la calidad de las heces. *Proteína seleccionada por su elevada digestibilidad. Alto contenido energético: Responde a las necesidades energéticas de los cachorros de razas pequeñas durante el período de crecimiento y satisface los apetitos caprichosos.', '4 KG', 110000, 4, '2', 167, 'https://i.postimg.cc/RF5zYN3Z/528-173857-Royal-Canin-Mini-Pupp.jpg', 1),
+('6435', '242435', 'Diamond Naturals Perros Adulto', 'Diamond Naturals Perros Adultos Light es un concentrado para perros Adultos Premium elaborado con ingredientes de alta calidad para proporcionar una nutrición completa y balanceada pero con menos calo', '3 LB', 285597, 7, '2', 64, 'https://i.postimg.cc/XNfs9Qrj/111100193-ed-min.jpg', 1),
+('7343', '104', 'Pedigree-SHN Starter M&B Dog W', 'Pedigree - Alimento Húmedo Para Perro Adulto Raza Pequeña Pollo Sobre, es 100% completo y balanceado. Con los nutrientes necesarios para que tu perro tenga una vida sana y feliz. Incluye comida húmeda', '100 GR', 3145, 8, '2', 20, 'https://i.postimg.cc/BQJMpHFx/111101967-min.jpg', 1),
+('7456', '242435', 'Dog Chow Adultos', 'Comida con vitaminas y nutrientes para tu mascota', '8 KG', 55000, 2, '2', 35, 'https://i.postimg.cc/kGT8f6rc/dog-chow-adulto-raza-peque-a-8kg.jpg', 1),
+('9634 ', '4323', 'Royal Canin - Mini Adult', 'Alimento seco para perros adultos pequeños formulado con una nutrición precisa hecha específicamente para perros pequeños de 10 meses a 8 años de edad que pesen entre 9 y 22 lb. Satisface las altas necesidades de energía de las razas de perros pequeños mientras ayuda a mantener un peso saludable con L-carnitina.', '2 KG', 102300, 4, '2', 200, 'https://i.postimg.cc/sg5WYKX1/459-62312-Royal-Canin-Mini-Adulto-1616619959-2186x2186.avif', 1);
 
 -- --------------------------------------------------------
 
@@ -291,8 +294,8 @@ INSERT INTO `productos` (`idProducto`, `proveedor`, `nombre`, `descripcionP`, `c
 --
 
 CREATE TABLE `productosagregados` (
-  `producto` varchar(11) COLLATE utf8mb4_general_ci NOT NULL,
-  `administrador` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `producto` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `administrador` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `fecha_registro` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -303,12 +306,12 @@ CREATE TABLE `productosagregados` (
 --
 
 CREATE TABLE `proveedores` (
-  `idProveedor` varchar(11) COLLATE utf8mb4_general_ci NOT NULL,
-  `nombreP` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ciudad` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `correo` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `telefono` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `estado` varchar(2) COLLATE utf8mb4_general_ci NOT NULL
+  `idProveedor` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nombreP` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ciudad` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `correo` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `telefono` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `estado` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -335,7 +338,7 @@ INSERT INTO `proveedores` (`idProveedor`, `nombreP`, `ciudad`, `correo`, `telefo
 
 CREATE TABLE `tiposid` (
   `codId` int NOT NULL,
-  `id` varchar(11) COLLATE utf8mb4_general_ci NOT NULL
+  `id` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -356,14 +359,14 @@ INSERT INTO `tiposid` (`codId`, `id`) VALUES
 
 CREATE TABLE `usuarios` (
   `id` int NOT NULL,
-  `identificacion` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
+  `identificacion` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `tipoId` int DEFAULT NULL,
-  `primerNombre` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
-  `segundoNombre` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `primerApellido` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
-  `segundoApellido` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `telefono` varchar(12) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
+  `primerNombre` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `segundoNombre` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `primerApellido` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `segundoApellido` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `telefono` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `activo` tinyint NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -375,7 +378,11 @@ INSERT INTO `usuarios` (`id`, `identificacion`, `tipoId`, `primerNombre`, `segun
 (680, '5442343', 4, 'Aurelio', 'Gilberto', 'Andaluz', 'Sanchez', '2322423435', 'aurelio2000@mail.com', 1),
 (683, '1119873234', 1, 'Jose', 'Luis', 'Restrepo', 'Perez', '3121010762', 'josdeluis@gmail.com', 1),
 (698, '1023836283', 2, 'Joiber', 'Daniel', 'Moreno', 'Sepulveda', '3112225464', 'jhoiber@gmail.com', 1),
-(699, '1027400956', 1, 'Agmeth', 'Emilio', 'Jimenez', 'Castro', '3124376338', 'agmeth.jimenez2005@gmail.com', 1);
+(699, '1027400956', 1, 'Agmeth', 'Emilio', 'Jimenez', 'Castro', '3124376338', 'agmeth.jimenez2005@gmail.com', 1),
+(717, '8370047334', 1, 'Romeo', 'Jesus', 'Gonzales', 'Duran', '3107891234', 'romeo@gmail.com', 1),
+(718, '6789765432', 1, 'Jose', 'Emilio', 'Mosaquera', 'Honstara', '3126789090', 'joseemilio@gmail.com', 1),
+(719, '7364724545', 4, 'Jua', 'David', 'Segundon', 'Perdedor', '3387463875', 'segundon@mail.com', 1),
+(722, '9123667344', 1, 'Luan', 'Esteban', 'Jimenez', 'Jimenez', '3034568719', 'luan@hotmail.com', 1);
 
 --
 -- Índices para tablas volcadas
@@ -490,10 +497,16 @@ ALTER TABLE `asesoria`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `marcas`
+--
+ALTER TABLE `marcas`
+  MODIFY `idMarca` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=700;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=723;
 
 --
 -- Restricciones para tablas volcadas

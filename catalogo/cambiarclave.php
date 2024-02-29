@@ -42,74 +42,136 @@ if (
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
 
         * {
-            margin: 0;
-            padding: 0;
-        }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .wrapper {
-            display: flex;
-            height: 100vh;
-            align-items: center;
-            justify-content: center;
-        }
+body {
+    font-family: 'Oxygen', sans-serif;
+    background-color: #f2e4bb;
+    margin: 0;
+}
 
-        .titulo {
-            font-weight: bold;
-            font-size: 34px;
-        }
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
 
-        .cambiarclaved {
-            width: 100%;
-            flex-grow: 2;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 5%;
-            justify-content: center;
-            align-items: center;
-        }
+.titulo {
+    font-weight: bold;
+    font-size: 34px;
+    text-align: center;
+}
 
-        .con1,
-        .con2,
-        .con3,
-        .con4 {
-            display: flex;
-        }
+.cambiarclaved {
+    width: 100%;
+    flex-grow: 2;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 5%;
+    justify-content: center;
+    align-items: center;
+}
 
-        .cambiarclaved form {
-            padding: 30px;
-            border: black solid 1px;
-            background-color: white;
-            border-radius: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            width: 60%;
-            gap: 50px;
-            flex-direction: column;
+.cambiarclaved form {
+    padding: 30px;
+    border: black solid 1px;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    width: 50%;
+    gap: 20px;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+}
 
-            justify-content: center;
-        }
+.cambiarclaved form .con1{
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.cambiarclaved form .con2 {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.con3{
+    display: flex;
+    justify-content: center;
+}
+input[type="password"] {
+    width: 257px;
+    max-width: 300px;
+}
 
-        .cambiarclaved form .con1,
-        .con2 {
-            display: flex;
-            gap: 20px;
-        }
+#message {
+    padding: 20px;
+}
+.g-recaptcha {
+      display: flex;
+      justify-content: center; /* Ajusta el origen de la transformación para mantener la posición */
+    }
+.boton2{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.boton2 input{
+    width: 200px;
+}
+/* Ajustes para pantallas más pequeñas */
+@media screen and (max-width: 768px) {
+    .wrapper{
+        overflow-y: auto;
+        display: flex;
+        align-items: flex-start;
+    }
+    .titulo {
+    font-weight: bold;
+    font-size: 28px;
+    text-align: center;
+}
+.cambiarclaved{
+    width: auto;
+}
+    .cambiarclaved form {
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex-wrap: wrap;
+        width: auto;
+    }
 
-        input[type="password"] {
-            width: 350px;
-        }
+    input[type="password"] {
+        max-width: none; /* Elimina el ancho máximo en pantallas más pequeñas */
+        width: 220px;
+    }
+    .g-recaptcha {
+        transform: scale(0.80); /* Reduzca el tamaño del reCAPTCHA en pantallas más pequeñas según sea necesario */
+        /*transform-origin: 0 0; /* Ajusta el origen de la transformación para mantener la posición */
+        display: flex;
+        justify-content: center;
+    }
+    #message {
+    padding: 20px;
+    font-size: 13px;
+}
+}
 
-        #message {
-            padding: 20px;
-        }
 
-        body {
-            font-family: 'Oxygen', sans-serif;
-            background-color: #f2e4bb;
-        }
     </style>
-    <title>Document</title>
+    <title>Actualizar Contraseña</title>
 </head>
 
 <body>

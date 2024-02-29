@@ -34,7 +34,6 @@ switch($metodo){
     
                 echo $respuesta;
             } catch (Exception $e) {
-                // En caso de error, devuelve un mensaje de error
                 echo json_encode(array('exito' => false, 'mensaje' => 'Error en el pedido: ' . $e->getMessage()));
             }
         break;
