@@ -1,7 +1,6 @@
 <?php
 require_once("../database/conexion.php");
 require_once("../models/Usuarios.php");
-require_once("../controller/users.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -13,8 +13,7 @@ class Usuario
     global $conexion;
 
     $conexion->begin_transaction();
-
-    include_once '../catalogo/verificarcorreo.php';
+    $enviado = true;
 
     if ($enviado) {
         $sql = "INSERT INTO usuarios (identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email, activo)
@@ -45,6 +44,49 @@ class Usuario
     } else {
         return ["success" => false, "mensaje" => "Error al verificar correo"];
     }
+}
+
+public function Login($correo, $contraseña){
+    global $conexion;
+        $error_message = " ";
+        $query = "SELECT u.id,u.primerNombre,u.primerApellido,u.email,cr.password FROM usuarios as u
+        LEFT JOIN credenciales as cr ON u.id = cr.id
+        WHERE u.activo = 1 and u.email = '$correo'";
+        $result = $conexion->query($query);
+
+        if ($result !== false) {
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $hashedPassword = $row['password'];
+
+                if (password_verify($contraseña, $hashedPassword)) {
+                    /*$_SESSION['id_usuario'] = $row['id'];
+                    $_SESSION['usuario_nombre'] = $row['primerNombre'];
+                    $_SESSION['usuario_apellido'] = $row['primerApellido'];*/
+                    $response = [
+                        "accesso" => true,
+                        "mensaje" => "Verificado correctamente",
+                        "usuario" => [
+                            "id" => $row['id'],
+                            "nombre" => $row['primerNombre'],
+                            "apellido" => $row['primerApellido'],
+                            "email" => $row['email']
+                        ]
+                    ];
+                    return $response;
+                } else {          
+                    return["accesso" => false, "mensaje" => "Contraseña incorrecta"];
+
+                }
+            } else {  
+                return["accesso" => false, "mensaje" => "usuario no encontrado"];
+
+            }
+        } else {
+            return["accesso" => false, "mensaje" => 'Error en la cosulta = '.$conexion->error.''];
+
+        }
+
 }
 
     

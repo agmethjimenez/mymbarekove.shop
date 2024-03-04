@@ -33,7 +33,7 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
   </head>
   <body>
     <div class="container">
-      <form action="login.php" method="POST">
+      <form action="" method="post" onsubmit="Loguear()">
         <div class="logo">
           <h1>Bienvenido</h1>
           <img src="imgs/Logo veterinaria animado azul rosado.png" alt="" />
@@ -44,6 +44,7 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
               class="input"
               type="email"
               name="email"
+              id="email"
               placeholder="Email"
               required
             />
@@ -54,13 +55,7 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
         </div>
         <div class="field">
           <p class="control has-icons-left">
-            <input
-              class="input"
-              type="password"
-              name="password"
-              placeholder="Contraseña"
-              required
-            />
+            <input class="input" type="password" id="password" name="password" placeholder="Contraseña" required/>
             <span class="icon is-small is-left">
               <i class="fas fa-lock"></i>
             </span>
@@ -78,8 +73,7 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
           </p>
         </div>
         <?php  
-      $error_message = "";
-      if (!empty($_POST["submit"])) {
+      /*if (!empty($_POST["submit"])) {
           if (empty($_POST["email"]) || empty($_POST["password"])) {
               $error_message = "CAMPOS VACIOS";
           } else {
@@ -95,11 +89,48 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
                 if ($usuario->inicioSesion($correo, $contraseña)) {
                     exit();
                 }       
-      }}}
+      }}}*/
       ?>
 
 
       </form>
     </div>
+    <script>
+      function Loguear(){
+        let correo = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+
+        let datos = {
+          "email" : correo,
+          "password": password
+        }
+        fetch('http://localhost/mymbarekove.shop/controller/login.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.acceso) {
+                console.log(data.mensaje);
+                alert("Iniciando....");
+                <?php
+                ?>
+                window.location.href = 'catalogo.php';
+            } else {
+                console.error(data.mensaje);
+                alert("Error al loguear usuario: " + data.mensaje);
+                event.preventDefault();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("errorrr");
+        });
+        event.preventDefault();
+    }  
+    </script>
   </body>
 </html>

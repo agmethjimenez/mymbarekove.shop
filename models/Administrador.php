@@ -20,6 +20,38 @@ class Admin{
         }
 
     }
+    public function LogIn($correo,$contraseña){
+        global $conexion;
+        $query = "SELECT * FROM administradores WHERE email='$correo' AND activo = 1";
+        $result = $conexion->query($query);
+
+        if ($result !== false) {
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $hashedPassword = $row['clave'];
+
+                if (password_verify($contraseña, $hashedPassword)) {
+                    /*$_SESSION['id_admin'] = $row['id'];
+                    $_SESSION['username'] = $row['username'];
+                    $_SESSION['email'] = $row['email'];*/
+                    return["accesso"=> true, "mensaje" => "Verificado correctamente", 'usuario' =>[
+                        "id_admin" => $row['id'],
+                        "username" => $row['username'],
+                        "email" => $row['email']
+                    ]];
+                } else {          
+                    return["accesso" => false, "mensaje" => "Contraseña incorrecta"];
+
+                }
+            } else {  
+                return["accesso" => false, "mensaje" => "Usuario no encontrado"];
+
+            }
+        } else {
+            return["accesso" => false, "mensaje" => 'Error en la cosulta = '.$conexion->error.''];
+        }
+
+    }
     public function IniciarSesion($correo,$contraseña){
         global $conexion;
         $error_message = " ";
