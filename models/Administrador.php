@@ -98,12 +98,12 @@ class Admin{
         if ($conexion->prepare($desactivacion1)->execute([$id])) {
             $desactivacion2 = "UPDATE credenciales SET activo = 0 WHERE id = ?";
             if($conexion->prepare($desactivacion2)->execute([$id])){
-                return true;
+                return["accesso" =>true,"mensaje"=>"Desactivado Correctamente"];
             }else{
-                return false;
+                return["accesso" =>false,"mensaje"=>"Desactivacion incorrecta"];
             }
         }else{
-            return false;
+            return["accesso" =>false,"mensaje"=>"Desactivacion incorrecta"];
         }
     }
 }
