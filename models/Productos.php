@@ -73,6 +73,18 @@ class Producto
         }
 
     }
+    public function AgregarProducto($provedor, $nombre, $descripcion, $contenido, $precio, $marca, $categoria,$tock,$imagen){
+        global $conexion;
+        $id = rand(1000,9999);
+        $sql = "INSERT INTO productos(idProducto,proveedor, nombre, descripcionP, contenido, precio, marca, categoria, cantidadDisponible, imagen,activo) VALUES (?,?,?,?,?,?,?,?,?,?,1)";
+        $bin = $conexion->prepare($sql);
+        $bin->bind_param("ssssssssss",$id,$provedor,$nombre,$descripcion,$contenido,$precio, $marca, $categoria, $tock,$imagen);
+        if($bin->execute()){
+            return["accesso"=>true,"mensaje"=>"Producto Agregado exitosamente"];
+        }else{
+            return["accesso"=>false,"mensaje"=>"Producto no agregado"];
+        }
+    }
 }
 
     
