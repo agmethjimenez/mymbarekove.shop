@@ -38,6 +38,19 @@ switch($metodo){
                 echo json_encode(['error' => 'JSON no válido']);
             }
             break;
+        case 'DELETE':
+            $jsonData = file_get_contents('php://input');
+            $usuario_data = json_decode($jsonData, true);
+
+            $id_usuario = $usuario_data['id_usuario'];
+
+            $result = $admin->DesactivarUsuario($id_usuario);
+            if ($result['accesso']) {
+                echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));
+            }else{
+                echo json_encode(array('exito' => false, 'mensaje' => $result['mensaje']));
+            }
+            break;
 }
 
 ?>
