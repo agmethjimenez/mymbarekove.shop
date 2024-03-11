@@ -14,7 +14,7 @@ fetch(url, {
     
     const div = document.getElementById("contenedor");
    div.innerHTML = "";
-    const productosFiltrados = (categoria === 'todos') ? productos : productos.filter(producto => producto.categoria === categoria);
+    const productosFiltrados = (categoria === 'todos') ? productos : productos.filter(producto => producto.descripcion === categoria);
     const productosFiltradosPorBusqueda = productosFiltrados.filter(producto => producto.nombre.toLowerCase().includes(terminoDeBusqueda.toLowerCase()));
   
     if (productosFiltradosPorBusqueda.length === 0) {
@@ -34,9 +34,9 @@ fetch(url, {
 
 
           divproducto.className = "producto";
-          divproducto.innerHTML = `<a href="../catalogo/paginaproducto.php?id=${producto.idProducto}"><img src="${producto.imagen}" alt=""></a>
+          divproducto.innerHTML = `<a href="../catalogo/producto.php?producto=${producto.idProducto}"><img src="${producto.imagen}" alt=""></a>
           <div class="informacion">
-          <a id="nombreproducto" href="../catalogo/paginaproducto.php?id=${producto.idProducto}">${producto.nombre}</a>         
+          <a id="nombreproducto" href="../catalogo/producto.php?producto=${producto.idProducto}">${producto.nombre}</a>         
           <p class="precio">${precioFormateado} </p>       
           <button class="comprar" onclick="agregarAlCarrito('${producto.nombre}',${producto.precio},'${producto.idProducto}',1,'${producto.imagen}')">Agregar <i class="fa-solid fa-cart-plus fa-lg"></i></button>
           </div>`;

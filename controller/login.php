@@ -1,9 +1,11 @@
 <?PHP
 session_start();
+header('Content-Type: application/json');
 require_once("../models/Usuarios.php");
 require_once("../database/conexion.php");
 require_once '../models/Administrador.php';
-
+$database = new Database();
+$conexion = $database->connect();
 $usuario = new Usuario();
 $admin = new Admin();
 $metodo = $_SERVER['REQUEST_METHOD'];
@@ -12,24 +14,18 @@ $metodo = $_SERVER['REQUEST_METHOD'];
 switch($metodo){
     case 'POST':
         $data = json_decode(file_get_contents('php://input'), true);
-
-        $resultUsuario = $usuario->Login($data['email'], $data['password']);
+        $usuario->setEmail($data['email']);
+        $resultUsuario = $usuario->Login($conexion, $data['password']);
 
         if ($resultUsuario["accesso"]) {
-            $_SESSION['id_usuario'] = $resultUsuario['usuario']['id'];
-            $_SESSION['usuario_nombre'] = $resultUsuario['usuario']['nombre'];
-            $_SESSION['usuario_apellido'] = $resultUsuario['usuario']['nombre'];
-            echo json_encode(array('acceso' => true, 'mensaje' => 'Inicio de sesión exitoso como usuario'));
+            echo json_encode(array('acceso' => true,'tipo'=>"user", 'mensaje' => 'Inicio de sesión exitoso como usuario',"data" => $resultUsuario['usuario']));
         } else {
             $resultAdmin = $admin->LogIn($data['email'], $data['password']);
 
             if ($resultAdmin['accesso']) {
-                $_SESSION['id_admin'] = $resultAdmin['usuario']['id_admin'];
-                $_SESSION['username'] = $resultAdmin['usuario']['username'];
-                $_SESSION['email'] = $resultAdmin['usuario']['email'];
-                echo json_encode(array('acceso' => true, 'mensaje' => 'Inicio de sesión exitoso como administrador'));
+                echo json_encode(array('acceso' => true,'tipo'=>"admin", 'mensaje' => 'Inicio de sesión exitoso como administrador', "data" => $resultAdmin['usuario']));
             } else {
-                echo json_encode(array('acceso' => false, 'mensaje' => 'Credenciales incorrectas'));
+                echo json_encode(array('acceso' => false, 'mensaje' => $resultUsuario['mensaje']));
             }
         }
         break;

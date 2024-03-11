@@ -10,8 +10,6 @@ class Database{
         $this->conn= new mysqli($this->servername,$this->username, $this->password, $this->database);
         return $this->conn;
     }
-
-
 }
 
 $database = new Database();

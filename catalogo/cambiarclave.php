@@ -1,7 +1,4 @@
 <?php
-require_once("../database/conexion.php");
-require_once("../models/Usuarios.php");
-require_once("../controller/password.php");
 
 session_start();
 
@@ -176,10 +173,8 @@ input[type="password"] {
 
 <body>
     <?php
-    $usuario = new Usuario();
 
     $id = $_SESSION['id_usuario'];
-    $usuario->verDatos($id);
     ?>
     <div class="wrapper">
         <div class="cambiarclaved" id="cambiarclaved">

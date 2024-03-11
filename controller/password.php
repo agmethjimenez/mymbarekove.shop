@@ -1,7 +1,7 @@
 <?php
 require_once("../models/Usuarios.php");
 require_once("../database/conexion.php");
-
+header('Content-Type: application/json');
 $usuario = new Usuario();
 
 $metodo = $_SERVER['REQUEST_METHOD'];

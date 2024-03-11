@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 29-02-2024 a las 01:20:23
+-- Tiempo de generación: 11-03-2024 a las 02:55:30
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 7.4.33
 
@@ -105,22 +105,27 @@ CREATE TABLE `credenciales` (
   `token` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `codigo` int DEFAULT NULL,
   `fecha_cambio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `activo` tinyint NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `credenciales`
 --
 
-INSERT INTO `credenciales` (`id`, `email`, `token`, `codigo`, `fecha_cambio`, `password`) VALUES
-(680, 'aurelio2000@mail.com', '2539c2c3e19d537e0603270d79171017', 9331, '2024-02-22 23:27:01', '$2y$10$TC1XEjJOGupQ1R5kVnIAce25Rf3rKf0eCIoW7.YtbBK5g/6a.FRhy'),
-(683, 'josdeluis@gmail.com', NULL, 0, '2024-01-21 22:57:16', '$2y$10$GyYT8Z6KwiYwsV8KcZma3O70alVk/NlwFybSzzzqqjnZsDHg7u2QG'),
-(698, 'jhoiber@gmail.com', NULL, 0, '2024-01-21 22:57:16', '$2y$10$/Lpc6TxnSAVkcwW.U8Yy0./R4kEax7ECr4vzyz7ULC4u/itVozbD6'),
-(699, 'agmeth.jimenez2005@gmail.com', 'e0e296bd4923ec698c0887977f6ca6a5', 9112, '2024-02-26 17:45:23', '$2y$10$KMCXaEv1btZyx6QaLGOecOiRyGo.yzQ8POiM4CiThbHgMcOoSszoS'),
-(717, 'romeo@gmail.com', '953ffd0d7891c2f836c7394b846c68ca', 5982, '2024-02-29 00:55:23', '$2y$10$N2Hq/3407R/FfKH8BZMZEO3S99vJyWbY8ovDj7.nf9AzjJTsuhoAq'),
-(718, 'joseemilio@gmail.com', '05cf516a0366d0de0df31fb274da0caf', 3249, '2024-02-29 00:56:32', '$2y$10$UFiJKM9JSfKwwCQ7mbTF5uhNdDlki55EfzCWPZxS4L.p.mj8Tr0JG'),
-(719, 'segundon@mail.com', '651129532e967ab083a6d91ada971cbb', 1077, '2024-02-29 00:57:50', '$2y$10$j6nxmcPxJiLHbxGrsvlMbOX8lpvsVslo5oqNjPEOUWRl0wZJ8BD3y'),
-(722, 'luan@hotmail.com', '0fb17b5a7cd94efca266b719c315460c', 5588, '2024-02-29 01:01:10', '$2y$10$bjnpAnzCbMTSitwUTjclPulT/MDZn0aYV3Cttvd/soykMpNvKMW6e');
+INSERT INTO `credenciales` (`id`, `email`, `token`, `codigo`, `fecha_cambio`, `password`, `activo`) VALUES
+(680, 'aurelio2000@mail.com', '2539c2c3e19d537e0603270d79171017', 9331, '2024-02-22 23:27:01', '$2y$10$TC1XEjJOGupQ1R5kVnIAce25Rf3rKf0eCIoW7.YtbBK5g/6a.FRhy', 0),
+(683, 'josdeluis@gmail.com', NULL, 0, '2024-01-21 22:57:16', '$2y$10$GyYT8Z6KwiYwsV8KcZma3O70alVk/NlwFybSzzzqqjnZsDHg7u2QG', 0),
+(698, 'jhoiber@gmail.com', NULL, 0, '2024-01-21 22:57:16', '$2y$10$/Lpc6TxnSAVkcwW.U8Yy0./R4kEax7ECr4vzyz7ULC4u/itVozbD6', 1),
+(699, 'agmeth.jimenez2005@gmail.com', 'e0e296bd4923ec698c0887977f6ca6a5', 9112, '2024-02-26 17:45:23', '$2y$10$KMCXaEv1btZyx6QaLGOecOiRyGo.yzQ8POiM4CiThbHgMcOoSszoS', 1),
+(717, 'romeo@gmail.com', '953ffd0d7891c2f836c7394b846c68ca', 5982, '2024-02-29 00:55:23', '$2y$10$N2Hq/3407R/FfKH8BZMZEO3S99vJyWbY8ovDj7.nf9AzjJTsuhoAq', 1),
+(718, 'joseemilio@gmail.com', '05cf516a0366d0de0df31fb274da0caf', 3249, '2024-02-29 00:56:32', '$2y$10$UFiJKM9JSfKwwCQ7mbTF5uhNdDlki55EfzCWPZxS4L.p.mj8Tr0JG', 1),
+(719, 'segundon@mail.com', '651129532e967ab083a6d91ada971cbb', 1077, '2024-02-29 00:57:50', '$2y$10$j6nxmcPxJiLHbxGrsvlMbOX8lpvsVslo5oqNjPEOUWRl0wZJ8BD3y', 1),
+(722, 'luan@hotmail.com', '0fb17b5a7cd94efca266b719c315460c', 5588, '2024-02-29 01:01:10', '$2y$10$bjnpAnzCbMTSitwUTjclPulT/MDZn0aYV3Cttvd/soykMpNvKMW6e', 1),
+(723, 'juliandomin@gmail.com', '44ebe82e77e8f62f64558d0563dc2023', 1448, '2024-02-29 01:37:29', '$2y$10$utFj1HVG/W3cGiUR8OB9G.tu65sV7x5p.fFqJqyzriG7SrgvaUdZW', 0),
+(724, 'jorge@gmail.com', 'ee28296e96313c8a0f5f4e9b2e4d5730', 2611, '2024-03-03 23:39:58', '$2y$10$Eg3MP9g87wc.kZt7ebr6a.iOEtxCOpJAG1OtkJ3.9CwmQbeS9jlGC', 1),
+(725, 'john.doe@example.com', '365d3780f931e06131695d1c4591edb5', 7155, '2024-03-09 23:12:55', '$2y$10$48UMd653xWoxwaJCnD.D7.tCLN/.xVXoiuGnI3rkUSqYUkYsHrwgK', 1),
+(726, 'pruebaapi@gmail.com', '42c588236b4cb899125b8cd1ff7c3aa2', 9500, '2024-03-09 23:21:21', '$2y$10$ePCGDw.SEYA8uSIkBz3S3OOhbuOjDsI.rs07j1IZ/MQg64AE/185K', 1);
 
 -- --------------------------------------------------------
 
@@ -141,7 +146,17 @@ CREATE TABLE `detallepedido` (
 
 INSERT INTO `detallepedido` (`idPedido`, `idProducto`, `cantidad`, `total`) VALUES
 ('65de34b14d', '7456', 1, 55000),
-('65de34b14d', '9634 ', 2, 204600);
+('65de34b14d', '9634 ', 2, 204600),
+('65e5321736', '12334', 1, 76999),
+('65e5321736', '33523', 1, 16920),
+('65e5321736', '5662 ', 1, 110000),
+('65e5321736', '9634 ', 1, 102300),
+('65ee45a6a6', '3168 ', 1, 7200),
+('65ee45a6a6', '32449', 1, 28000),
+('65ee45a6a6', '6435', 1, 285597),
+('65ee45a6a6', '7343', 1, 3145),
+('65ee45a6a6', '7456', 1, 55000),
+('65ee45a6a6', '9634 ', 1, 102300);
 
 -- --------------------------------------------------------
 
@@ -214,7 +229,9 @@ CREATE TABLE `pedidos` (
 --
 
 INSERT INTO `pedidos` (`idPedido`, `usuario`, `ciudad`, `direccion`, `fecha`, `total`, `detalles_pago`, `estado`) VALUES
-('65de34b14d', 699, 'Bogota', 'Carrera 98 #2 -20 Int 20 Apto 501', '2024-02-27 19:14:57', 259600, '{\"payment_id\":\"1321396553\",\"status\":\"approved\",\"payment_type\":\"debit_card\",\"order_id\":\"16157797761\"}', 4);
+('65de34b14d', 699, 'Bogota', 'Carrera 98 #2 -20 Int 20 Apto 501', '2024-02-27 19:14:57', 259600, '{\"payment_id\":\"1321396553\",\"status\":\"approved\",\"payment_type\":\"debit_card\",\"order_id\":\"16157797761\"}', 4),
+('65e5321736', 699, 'Pereira', 'Transversal 42 #65 -8 ', '2024-03-04 02:29:43', 306219, '{\"payment_id\":\"1317305692\",\"status\":\"approved\",\"payment_type\":\"debit_card\",\"order_id\":\"16319447919\"}', 4),
+('65ee45a6a6', 699, 'Buga', 'Carrera 88 #88 -8 ', '2024-03-10 23:43:34', 481242, '{\"payment_id\":\"1317395804\",\"status\":\"approved\",\"payment_type\":\"credit_card\",\"order_id\":\"16549402559\"}', 4);
 
 --
 -- Disparadores `pedidos`
@@ -276,16 +293,17 @@ INSERT INTO `productos` (`idProducto`, `proveedor`, `nombre`, `descripcionP`, `c
 ('1', '3123', 'Purgante Canisan', 'Purgante para gato 100 EFECTIVOI', '2.5 ML', 200000, 1, '1', 64, 'https://i.postimg.cc/tTP2SzDz/156397-800-auto.jpg', 1),
 ('12334', '103', 'Artri-Vet Suplemento Alimentic', 'ARTRI-VET es un suplemento alimenticio, cuya fórmula contiene ingredientes coadyuvantes en el regeneramiento articular, especial para el tratamiento y prevención de problemas articulares y enfermedade', '60 TAB', 76999, 10, '4', 33, 'https://i.postimg.cc/Ss7cY1DH/5959459405940000013-min.jpg', 1),
 ('1346', '103', 'Royal Canin-SHN Starter M&B Do', 'Es especial para la salud digestiva: Resultado de la investigación de Royal Canin, start complex es una combinación exclusiva de sustancias nutricionales presentes en la leche materna, reforzada con n', '145 G', 11500, 4, '2', 49, 'https://i.postimg.cc/hvDTL8Yv/111103887-min.jpg', 1),
-('3168 ', '103', 'Kyra - Alimento Completo Horneada Perro', 'Kyra - Alimento Completo Horneada Perro, es un alimento nutritivo de 500gr. Diseñado para perros de todas las edades y razas.', '500 G', 7200, 11, '2', 310, 'https://i.postimg.cc/50p9bQtx/f3ccdd27d2000e3f9255a7e3e2c48800-1706737511.avif', 1),
+('3168 ', '103', 'Kyra - Alimento Completo Horneada Perro', 'Kyra - Alimento Completo Horneada Perro, es un alimento nutritivo de 500gr. Diseñado para perros de todas las edades y razas.', '500 G', 7200, 11, '2', 310, 'https://i.postimg.cc/sX02SVNh/f3ccdd27d2000e3f9255a7e3e2c48800.jpg', 1),
 ('32449', '102', 'Royal Canin lata gastrointesti', 'El Royal Canin Dog Lata Gastro Intestinal es un alimento para perros de alta energía, altamente digestible, apetecible, completo y equilibrado . Especies: Caninos.\r\nSeguridad Digestiva. Ayuda a manten', '385 GR', 28000, 4, '2', 45, 'https://i.postimg.cc/VNtqmkMf/00030111470713e-cf.jpg', 1),
 ('33523', '105', 'Basti Cat - Arena Estandar', 'Basti Cat - Arena Estandar, es un producto con una aglomeración consistente, fácil de limpiar y muy agradable para tu mascota', '4 KG', 16920, 9, '6', 76, 'https://i.postimg.cc/9FBNHJ28/68936-161035-Basti-Cat-Arena-Est.jpg', 1),
 ('42356', '242435', 'Juguete de goma', 'el mejor', '500 LB', 10000, 5, '2', 34, '', 0),
+('5540', '6656', 'prueba magica', 'Esta es una prueba de producto xdscd', '100 GR', 19999, 7, '3', 99, 'https://i.postimg.cc/3wmK6tML/guantee.avif', 1),
 ('5555', '4323', 'Comida mojada', 'comida mojada', '2LB', 5990, 10, '5', 77, 'https://i.postimg.cc/BQJMpHFx/111101967-min.jpg', 1),
 ('5662 ', '242435', 'Royal Canin - Mini Puppy', 'Royal Canin - Mini Puppy, es ideal para el crecimiento es una fase muy importante de la vida del perro: es una época de grandes cambios, descubrimientos y nuevos encuentros. Durante este período clave, el sistema inmunológico del cachorro se desarrolla de forma gradual. Mini puppy ayuda a reforzar las defensas naturales del cachorro gracias a un complejo patentado* de antioxidantes que incluye vitamina E. Salud digestiva: Combinación de nutrientes con proteínas de gran calidad (L.I.P.)* y prebióticos (FOS) que favorece la salud digestiva y el equilibro de la flora intestinal, contribuyendo a la calidad de las heces. *Proteína seleccionada por su elevada digestibilidad. Alto contenido energético: Responde a las necesidades energéticas de los cachorros de razas pequeñas durante el período de crecimiento y satisface los apetitos caprichosos.', '4 KG', 110000, 4, '2', 167, 'https://i.postimg.cc/RF5zYN3Z/528-173857-Royal-Canin-Mini-Pupp.jpg', 1),
 ('6435', '242435', 'Diamond Naturals Perros Adulto', 'Diamond Naturals Perros Adultos Light es un concentrado para perros Adultos Premium elaborado con ingredientes de alta calidad para proporcionar una nutrición completa y balanceada pero con menos calo', '3 LB', 285597, 7, '2', 64, 'https://i.postimg.cc/XNfs9Qrj/111100193-ed-min.jpg', 1),
 ('7343', '104', 'Pedigree-SHN Starter M&B Dog W', 'Pedigree - Alimento Húmedo Para Perro Adulto Raza Pequeña Pollo Sobre, es 100% completo y balanceado. Con los nutrientes necesarios para que tu perro tenga una vida sana y feliz. Incluye comida húmeda', '100 GR', 3145, 8, '2', 20, 'https://i.postimg.cc/BQJMpHFx/111101967-min.jpg', 1),
 ('7456', '242435', 'Dog Chow Adultos', 'Comida con vitaminas y nutrientes para tu mascota', '8 KG', 55000, 2, '2', 35, 'https://i.postimg.cc/kGT8f6rc/dog-chow-adulto-raza-peque-a-8kg.jpg', 1),
-('9634 ', '4323', 'Royal Canin - Mini Adult', 'Alimento seco para perros adultos pequeños formulado con una nutrición precisa hecha específicamente para perros pequeños de 10 meses a 8 años de edad que pesen entre 9 y 22 lb. Satisface las altas necesidades de energía de las razas de perros pequeños mientras ayuda a mantener un peso saludable con L-carnitina.', '2 KG', 102300, 4, '2', 200, 'https://i.postimg.cc/sg5WYKX1/459-62312-Royal-Canin-Mini-Adulto-1616619959-2186x2186.avif', 1);
+('9634 ', '4323', 'Royal Canin - Mini Adult', 'Alimento seco para perros adultos pequeños formulado con una nutrición precisa hecha específicamente para perros pequeños de 10 meses a 8 años de edad que pesen entre 9 y 22 lb. Satisface las altas necesidades de energía de las razas de perros pequeños mientras ayuda a mantener un peso saludable con L-carnitina.', '2 KG', 102300, 4, '2', 200, 'https://i.postimg.cc/bvB3d5hw/459-62312-Royal-Canin-Mini-Adult.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -309,9 +327,9 @@ CREATE TABLE `proveedores` (
   `idProveedor` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `nombreP` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `ciudad` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `correo` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `correo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `telefono` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `estado` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+  `estado` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'SI'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -327,7 +345,9 @@ INSERT INTO `proveedores` (`idProveedor`, `nombreP`, `ciudad`, `correo`, `telefo
 ('242435', 'Foot Pet SA', 'New York', 'petfoot@fpa.usa', '1283726', 'SI'),
 ('245', 'FOO S.A', 'Bogota', 'foo.sa@gmail.com', '3143667879', 'NO'),
 ('3123', 'Juguetes Bogota', 'Bogota', 'juguebog@mail.com', '2346347', 'NO'),
+('3582', 'Capital Distribuitors', 'Cali', 'capitaldistribiutors@capital.com', '8768343', 'SI'),
 ('4323', 'Empresa Distribuidora SAS', 'Bogota', 'empresa@gmail.com', '76242432', 'SI'),
+('6656', 'North Down PetShops', 'California', 'nrthdouwn@petshn.us', '1435654', 'SI'),
 ('7544', 'Sood S.AS.', 'Bogota', 'sooscompany@outlook.com', '77755553', 'NO');
 
 -- --------------------------------------------------------
@@ -375,14 +395,18 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `identificacion`, `tipoId`, `primerNombre`, `segundoNombre`, `primerApellido`, `segundoApellido`, `telefono`, `email`, `activo`) VALUES
-(680, '5442343', 4, 'Aurelio', 'Gilberto', 'Andaluz', 'Sanchez', '2322423435', 'aurelio2000@mail.com', 1),
-(683, '1119873234', 1, 'Jose', 'Luis', 'Restrepo', 'Perez', '3121010762', 'josdeluis@gmail.com', 1),
+(680, '5442343', 4, 'Aurelio', 'Gilberto', 'Andaluz', 'Sanchez', '2322423435', 'aurelio2000@mail.com', 0),
+(683, '1119873234', 1, 'Jose', 'Luis', 'Restrepo', 'Perez', '3121010762', 'josdeluis@gmail.com', 0),
 (698, '1023836283', 2, 'Joiber', 'Daniel', 'Moreno', 'Sepulveda', '3112225464', 'jhoiber@gmail.com', 1),
 (699, '1027400956', 1, 'Agmeth', 'Emilio', 'Jimenez', 'Castro', '3124376338', 'agmeth.jimenez2005@gmail.com', 1),
 (717, '8370047334', 1, 'Romeo', 'Jesus', 'Gonzales', 'Duran', '3107891234', 'romeo@gmail.com', 1),
 (718, '6789765432', 1, 'Jose', 'Emilio', 'Mosaquera', 'Honstara', '3126789090', 'joseemilio@gmail.com', 1),
 (719, '7364724545', 4, 'Jua', 'David', 'Segundon', 'Perdedor', '3387463875', 'segundon@mail.com', 1),
-(722, '9123667344', 1, 'Luan', 'Esteban', 'Jimenez', 'Jimenez', '3034568719', 'luan@hotmail.com', 1);
+(722, '9123667344', 1, 'Luan', 'Esteban', 'Jimenez', 'Jimenez', '3034568719', 'luan@hotmail.com', 1),
+(723, '1022876123', 1, 'Mario', 'Julian', 'Gay', 'Dominguez', '3202569856', 'juliandomin@gmail.com', 0),
+(724, '1233345445', 1, 'Jorge', 'Camilio', 'Arias', 'Pineda', '2432432432', 'jorge@gmail.com', 1),
+(725, '123456789', 1, 'John', 'Doe', 'Smith', 'Johnson', '1234567890', 'john.doe@example.com', 1),
+(726, '4353456676', 1, 'Prueba', 'DelAPI', 'DER', 'Registro', '9291337475', 'pruebaapi@gmail.com', 1);
 
 --
 -- Índices para tablas volcadas
@@ -506,7 +530,7 @@ ALTER TABLE `marcas`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=723;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=727;
 
 --
 -- Restricciones para tablas volcadas

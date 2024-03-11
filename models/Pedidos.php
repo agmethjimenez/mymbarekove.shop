@@ -1,88 +1,109 @@
 <?php
-//("../database/conexion.php");
-//$database = new Database();
-//$conexion = $database->connect();
-
 class Pedido {
+    private $idPedido;
+    private $idUsuario;
+    private $ciudad;
+    private $direccion;
+    private $detalles;
+    private $totalP;
+    private $detallesPago;
+
     
-    public function actualizarTotal($idpedido){
-        global $conexion;
-        $tottQuery = "SELECT SUM(dp.total) AS total_pedido FROM detallepedido as dp WHERE dp.idPedido = '$idpedido'";
-        $resultTott = $conexion->query($tottQuery);
-        // Verificar si la consulta fue exitosa
-        if ($resultTott) {
-            // Obtener el resultado como un array asociativo
-            $totalRow = $resultTott->fetch_assoc();
-            // Obtener el total
+    public function setIdPedido($idPedido) {
+        $this->idPedido = $idPedido;
+    }
+
+    public function setIdUsuario($idUsuario) {
+        $this->idUsuario = $idUsuario;
+    }
+
+    public function setCiudad($ciudad) {
+        $this->ciudad = $ciudad;
+    }
+
+    public function setDireccion($direccion) {
+        $this->direccion = $direccion;
+    }
+
+    public function setDetalles($detalles) {
+        $this->detalles = $detalles;
+    }
+
+    public function setTotalP($totalP) {
+        $this->totalP = $totalP;
+    }
+
+    public function setDetallesPago($detallesPago) {
+        $this->detallesPago = $detallesPago;
+    }
+
+    public function actualizarTotal($conexion,$idPedido) {
+        $tottQuery = "SELECT SUM(dp.total) AS total_pedido FROM detallepedido as dp WHERE dp.idPedido = ?";
+        $stmt = $conexion->prepare($tottQuery);
+        $stmt->bind_param("s", $idPedido);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $totalRow = $result->fetch_assoc();
             $total_pedido = $totalRow['total_pedido'];
-            $actualizartotal = "UPDATE pedidos SET total = ? WHERE idPedido = ?";
-            $binactualizartotal = $conexion->prepare($actualizartotal);
-            $binactualizartotal->bind_param("ss", $total_pedido, $idpedido);
-            $binactualizartotal->execute();
+
+            $actualizarTotal = "UPDATE pedidos SET total = ? WHERE idPedido = ?";
+            $stmtActualizarTotal = $conexion->prepare($actualizarTotal);
+            $stmtActualizarTotal->bind_param("ss", $total_pedido, $idPedido);
+            $stmtActualizarTotal->execute();
         }
     }
 
-    public function Traerpedido($id_usuario, $id_pedido, $ciudad, $direccion, $detalles, $totalP, $detalles_pago){
-    global $conexion;
-    $conexion->begin_transaction();
-
-    $detalles_pagoJSON = json_encode($detalles_pago);
-
-    $detalles_pagoJSON = substr($detalles_pagoJSON, 0, 255); // Ajusta el número según la capacidad de tu campo VARCHAR
-
-    try {
-        $sql = "INSERT INTO pedidos VALUES (?,?,?,?,NOW(),?,?,4)";
-        $bin = $conexion->prepare($sql);
-
-        $bin->bind_param("ssssds", $id_pedido, $id_usuario, $ciudad, $direccion, $totalP, $detalles_pagoJSON);
-        $bin->execute();
-
-        foreach ($detalles as $producto) {
-            $id_producto = $producto['id'];
-            $cantidad = $producto['cantidad'];
-            $total = $producto['total'];
-
-            $sql2 = "INSERT INTO detallepedido VALUES(?,?,?,?)";
-            $bin2 = $conexion->prepare($sql2);
-
-            $bin2->bind_param("ssdd", $id_pedido, $id_producto, $cantidad, $total);
-
-            if (!$bin2->execute()) {
-                $conexion->rollback();
-                return json_encode(array('exito' => false, 'mensaje' => 'Error al insertar detalle de pedido: ' . $bin2->error));
+    public function traerPedido($conexion) {    
+        try {
+            $sql = "INSERT INTO pedidos VALUES (?, ?, ?, ?, NOW(), ?, ?, 4)";
+            $stmt = $conexion->prepare($sql);
+            $detallesPagoJSON = json_encode($this->detallesPago);
+            $detallesPagoJSON = substr($detallesPagoJSON, 0, 255); 
+            $stmt->bind_param("ssssds", $this->idPedido, $this->idUsuario, $this->ciudad, $this->direccion, $this->totalP, $detallesPagoJSON);
+            $stmt->execute();
+    
+            foreach ($this->detalles as $producto) {
+                $idProducto = $producto['id'];
+                $cantidad = $producto['cantidad'];
+                $total = $producto['total'];
+    
+                $sqlDetalle = "INSERT INTO detallepedido VALUES (?, ?, ?, ?)";
+                $stmtDetalle = $conexion->prepare($sqlDetalle);
+    
+                $stmtDetalle->bind_param("ssdd", $this->idPedido, $idProducto, $cantidad, $total);
+    
+                if (!$stmtDetalle->execute()) {
+                    throw new Exception("Error al insertar detalle de pedido: " . $stmtDetalle->error);
+                }
+    
+                $stmtDetalle->close();
             }
-
-            $bin2->close();
+    
+            $conexion->commit();
+    
+            return json_encode(['exito' => true, 'mensaje' => 'Pedido exitoso']);
+        } catch (Exception $e) {
+            $conexion->rollback();
+            throw $e;
         }
-
-        $conexion->commit();
-
-        $respuesta = array('exito' => true, 'mensaje' => 'Pedido exitoso');
-        return json_encode($respuesta);
-
-    } catch (Exception $e) {
-        $conexion->rollback();
-        $respuesta = array('exito' => false, 'mensaje' => 'Error en la transacción: ' . $conexion->error . ' ' . $e->getMessage());
-        return json_encode($respuesta);
     }
-}
 
-
-    public function GetPedidos(){
-        global $conexion;
+    public function getPedidos($conexion) {
         $sql = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha, p.total, e.estado FROM pedidos as p 
-        INNER JOIN estados as e ON p.estado = e.codEst;";
+            INNER JOIN estados as e ON p.estado = e.codEst;";
+        $resultados = array();
 
-    $resultados = array();
-
-        if ($resultado = $conexion->query($sql)) {
-            while ($fila = $resultado->fetch_assoc()) {
+        if ($result = $conexion->query($sql)) {
+            while ($fila = $result->fetch_assoc()) {
                 $resultados[] = $fila;
             }
-            $resultado->free();
+            $result->free();
         }
         return $resultados;
-}
+    }
 }
 
 ?>
