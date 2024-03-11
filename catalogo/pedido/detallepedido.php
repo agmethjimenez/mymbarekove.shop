@@ -257,7 +257,6 @@ if($pedido['estad'] = "Pendiente" ){
         
             // Imprimir el total
             echo "<h1><strong>Total:$$total_pedido</strong></h1>";
-            $obpedido->actualizarTotal($idPedido);
         } else {
             // Manejar el error si la consulta no fue exitosa
             echo "Error en la consulta: " . $conexion->error;

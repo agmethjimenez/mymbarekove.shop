@@ -81,7 +81,7 @@ session_start();
           //echo '<span class="tag is-link is-medium" id="user"><i class="fa-solid fa-circle-user fa-lg"></i><a href="perfil.php">' . $nombre . ' ' . $apellido . '</a></span> ';
           echo '<a href="perfil.php" style="color:black;"><i class="fa-solid fa-circle-user fa-2xl" style="color: #FFD43B;"></i></a>';
           echo '<form action="./logout.php" method="post">';
-          echo '<button type="submit" class="acceso">Salir</button>';
+          echo '<button type="submit" class="acceso">Salir  <i class="fa-solid fa-right-from-bracket"></i></button>';
           echo '</form>';
       }else{
             echo '<button class="acceso"><a href="./login.php">Acceder</a></button>';

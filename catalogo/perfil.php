@@ -1,7 +1,9 @@
 <?php
 require_once("../database/conexion.php");
 require_once("../models/Usuarios.php");
-require_once("../controller/users.php");
+
+$database = new Database();
+$conexion = $database->connect();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +28,7 @@ require_once("../controller/users.php");
     $usuario = new Usuario();
 
     $id = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : $_COOKIE['id_usuario'];
-    $usuario->verDatos($id);
+    $usuario->verDatos($conexion,$id);
     ?>
     <div class="wrapper">
 

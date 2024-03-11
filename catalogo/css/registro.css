@@ -36,6 +36,15 @@ form {
   justify-content: center;
   flex-direction: column;
 }
+.tittle{
+display: flex;
+width: 100%;
+justify-content: flex-start;
+align-items: center;
+}
+.tittle img{
+  width: 130px;
+}
 .tittle h1 {
   font-weight: bold;
   font-size: 35px;
@@ -44,6 +53,13 @@ form {
 input[type="text"],
 input[type="password"],
 input[type="email"] {
+  padding: 10px;
+  width: 270px;
+  border-radius: 20px;
+  font-size: 16px;
+  background-color: #efefef;
+}
+#tipoIdentificacion{
   padding: 10px;
   width: 270px;
   border-radius: 20px;

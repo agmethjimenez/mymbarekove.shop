@@ -1,10 +1,10 @@
 <?php
-require_once("../models/Usuarios.php");
+/*require_once("../models/Usuarios.php");
 require_once("../models/Pedidos.php");
 require_once("../database/conexion.php");
 session_start();
 $pedido = new Pedido();
-
+header('Content-Type: application/json');
 $metodo = $_SERVER['REQUEST_METHOD'];
 
 switch($metodo){
@@ -40,4 +40,41 @@ switch($metodo){
 
         
 
+}*/
+
+require_once("../models/Usuarios.php");
+require_once("../models/Pedidos.php");
+require_once("../database/conexion.php");
+$database = new Database();
+$conexion = $database->connect();
+session_start();
+
+header('Content-Type: application/json');
+$metodo = $_SERVER['REQUEST_METHOD'];
+
+switch($metodo) {
+    case 'GET':
+        echo json_encode((new Pedido())->getPedidos($conexion));
+        break;
+
+    case 'POST':
+        $jsonData = file_get_contents('php://input');
+        $pedido_data = json_decode($jsonData, true);
+
+        try {
+            $pedido = new Pedido();
+            $pedido->setIdUsuario(isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : (isset($_COOKIE['id_usuario']) ? $_COOKIE['id_usuario'] : null));
+            $pedido->setIdPedido(substr(uniqid(), 0, 10));
+            $pedido->setCiudad($pedido_data['ciudad']);
+            $pedido->setDireccion($pedido_data['direccion']);
+            $pedido->setDetalles($pedido_data['detalles']);
+            $pedido->setTotalP($pedido_data['totalp']);
+            $pedido->setDetallesPago($pedido_data['datospago']);
+
+            $respuesta = $pedido->traerPedido($conexion);
+            echo $respuesta;
+        } catch (Exception $e) {
+            echo json_encode(['exito' => false, 'mensaje' => 'Error en el pedido: ' . $e->getMessage()]);
+        }
+        break;
 }
