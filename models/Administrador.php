@@ -100,6 +100,22 @@ class Admin{
             return["status"=>false,"message"=>"Error al desactivar producto"];
         }
     }
+
+    static public function DesactivarProveedor($conexion,$id){
+        if($id === null){
+            return["status"=>false,"message"=>"Informacion no proporcionada"];
+        }else{
+            $sql = "UPDATE proveedores SET estado = 'NO' WHERE idProveedor = ?";
+            $bin = $conexion->prepare($sql);
+            $bin->bind_param("s",$id);
+
+            if ($bin->execute()){
+                return["status"=>true,"message"=>"Desactivado correctamente"];
+            }else{
+                return["status"=>false,"message"=>"Error al desactivar: $conexion->error"];             
+            }
+        }
+    }
 }
 
 ?>
