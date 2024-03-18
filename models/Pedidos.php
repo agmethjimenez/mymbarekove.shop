@@ -91,19 +91,89 @@ class Pedido {
         }
     }
 
-    public function getPedidos($conexion) {
-        $sql = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha, p.total, e.estado FROM pedidos as p 
-            INNER JOIN estados as e ON p.estado = e.codEst;";
+    public function getPedidos($conexion, $id) {
+        if ($id === null) {
+            $sql = "SELECT p.idPedido,u.identificacion, CONCAT(u.primerNombre, ' ', COALESCE(u.segundoNombre, ''), ' ', u.primerApellido, ' ', COALESCE(u.segundoApellido, '')) AS nombreCompleto, p.ciudad, p.direccion, p.fecha, p.total, p.detalles_pago 
+                    FROM pedidos as p
+                    LEFT JOIN usuarios as u ON p.usuario = u.id";
+        } else {
+            $sql = "SELECT p.idPedido,u.identificacion, CONCAT(u.primerNombre, ' ', COALESCE(u.segundoNombre, ''), ' ', u.primerApellido, ' ', COALESCE(u.segundoApellido, '')) AS nombreCompleto, p.ciudad, p.direccion, p.fecha, p.total, p.detalles_pago 
+                    FROM pedidos as p 
+                    LEFT JOIN usuarios as u ON p.usuario = u.id
+                    WHERE p.idPedido = ?";
+        }
+    
         $resultados = array();
-
-        if ($result = $conexion->query($sql)) {
+    
+        if ($stmt = $conexion->prepare($sql)) {
+            if ($id !== null) {
+                $stmt->bind_param("s", $id);
+            }
+            $stmt->execute();
+            $result = $stmt->get_result();
+    
             while ($fila = $result->fetch_assoc()) {
+                $fila['detalles_pago'] = json_decode($fila['detalles_pago']);
+                $sql2 = "SELECT dp.idProducto, p.nombre, dp.cantidad, dp.total FROM detallepedido as dp
+                    INNER JOIN productos as p ON p.idProducto = dp.idProducto
+                    WHERE idPedido = ?";
+                $bin = $conexion->prepare($sql2);
+                $bin->bind_param("s", $fila['idPedido']);
+                $bin->execute();
+                $detalles = $bin->get_result()->fetch_all(MYSQLI_ASSOC);
+    
+                $fila['details'] = $detalles;
                 $resultados[] = $fila;
             }
-            $result->free();
+    
+            $stmt->close();
         }
-        return $resultados;
+    
+        // Verifica si no se encontraron resultados
+        if (empty($resultados) && $id === null) {
+            return [];
+        }
+    
+        $jsonResult = $resultados;
+    
+        return $jsonResult;
     }
+    
+    
+    
+    
+
+
+    public function getIdPago($conexion) {
+        $idPago = null;
+    
+        $SQL = "SELECT detalles_pago FROM pedidos WHERE idPedido = ?";
+        
+        $stmt = $conexion->prepare($SQL);
+        
+        $stmt->bind_param("s", $this->idPedido);
+        
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            
+            $detalles_pago_json = $row['detalles_pago'];
+            
+            $detalles_pago = json_decode($detalles_pago_json, true);
+            
+            if ($detalles_pago !== null && isset($detalles_pago['payment_id'])) {
+                $idPago = $detalles_pago['payment_id'];
+            }
+        }
+        
+        $stmt->close();
+        
+        return $idPago;
+    }
+    
 }
 
 ?>

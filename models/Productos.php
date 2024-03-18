@@ -71,7 +71,6 @@ class Producto
 }
     
     public function AgregarProducto($conexion){
-        global $conexion;
         $id = rand(1000,9999);
         $sql = "INSERT INTO productos(idProducto,proveedor, nombre, descripcionP, contenido, precio, marca, categoria, cantidadDisponible, imagen,activo) VALUES (?,?,?,?,?,?,?,?,?,?,1)";
         $bin = $conexion->prepare($sql);
@@ -82,6 +81,36 @@ class Producto
             return["accesso"=>false,"mensaje"=>"Producto no agregado"];
         }
     }
+    public function ActualizarProducto($conexion){
+        $sql = "UPDATE productos SET nombre = ?, descripcionP = ?, contenido = ?, precio = ?, cantidadDisponible = ?, imagen = ? WHERE idProducto = ?";
+        $bin = $conexion->prepare($sql);
+        $bin->bind_param("sssssss",$this->nombre,$this->descripcion,$this->contenido, $this->precio, $this->stock, $this->imagen,$this->id_producto);
+        if($bin->execute()){
+            return["accesso" => true, "mensaje" => "Producto Actualizado"];
+        }else{
+            return["accesso" => false, "mensaje" => "Producto no Actualizado"];
+        }
+        
+    }
+    public static function BuscarProducto($conexion, $nombreProducto){
+        $query = "SELECT * FROM productos WHERE nombre LIKE ?";
+    
+        $stmt = $conexion->prepare($query);
+        $nombreProducto = "%$nombreProducto%"; 
+        $stmt->bind_param("s", $nombreProducto);
+        $stmt->execute();
+    
+        $result = $stmt->get_result();
+    
+        $productos = array();
+        while ($row = $result->fetch_assoc()) {
+            $productos[] = $row;
+        }
+        $stmt->close();
+    
+        return json_encode($productos);
+    }
+    
 }
 
     

@@ -1,7 +1,12 @@
-const url = 'http://localhost/mymbarekove.shop/controller/producto.php';
+import appiproductoget from "../../config.js";
+const url = 'http://localhost/mymbarekove.shop/controller/producto';
 function mostrarProductos(categoria, terminoDeBusqueda = ""){
 fetch(url, {
   method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization':'Bearer ' + appiproductoget
+  }
 })
   .then(response => {
     if (!response.ok) {
@@ -38,7 +43,7 @@ fetch(url, {
           <div class="informacion">
           <a id="nombreproducto" href="../catalogo/producto.php?producto=${producto.idProducto}">${producto.nombre}</a>         
           <p class="precio">${precioFormateado} </p>       
-          <button class="comprar" onclick="agregarAlCarrito('${producto.nombre}',${producto.precio},'${producto.idProducto}',1,'${producto.imagen}')">Agregar <i class="fa-solid fa-cart-plus fa-lg"></i></button>
+          <button class="comprar" onclick="agregarAlCarrito('${producto.nombre}',${producto.precio},'${producto.idProducto}',1,'${producto.imagen}',${producto.cantidadDisponible})">Agregar <i class="fa-solid fa-cart-plus fa-lg"></i></button>
           </div>`;
       
           div.append(divproducto);
@@ -78,5 +83,6 @@ document.getElementById("categoria-accesorios").addEventListener("click",functio
 document.getElementById("categoria-higiene").addEventListener("click",function(){
   mostrarProductos("Higiene y Cuidado\r\n");
 });
+buscarProductos();
 
 

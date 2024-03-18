@@ -85,8 +85,8 @@ if (isset($_SESSION['carrito'])) {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="carrito.js"></script>
-<script src="./js/getproducts.js"></script>
-<script src="./js/guardarcarrito.js"></script>
+<script type="module" src="js/getproducts.js"></script>
+<script src="js/guardarcarrito.js"></script>
 <script>
   document.getElementById("abrir-panel").addEventListener("click",function(){
     document.getElementById("panel").style.display = "flex";

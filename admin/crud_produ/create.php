@@ -24,8 +24,6 @@
             </div>
             <div class="con1">
                 <div class="con1-1">
-                    <label for="" class="label">ID Producto</label>
-                    <input class="input is-primary" type="text" name="id" value = "<?php echo rand(1000,9999); ?> " readonly>
                 </div>
                 <div class="con1-2">
                     <label for="" class="label">Proveedor</label>
@@ -128,7 +126,7 @@
             </div>
 
 
-            <?php
+<?php
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $id_producto = $_POST['id'];
     $proveedor = $_POST['proveedor'];
@@ -140,33 +138,50 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $categoria = $_POST['categoria'];
     $stock = $_POST['stock'];
     $direccionimg = $_POST['direccion'];
-
-   
-
-        
-            // Solo necesitas una inserción en la base de datos
-            $sqli = "INSERT INTO `productos` (`idProducto`, `proveedor`, `nombre`, `descripcionP`, `contenido`, `precio`, `marca`, `categoria`, `cantidadDisponible`, `imagen`, `activo`) VALUES ('$id_producto', '$proveedor', '$nombreproducto', '$descripcion', '$contenido', '$precio', '$marca', '$categoria', '$stock', '$direccionimg', 1)";
-
-            // Ya tienes la conexión incluida en algún lugar anterior
-            $resultado = mysqli_query($conexion, $sqli);
-
-            if ($resultado === true) {
-                echo '<div class="message is-primary" id="message">';
-                echo '<p>Inserción de producto exitosa</p>';
-                echo '<a href="productos.php" class="button is-primary">Volver</a>';
-                echo '</div>';
-            } else {
-                echo "Error al agregar el producto: " . mysqli_error($conexion);
-                echo '<div class="message is-danger" id="message">';
-                echo '<p>Inserción de producto no realizada</p>';
-                echo '<a href="provedores.php" class="button is-primary">Volver</a>';
-                echo '</div>';
-            }
-        
     
+    $producto_data = array(
+        "proveedor" => $proveedor,
+        "nombre" => $nombreproducto,
+        "descripcion" => $descripcion,
+        "contenido" => $contenido,
+        "precio" => $precio,
+        "marca" => $marca,
+        "categoria" => $categoria,
+        "stock" => $stock,
+        "imagen" => $direccionimg
+    );
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://localhost/mymbarekove.shop/controller/producto',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => json_encode($producto_data),
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+        ),
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+
+    $responseData = json_decode($response, true);
+
+    if (isset($responseData['exito']) && $responseData['exito']) {
+        echo '<div class="notification is-success">';
+        echo '<button class="delete"></button>';
+        echo '¡Producto insertado correctamente!';
+        echo '</div>';
+    }
 }
 ?>
-
     </div>
     </form>
 </body>

@@ -28,7 +28,7 @@ if (
 if (isset($_GET['id'])) {
     $idPedido = $_GET['id'];
     $idUsuario = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : $_COOKIE['id_usuario'];   
-
+    
 
     // Consulta para obtener detalles del pedido
     $sqlDetalles = "SELECT dp.idProducto, p.nombre, p.precio, dp.cantidad, dp.total 
@@ -261,9 +261,17 @@ if($pedido['estad'] = "Pendiente" ){
             // Manejar el error si la consulta no fue exitosa
             echo "Error en la consulta: " . $conexion->error;
         }
+
+        $obpedido->setIdPedido($idPedido);
+        $_SESSION['numero_pago'] = $obpedido->getIdPago($conexion);
+        $_SESSION['num_pedido'] = $idPedido ;
+        echo $_SESSION['num_pedido'];
         ?>
         <h1></h1>
+        <div style="display: flex;">
         <a class="button is-warning" href="verpedidos.php" class="details-link">Volver a Tus Pedidos</a>
+        <a class="button is-danger" href="../factura.php"><i class="fa-solid fa-file-pdf"></i> Factura</a>
+        </div>
         <div class="modal" id="myModal">
     <div class="modal-content">
         <p>¿Estás seguro de cancelar el pedido? Ten en cuenta que no podras deshacer esta accion.</p>

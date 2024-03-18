@@ -14,6 +14,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mensajeAlerta .= "- " . $producto['nombre'] . " (" . $producto['cantidad'] . " unidades) - Precio: $" . $producto['precio'] . "\n";
     }
 
-    echo "<script>alert('" . $mensajeAlerta . "');</script>";
 }
 ?>

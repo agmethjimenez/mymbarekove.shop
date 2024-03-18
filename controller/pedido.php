@@ -52,9 +52,13 @@ session_start();
 header('Content-Type: application/json');
 $metodo = $_SERVER['REQUEST_METHOD'];
 
+$path = isset($_SERVER['PATH_INFO'])?$_SERVER['PATH_INFO']:'/';
+$Bidpedido = explode('/',$path);
+$idpedido = ($path!=='/') ? end($Bidpedido):null;
+
 switch($metodo) {
     case 'GET':
-        echo json_encode((new Pedido())->getPedidos($conexion));
+        echo json_encode((new Pedido())->getPedidos($conexion,$idpedido));
         break;
 
     case 'POST':

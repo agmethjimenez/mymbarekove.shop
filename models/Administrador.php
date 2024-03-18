@@ -5,6 +5,7 @@ class Admin{
     private $id;
     private $username;
     private $email;
+    private $token;
 
     public function Registro($username, $email, $password){
         global $conexion;
@@ -64,23 +65,41 @@ class Admin{
     
         return $conexion->prepare($sql)->execute([$nombre]);
     }
-    public function DesactivarUsuario($conexion,$id) {
+    public function DesactivarUsuario($conexion, $id) {
+        if ($id === null) {
+            return ["acceso" => false, "mensaje" => "No se proporcionó un ID"];
+        } 
         $desactivacion1 = "UPDATE usuarios SET activo = 0 WHERE id = ?";
         $stmt1 = $conexion->prepare($desactivacion1);
         $stmt1->bind_param("i", $id);
     
         if (!$stmt1->execute()) {
-            return ["acceso" => false, "mensaje" => "Error al ejecutar la consulta: " . $stmt1->error];
-        }
-    
+            return ["acceso" => false, "mensaje" => "Error al ejecutar la consulta para desactivar usuario en la tabla 'usuarios': " . $stmt1->error];
+        }  
         $desactivacion2 = "UPDATE credenciales SET activo = 0 WHERE id = ?";
         $stmt2 = $conexion->prepare($desactivacion2);
         $stmt2->bind_param("i", $id);
     
         if (!$stmt2->execute()) {
-            return ["acceso" => false, "mensaje" => "Error al ejecutar la consulta: " . $stmt2->error];
+            return ["acceso" => false, "mensaje" => "Error al ejecutar la consulta para desactivar credenciales en la tabla 'credenciales': " . $stmt2->error];
+        }   
+        return ["acceso" => true, "mensaje" => "Desactivado correctamente"];
+    }   
+
+    static public function DesactivarProducto($conexion,$id){
+        if($id=== null){
+            return["status"=>false,"message"=>"Informacion no proporcionada"];
         }
-        return ["acceso" => true, "mensaje" => "Desactivado Correctamente"];
+        $sql = "UPDATE productos SET activo = 0 WHERE idProducto = ?";
+        $bin = $conexion->prepare($sql);
+        $bin->bind_param("s",$id);
+
+        if ($bin->execute()) {
+            return["status"=>true,"message"=>"Producto desactivado"];
+        }else{
+            return["status"=>false,"message"=>"Error al desactivar producto"];
+        }
     }
 }
+
 ?>

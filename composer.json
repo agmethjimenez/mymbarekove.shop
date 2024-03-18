@@ -1,6 +1,10 @@
 {
     "require": {
         "mercadopago/dx-php": "^2.6",
-        "phpmailer/phpmailer": "^6.9"
+        "phpmailer/phpmailer": "^6.9",
+        "firebase/php-jwt": "^6.10",
+        "setasign/fpdf": "^1.8",
+        "fpdf/fpdf": "^1.86",
+        "tecnickcom/tcpdf": "^6.6"
     }
 }

@@ -1,4 +1,5 @@
 <?php
+require_once("../config.php");
 session_start();
 if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && isset($_SESSION['usuario_apellido'])) ||
   (isset($_COOKIE['id_usuario']) && isset($_COOKIE['usuario_nombre']) && isset($_COOKIE['usuario_apellido']))
@@ -189,8 +190,7 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
           curl_setopt($ch, CURLOPT_POST, true);
           curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-          curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-
+          curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Bearer ' . API_POST_USER));
           $response = curl_exec($ch);
 
           curl_close($ch);

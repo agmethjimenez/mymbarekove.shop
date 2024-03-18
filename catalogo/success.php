@@ -58,6 +58,11 @@ foreach ($detallesproducto as $producto) {
       .then(data => {
         if (data.exito) {
           alert('PEDIDO EXITOSO: ' + data.mensaje);
+          <?php
+          unset($_SESSION['carrito']);
+          ?>
+          localStorage.removeItem("carritoProductos");
+          window.location.href = "http://localhost/mymbarekove.shop/catalogo/pedido/verpedidos.php";
         } else {
           alert('ERROR EN EL PEDIDO: ' + data.mensaje);
         }
