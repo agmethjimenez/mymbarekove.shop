@@ -28,20 +28,38 @@ EnviarDatosCarrito();
 numerito();
 
 
-function agregarAlCarrito(nombre, precio, id, cantidad = 1, imagen) {
+function agregarAlCarrito(nombre, precio, id, cantidad = 1, imagen, stock) {
   const productoExistente = carritoProductos.find((producto) => producto.nombre === nombre);
 
   if (productoExistente) {
-    productoExistente.cantidad += cantidad;
-    productoExistente.total = productoExistente.precio * productoExistente.cantidad;
+    const cantidadTotal = productoExistente.cantidad + cantidad;
+    if (cantidadTotal > stock) {
+      alert(`¡No hay suficiente stock disponible para agregar ${cantidad} unidades de ${nombre} al carrito!`);
+      return;
+    }
+    if (cantidadTotal > 4) {
+      alert("¡No se pueden agregar más de 4 unidades de un mismo producto al carrito!");
+      return;
+    }
+    productoExistente.cantidad = cantidadTotal;
+    productoExistente.total = productoExistente.precio * cantidadTotal;
   } else {
+    if (cantidad > 4) {
+      alert("¡No se pueden agregar más de 4 unidades de un mismo producto al carrito!");
+      return;
+    }
+    if (cantidad > stock) {
+      console.log(`¡No hay suficiente stock disponible para agregar ${cantidad} unidades de ${nombre} al carrito!`);
+      return;
+    }
     carritoProductos.push({
       imagen,
       id,
       nombre,
       precio,
+      stock,
       cantidad,
-      total:precio*cantidad
+      total: precio * cantidad
     });
     console.log(carritoProductos);
   }
@@ -73,14 +91,21 @@ function sumarCantidad(id) {
   const producto = carritoProductos.find(item => item.id === id);
 
   if (producto) {
-    producto.cantidad++;
+    const cantidadTotal = producto.cantidad + 1;
+    if (cantidadTotal > producto.stock) {
+      alert(`¡No hay suficiente stock disponible para agregar más unidades de ${producto.nombre} al carrito!`);
+      return;
+    }
+    if (cantidadTotal > 4) {
+      alert("¡No se pueden tener más de 4 unidades de un mismo producto en el carrito!");
+      return;
+    }
+    producto.cantidad = cantidadTotal;
     producto.total = producto.cantidad * producto.precio;
-    console.log(`Se aumentó la cantidad de ${producto.nombre}. Cantidad actual: ${producto.cantidad}`);
     savelocal();
     tablear();
     EnviarDatosCarrito();
     
-    // Otras acciones que desees realizar
   } else {
     console.log('Producto no encontrado en el carrito');
   }

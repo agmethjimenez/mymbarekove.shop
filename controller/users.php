@@ -1,12 +1,21 @@
 <?php
 header('Content-Type: application/json');
+require_once("../config.php");
+require_once("../models/Auth.php");
 require_once("../models/Usuarios.php");
 require_once("../database/conexion.php");
 require_once '../models/Administrador.php';
 $database = new Database();
 $conexion = $database->connect();
+$auth = new Auth();
 $usuario = new Usuario();
 $admin = new Admin();
+
+$headers = getallheaders();
+$authorizationHeader = $headers['Authorization'] ?? null;
+
+
+
 $metodo = $_SERVER['REQUEST_METHOD'];
 
 $path = isset($_SERVER['PATH_INFO'])?$_SERVER['PATH_INFO']:'/';
@@ -15,27 +24,47 @@ $idusuario = ($path!=='/') ? end($BidUsuario):null;
 
 switch ($metodo) {
     case 'GET':
+        $auth->setToken(API_KEY_GET);
+        if ($auth->verificarToken($authorizationHeader)) {
         $funcion = $usuario->GETusuarios($conexion,$idusuario);
         echo json_encode($funcion);
-        break;
-    case 'POST':
-        $data = json_decode(file_get_contents('php://input'), true);
-        $usuario->setIdentificacion($data['identificacion']);
-        $usuario->setTipoId($data['tipoid']);
-        $usuario->setNombre1($data['nombre1']);
-        $usuario->setNombre2($data['nombre2']);
-        $usuario->setApellido1($data['apellido1']);
-        $usuario->setApellido2($data['apellido2']);
-        $usuario->setTelefono($data['telefono']);
-        $usuario->setEmail($data['email']);
-        $result = $usuario->registrarse($conexion,$data['password']);
-        if ($result["success"]) {
-            echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));
-        } else {
-            echo json_encode(array('exito' => false, 'mensaje' => $result['mensaje']));
+        }else{
+        header('HTTP/1.0 401 Unauthorized');
+        echo json_encode(['error' => 'Acceso no autorizado']);
+        exit;
         }
         break;
+    case 'POST':
+        $auth->setToken(API_POST_USER);
+        if ($auth->verificarToken($authorizationHeader)) {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $usuario->setIdentificacion($data['identificacion']);
+            $usuario->setTipoId($data['tipoid']);
+            $usuario->setNombre1($data['nombre1']);
+            $usuario->setNombre2($data['nombre2']);
+            $usuario->setApellido1($data['apellido1']);
+            $usuario->setApellido2($data['apellido2']);
+            $usuario->setTelefono($data['telefono']);
+            $usuario->setEmail($data['email']);
+            $result = $usuario->registrarse($conexion,$data['password']);
+            if ($result["success"]) {
+                http_response_code(201);
+                echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));
+            } else {
+                echo json_encode(array('exito' => false, 'mensaje' => $result['mensaje']));
+            }
+        }else{
+            header('HTTP/1.0 401 Unauthorized');
+            echo json_encode(array('exito'=>false,'mensaje' => 'Acceso no autorizado'));
+            exit;
+        }
+        
+        break;
     case 'PUT':
+        $auth->setToken(API_POST_USER);
+        if ($auth->verificarToken($authorizationHeader)){
+
+        
         $jsonData = file_get_contents('php://input');
         $usuario_data = json_decode($jsonData, true);
 
@@ -59,19 +88,31 @@ switch ($metodo) {
             $usuario->actualizarDatos($conexion);
 
             header('Content-Type: application/json');
-            echo json_encode(['message' => 'Datos actualizados con éxito']);
+            echo json_encode(['exito'=>true,'message' => 'Datos actualizados con exito']);
         } else {
             header('Content-Type: application/json', true, 400);
             echo json_encode(['error' => 'JSON no válido']);
         }
+    }else{
+        header('HTTP/1.0 401 Unauthorized');
+        echo json_encode(array('exito'=>false,'mensaje' => 'Acceso no autorizado'));
+        exit;
+    }
         break;
     case 'DELETE':
+        $auth->setToken(dku);
+        if ($auth->verificarToken($authorizationHeader)){
         $result = $admin->DesactivarUsuario($conexion,$idusuario);
         if ($result['acceso']) {
             echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));
         } else {
             echo json_encode(array('exito' => false, 'mensaje' => $result['mensaje']));
         }
+    }else{
+        header('HTTP/1.0 401 Unauthorized');
+        echo json_encode(array('exito'=>false,'mensaje' => 'Acceso no autorizado'));
+        exit;
+    }
         break;
 }
 

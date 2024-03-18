@@ -1,5 +1,4 @@
 <?php
-require '../vendor/autoload.php';
 require_once("../database/conexion.php");
 
 class Usuario
@@ -140,7 +139,7 @@ class Usuario
         }
     }
 
-    public function verDatos($conexion,$id)
+    public function verDatos($conexion, $id)
     {
         $sql = "SELECT*FROM usuarios WHERE id = '$id'";
         $con = $conexion->query($sql);
@@ -208,5 +207,28 @@ class Usuario
             return ['encontrado' => false, 'mensaje' => 'Usuario no encontrado'];
         }
         $stmt->close();
+    }
+
+    public function VerificarExistencia($id)
+    {
+    }
+    public function verificarToken($conexion, $idusuario, $token_ingresado)
+    {
+        $token_db = null;
+        $id = null;
+        $sql = "SELECT id, token FROM credenciales WHERE id = ? AND activo = 1";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param('s', $idusuario);
+        $stmt->execute();
+        $stmt->bind_result($id, $token_db);
+        $stmt->fetch();
+        $stmt->close();
+        
+
+        if ($token_db && hash_equals($token_db, $token_ingresado)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

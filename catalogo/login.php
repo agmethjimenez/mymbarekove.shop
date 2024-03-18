@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once('../config.php');
 require_once("../models/Usuarios.php");
 require_once("../database/conexion.php");
 require_once("../models/Administrador.php");
@@ -85,7 +86,7 @@ if (!empty($_POST["submit"])) {
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($datos));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Authorization: Bearer ' . login));
 
             $response = curl_exec($ch);
 

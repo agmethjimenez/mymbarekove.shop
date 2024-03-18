@@ -1,0 +1,21 @@
+RewriteEngine On
+
+# Reescribir todas las solicitudes a archivos PHP sin la extensión .php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^/]+)/?$ $1.php [L]
+
+# Reescribir todas las solicitudes a archivos PHP con parámetros
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/?$ $1.php?param1=$2&param2=$3 [L,QSA]
+
+# Reescribir todas las solicitudes a archivos PHP en la raíz con parámetros
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^/]+)/([^/]+)/?$ $1.php?param1=$2 [L,QSA]
+
+RewriteEngine On
+RewriteBase /mymbarekove.shop/catalogo/
+RewriteRule ^$ catalogo.php [L]
+

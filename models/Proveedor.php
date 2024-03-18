@@ -66,4 +66,16 @@ class Proveedor
             return ["acceso" => false, "mensaje" => "Error al insertar: $conexion->error"];
         }
     }
+
+    public function PUTprovedores($conexion){
+        $sql = "UPDATE proveedores SET nombreP = ?, ciudad = ?, correo = ?, telefono = ? WHERE idProveedor ? AND estado = 'SI' ";
+        $bin = $conexion->prepare($sql);
+        $bin->bind_param("sssss",$this->nombre, $this->ciudad, $this->correo, $this->telefono, $this->idProveedor);
+
+        if ($bin->execute()) {
+            return ["acceso" => true, "mensaje" => "Actualizado correctamente"];
+        } else {
+            return ["acceso" => false, "mensaje" => "Error al actualizar: $conexion->error"];
+        }
+    }
 }

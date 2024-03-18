@@ -118,7 +118,7 @@ if ((!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido']
         }
     ?>
     <?php } 
-    if (isset($_SESSION['direccion']) && isset($_SESSION['ciudad']) && isset($_SESSION['carrito'])) {
+    if (isset($_SESSION['direccion']) && isset($_SESSION['ciudad']) && isset($_SESSION['carrito']) && !empty($_SESSION['carrito'])) {
     ?>
     <div class="mp">
     <p>Seras dirigido a mercado pago para realizar el pago del pedido</p>
@@ -156,18 +156,16 @@ function tablear() {
 
     if (!productos || productos.length === 0) {
         // Si no hay productos, mostrar mensaje y botón de redirección
-        let noProductosMessage = document.createElement("p");
-        noProductosMessage.textContent = "No hay productos.";
+        let noProductosMessage = document.createElement("div");
+        noProductosMessage.className = 'noproduct'
+        noProductosMessage.id = 'noproduct';
+        noProductosMessage.innerHTML = `
+        <p>No hay productos<p>
+        <a href="catalogo.php">Ir al catalogo<a/>`;
+
         options.appendChild(noProductosMessage);
 
-        let redireccionarBoton = document.createElement("button");
-        redireccionarBoton.className = "button is-primary";
-        redireccionarBoton.id = "redireccionar";
-        redireccionarBoton.textContent = "Ir al catálogo";
-        redireccionarBoton.addEventListener("click", function () {
-            window.location.href = "catalogo.php";
-        });
-        options.appendChild(redireccionarBoton);
+        
     } else {
         // Si hay productos, llenar la tabla y mostrar total y botón de vaciar carrito
         let thead = document.createElement("thead");

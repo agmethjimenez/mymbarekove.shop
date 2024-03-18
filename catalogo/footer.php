@@ -15,6 +15,9 @@
             color: #fff;
             padding: 20px;
             text-align: center;
+            width: 100%;
+            bottom: 0;
+            top: 10px;
         }
     </style>
 </head>

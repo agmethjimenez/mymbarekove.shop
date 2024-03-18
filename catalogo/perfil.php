@@ -1,4 +1,5 @@
 <?php
+require_once("../config.php");
 require_once("../database/conexion.php");
 require_once("../models/Usuarios.php");
 
@@ -28,7 +29,7 @@ $conexion = $database->connect();
     $usuario = new Usuario();
 
     $id = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : $_COOKIE['id_usuario'];
-    $usuario->verDatos($conexion,$id);
+    $usuario->verDatos($conexion, $id);
     ?>
     <div class="wrapper">
 
@@ -57,114 +58,98 @@ $conexion = $database->connect();
         </div>
 
         <div class="actualizardatos" id="actualizardatos">
-        <h1 class="titulo">Actualizar datos</h1>
-        <p>*La identificacion y el tipo de identificacion no de pueden cambiar</p>
+            <h1 class="titulo">Actualizar datos</h1>
+            <p>*La identificacion y el tipo de identificacion no de pueden cambiar</p>
             <form method="post">
                 <div class="con1">
                     <div>
-                    <label class="label" for="">Primer Nombre</label>
-                    <input class="input is-rounded" type="text" id="nombre1" name="nombre1" value="<?php echo $_SESSION['nombre1']; ?>"> 
+                        <label class="label" for="">Primer Nombre</label>
+                        <input class="input is-rounded" type="text" id="nombre1" name="nombre1" value="<?php echo $_SESSION['nombre1']; ?>">
                     </div>
                     <div>
-                    <label class="label" for="">Segundo Nombre</label>
-                    <input class="input is-rounded" type="text" id="nombre2" name="nombre2" value="<?php echo $_SESSION['nombre2'];?>">
+                        <label class="label" for="">Segundo Nombre</label>
+                        <input class="input is-rounded" type="text" id="nombre2" name="nombre2" value="<?php echo $_SESSION['nombre2']; ?>">
                     </div>
                 </div>
                 <div class="con2">
                     <div>
-                    <label class="label" for="">Primer apellido</label>
-                    <input class="input is-rounded" type="text" id="apellido1" name="apellido1" value="<?php echo $_SESSION['apellido1'] ?>">
+                        <label class="label" for="">Primer apellido</label>
+                        <input class="input is-rounded" type="text" id="apellido1" name="apellido1" value="<?php echo $_SESSION['apellido1'] ?>">
                     </div>
                     <div>
-                    <label class="label" for="">Segundo apellido</label>
-                    <input class="input is-rounded" type="text" id="apellido2" name="apellido2" value="<?php echo $_SESSION['apellido2'] ?>">
+                        <label class="label" for="">Segundo apellido</label>
+                        <input class="input is-rounded" type="text" id="apellido2" name="apellido2" value="<?php echo $_SESSION['apellido2'] ?>">
                     </div>
                 </div>
                 <div class="con3">
                     <div>
-                    <label class="label" for="">Correo</label>
-                    <input class="input is-rounded" type="text" id="email" name="email" value="<?php echo $_SESSION['email'] ?>">
+                        <label class="label" for="">Correo</label>
+                        <input class="input is-rounded" type="text" id="email" name="email" value="<?php echo $_SESSION['email'] ?>">
                     </div>
                     <div>
 
-                    <label class="label" for="">Telefono</label>
-                    <input class="input is-rounded" type="text" id="telefono" name="telefono" value="<?php echo $_SESSION['telefono'] ?>">
+                        <label class="label" for="">Telefono</label>
+                        <input class="input is-rounded" type="text" id="telefono" name="telefono" value="<?php echo $_SESSION['telefono'] ?>">
                     </div>
                 </div>
                 <div class="con4">
-                <div class="g-recaptcha" data-sitekey="6LelmxwpAAAAAFS3KlCNxJf9TfDpe70SP2y0Ie3w"></div>
+                    <div class="g-recaptcha" data-sitekey="6LelmxwpAAAAAFS3KlCNxJf9TfDpe70SP2y0Ie3w"></div>
                 </div>
                 <div class="boton">
-                    <input type="submit" class="button is-black" value="Actualizar" onclick="updatesuer()">
-                </div> 
+                    <input type="submit" class="button is-black" name="submit" value="Actualizar" onclick="updatesuer()">
+                </div>
+                <?php
+                if (isset($_POST['submit'])) {
+                    $curl = curl_init();
+
+                    $data = array(
+                        "identificacion" => $_SESSION['identificacion'],
+                        "primerNombre" => $_POST['nombre1'],
+                        "segundoNombre" => $_POST['nombre2'],
+                        "primerApellido" => $_POST['apellido1'],
+                        "segundoApellido" => $_POST['apellido2'],
+                        "telefono" => $_POST['telefono'],
+                        "email" => $_POST['email']
+                    );
+
+                    $payload = json_encode($data);
+
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'http://localhost/mymbarekove.shop/controller/users',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'PUT',
+                        CURLOPT_POSTFIELDS => $payload,
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: ' . API_POST_USER,
+                            'Content-Type: application/json'
+                        ),
+                    ));
+
+                    $response = curl_exec($curl);
+
+                    curl_close($curl);
+                    $responseData = json_decode($response, true);
+                    if (isset($responseData['exito']) && $responseData['exito']) {
+                        echo '<div class="message is-primary" id="message">';
+                        echo '<p>Datos Actualizados</p>';
+                        echo '</div>';
+                        header("Location: {$_SERVER['PHP_SELF']}");
+                        exit();
+                    } else {
+                        echo '<div class="message is-danger" id="message">';
+                        echo '<p>Datos no actualizados</p>';
+                        echo '</div>';
+                    }
+                }
+                ?>
             </form>
         </div>
-
-        
-
     </div>
-    <script>
-         function updatesuer(){
-    let recaptchaResponse = grecaptcha.getResponse();
-    if (!recaptchaResponse){
-        message("Por favor, complete el reCAPTCHA", "is-danger");
-        event.preventDefault();
-        return false;
-    }
-    let id = <?php echo $_SESSION['identificacion']; ?>;
-    let nombre1 = document.getElementById("nombre1").value;
-    let nombre2 = document.getElementById("nombre2").value;
-    let apellido1 = document.getElementById("apellido1").value;
-    let apellido2 = document.getElementById("apellido2").value;
-    let telefono = document.getElementById("telefono").value;
-    let email = document.getElementById("email").value;
-
-    const jsonData = {
-        "identificacion": id,
-        "primerNombre": nombre1,
-        "segundoNombre": nombre2,
-        "primerApellido": apellido1,
-        "segundoApellido": apellido2,
-        "telefono": telefono,
-        "email": email
-        }
-    fetch('http://localhost/mymbarekove.shop/controller/users.php', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(jsonData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            message("Actualizado","is-primary");
-        })
-        .catch(error =>{
-            console.error('Error:', error)
-            message("Error","is-danger");
-        });
-    }
-
-
-    function message(m, e) {
-    let bot = document.querySelector(".boton");
-
-    let mensajeAnterior = document.getElementById("message");
-    if (mensajeAnterior) {
-        mensajeAnterior.remove();
-    }
-
-    let div = document.createElement("div");
-    div.className = `message ${e}`;
-    div.id = "message";
-    div.innerHTML = `
-        <p>${m}</p>
-    `;
-    bot.appendChild(div);
-}
-
-</script>
 </body>
 
 

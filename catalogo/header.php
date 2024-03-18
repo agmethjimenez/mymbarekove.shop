@@ -6,6 +6,7 @@ session_start();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
     <link rel="stylesheet" href="./css/estilo.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" type="image/png" href="imgs/productos/Copia de Logo veterinaria animado azul rosado.png">
 </head>
@@ -14,9 +15,10 @@ session_start();
       <img class="logo" src="imgs/productos/Copia de Logo veterinaria animado azul rosado.png" alt="Logo">
     </div>
     <div class="ssa" style="display: flex; justify-content: center; align-items: center;">
-        <input class="input is-primary" id="searchin" type="search" placeholder="¿Que producto buscas">
-        <button class="button is-black" id="buscarbtn" onclick="buscarProductos()"><i class="fa-solid fa-magnifying-glass"></i></button>  
-    </div>
+    <form action="search.php" method="GET">
+        <input class="input is-primary" id="searchin" type="search" name="producto" placeholder="¿Qué producto buscas">
+    </form>
+</div>
         
 
     <nav class="navigation">

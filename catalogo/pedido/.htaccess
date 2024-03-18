@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteBase /mymbarekove.shop/catalogo/pedido
+RewriteRule ^$ verpedidos.php [L]

@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Reescribir URLs sin la extensión .php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^/]+)/?$ $1.php [L]
+
+# Reescribir URLs con parámetros
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^/]+)/([^/]+)/?$ $1.php/$2 [L,QSA]
