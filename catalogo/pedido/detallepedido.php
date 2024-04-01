@@ -265,7 +265,6 @@ if($pedido['estad'] = "Pendiente" ){
         $obpedido->setIdPedido($idPedido);
         $_SESSION['numero_pago'] = $obpedido->getIdPago($conexion);
         $_SESSION['num_pedido'] = $idPedido ;
-        echo $_SESSION['num_pedido'];
         ?>
         <h1></h1>
         <div style="display: flex;">

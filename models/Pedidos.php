@@ -78,7 +78,12 @@ class Pedido {
                 if (!$stmtDetalle->execute()) {
                     throw new Exception("Error al insertar detalle de pedido: " . $stmtDetalle->error);
                 }
-    
+
+                $sqlStock = "UPDATE productos SET cantidadDisponible = cantidadDisponible - ? WHERE idProducto = ? ";
+                $stmtStock = $conexion->prepare($sqlStock);
+                $stmtStock->bind_param("ss",$cantidad,$idProducto);
+                $stmtStock->execute();
+
                 $stmtDetalle->close();
             }
     

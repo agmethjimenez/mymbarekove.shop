@@ -1,4 +1,7 @@
 <?php
+require '../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
+$dotenv->load();
 include_once("../models/Productos.php");
 if(isset($_GET['producto'])){
     $id = $_GET['producto'];
@@ -6,7 +9,7 @@ if(isset($_GET['producto'])){
     
     $apiUrl = "http://localhost/mymbarekove.shop/controller/producto/$id";
     $ch = curl_init($apiUrl);
-    $token = "a48bdbf8e9da6943d26ea4061a7d42038ff6f9bab2037e2279d5875379215a2583ae9a8b98a20c1d597dca986f27e3a98dc3ee9e70019c756668945d4a6492028ba028361d28486bc933fd2a1826907f7a1130f78287f3fceb3ce40445da155607f07891";
+    $token = $_ENV['KEY_PRODUCTS'];
     $headers = array(
         'Authorization: Bearer ' . $token
     );

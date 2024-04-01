@@ -1,6 +1,8 @@
 <?php
 header('Content-Type: application/json');
-require_once("../config.php");
+require '../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
+$dotenv->load();
 require_once("../models/Auth.php");
 require_once("../models/Usuarios.php");
 require_once("../database/conexion.php");
@@ -24,7 +26,7 @@ $idusuario = ($path!=='/') ? end($BidUsuario):null;
 
 switch ($metodo) {
     case 'GET':
-        $auth->setToken(API_KEY_GET);
+        $auth->setToken($_ENV['API_KEY_GET']);
         if ($auth->verificarToken($authorizationHeader)) {
         $funcion = $usuario->GETusuarios($conexion,$idusuario);
         echo json_encode($funcion);
@@ -35,7 +37,7 @@ switch ($metodo) {
         }
         break;
     case 'POST':
-        $auth->setToken(API_POST_USER);
+        $auth->setToken($_ENV['API_POST_USER']);
         if ($auth->verificarToken($authorizationHeader)) {
             $data = json_decode(file_get_contents('php://input'), true);
             $usuario->setIdentificacion($data['identificacion']);
@@ -61,7 +63,7 @@ switch ($metodo) {
         
         break;
     case 'PUT':
-        $auth->setToken(API_POST_USER);
+        $auth->setToken($_ENV['API_POST_USER']);
         if ($auth->verificarToken($authorizationHeader)){
 
         
@@ -100,7 +102,7 @@ switch ($metodo) {
     }
         break;
     case 'DELETE':
-        $auth->setToken(dku);
+        $auth->setToken($_ENV['dku']);
         if ($auth->verificarToken($authorizationHeader)){
         $result = $admin->DesactivarUsuario($conexion,$idusuario);
         if ($result['acceso']) {

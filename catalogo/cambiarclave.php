@@ -1,5 +1,7 @@
 <?php
-
+require '../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
+$dotenv->load();
 session_start();
 
 if (
@@ -172,29 +174,25 @@ input[type="password"] {
 </head>
 
 <body>
-    <?php
-
-    $id = $_SESSION['id_usuario'];
-    ?>
     <div class="wrapper">
         <div class="cambiarclaved" id="cambiarclaved">
-            <form method="post">
+            <form method="post" action="">
                 <h1 class="titulo">Cambio de contraseña</h1>
                 <div class="con1">
                     <div>
                         <label class="label" for="">Contraseña actual</label>
 
-                        <input class="input is-rounded" type="password" placeholder="Ingrese su clave actual" id="passwordactual" required>
+                        <input class="input is-rounded" type="password" placeholder="Ingrese su clave actual" name="passwordactual" id="passwordactual" required>
                     </div>
                 </div>
                 <div class="con2">
                     <div>
                         <label class="label" for="">Contraseña nueva</label>
-                        <input class="input is-rounded" type="password" placeholder="Ingrese su clave nueva" id="passwordnueva">
+                        <input class="input is-rounded" name="passwordnueva" type="password" placeholder="Ingrese su clave nueva" id="passwordnueva">
                     </div>
                     <div>
                         <label class="label" for="">Contraseña nueva</label>
-                        <input class="input is-rounded" type="password" placeholder="Ingrese su clave nueva otra vez" id="passwordnueva2">
+                        <input class="input is-rounded" type="password" name="passwordnueva2" placeholder="Ingrese su clave nueva otra vez" id="passwordnueva2">
                     </div>
                 </div>
                 <div class="con3">
@@ -202,12 +200,71 @@ input[type="password"] {
 
                 </div>
                 <div class="boton2">
-                    <input type="submit" class="button is-black" value="Actualizar" onclick="cambioClave(event)">
+                    <input type="submit" name="submit" class="button is-black" value="Actualizar" onclick="cambioClave(event)">
                 </div>
+                <?php
+                /*if (isset($_POST['submit'])) {
+                    $id = $_SESSION['id_usuario'];
+                    $claveactual = $_POST["passwordactual"];
+                    $clavenueva = $_POST["passwordnueva"];
+                    $clavenueva2 = $_POST["passwordnueva2"];
+                
+                    if (empty($id) || empty($claveactual) || empty($clavenueva) || empty($clavenueva2)) {
+                        echo '<div class="notification is-danger">Por favor, complete todos los campos</div>';
+                        exit();
+                    }
+                
+                    if ($claveactual == $clavenueva) {
+                        echo '<div class="notification is-danger">La contraseña actual es igual a la nueva, cambíela</div>';
+                        exit();
+                    }
+                
+                    if ($clavenueva != $clavenueva2) {
+                        echo '<div class="notification is-danger">Las contraseñas nuevas deben ser iguales</div>';
+                        exit();
+                    }
+                
+                    // Preparar datos para la solicitud al API
+                    $jsonData = json_encode(array(
+                        "identificacion" => $id,
+                        "claveactual" => $claveactual,
+                        "clavenueva" => $clavenueva,
+                        "clavenueva2" => $clavenueva2
+                    ));
+                
+                    // Realizar la solicitud al API utilizando cURL
+                    $api_url = 'http://localhost/mymbarekove.shop/controller/password.php';
+                
+                    $ch = curl_init($api_url);
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json',
+                        'Authorization: Bearer ' . $_ENV['PASSWORD_TOKEN']
+                    ));
+                
+                    // Realizar la solicitud y obtener la respuesta
+                    $response = curl_exec($ch);
+                    curl_close($ch);
+                    $response = json_decode($response, true);
+                
+                    // Procesar la respuesta del API y mostrar las alertas de Bulma CSS
+                    if ($response['exito']) {
+                        echo '<script> window.location.href = "logout.php"</script>';
+                    } else {
+                        echo '<div class="notification is-danger">' . $response['mensaje'] . '</div>';
+                        exit();
+                    }
+                }*/
+?>
+
+
             </form>
         </div>
     </div>
     <script>
+        
         function cambioClave(event) {
     event.preventDefault(); // Evita que el formulario se envíe de forma tradicional
 
@@ -249,6 +306,8 @@ input[type="password"] {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': 'Bearer <?php echo $_ENV['PASSWORD_TOKEN'] ?>' ,
+            
         },
         body: JSON.stringify(jsonData),
     })
@@ -287,8 +346,7 @@ function mesage(m, e) {
     div.innerHTML = `<p>${m}</p>`;
     bot.appendChild(div);
 }
-
-        
+       
     </script>
 </body>
 

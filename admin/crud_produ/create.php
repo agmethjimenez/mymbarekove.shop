@@ -1,3 +1,8 @@
+<?php
+require '../../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../'); // Corregido el directorio donde se encuentra el archivo .env
+$dotenv->load();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -128,7 +133,6 @@
 
 <?php
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $id_producto = $_POST['id'];
     $proveedor = $_POST['proveedor'];
     $nombreproducto = $_POST['nombre'];
     $descripcion = $_POST['descripcion'];
@@ -164,7 +168,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS => json_encode($producto_data),
         CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json'
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$_ENV['POST_PRODUCT'].' ',
         ),
     ));
 
@@ -178,6 +183,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo '<div class="notification is-success">';
         echo '<button class="delete"></button>';
         echo '¡Producto insertado correctamente!';
+        echo '<a href="./productos.php">Volver</a>';
+        echo '</div>';
+    }else{
+        echo '<div class="notification is-danger">';
+        echo '<button class="delete"></button>';
+        echo '¡Error! ' . $responseData['error'];
         echo '</div>';
     }
 }

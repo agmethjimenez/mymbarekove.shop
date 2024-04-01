@@ -1,10 +1,12 @@
 <?PHP
+require '../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
+$dotenv->load();
 session_start();
 header('Content-Type: application/json');
 require_once '../models/Auth.php';
 require_once("../models/Usuarios.php");
 require_once("../database/conexion.php");
-require_once '../config.php';
 require_once '../models/Administrador.php';
 $database = new Database();
 $conexion = $database->connect();
@@ -18,7 +20,7 @@ $authorizationHeader = $headers['Authorization'] ?? null;
 
 switch ($metodo) {
     case 'POST':
-        $auth->setToken(login);
+        $auth->setToken($_ENV['login']);
         if ($auth->verificarToken($authorizationHeader)) {
 
             $data = json_decode(file_get_contents('php://input'), true);

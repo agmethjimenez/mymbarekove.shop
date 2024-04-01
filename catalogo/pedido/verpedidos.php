@@ -34,7 +34,14 @@ header {
     background-color: #594A3C;
     color: #fff;
     text-align: center;
+    align-items: center;
     padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+header img{
+    width: 40px;
+    filter: invert(100%);
 }
 
 .container {
@@ -53,6 +60,10 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.order:hover{
+    background-color: #f5f5f5;
+
 }
 
 .order-info {
@@ -113,7 +124,9 @@ header {
 </head>
 <body>
     <header>
+        <a href="../catalogo.php"><img src="../imgs/recursos/flecha-izquierda.png" alt=""></a>
         <h1>Tus Pedidos</h1>
+        <h1></h1>
     </header>
 
     <div class="container">

@@ -1,3 +1,13 @@
+<?php
+if (isset($_GET['success'])) {
+    if ($_GET['success'] === 'true') {
+        echo '<script>alert("Desactivado exitosamente");</script>';
+    } else {
+        echo '<script>alert("No desactivado");</script>';
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

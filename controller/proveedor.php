@@ -1,11 +1,12 @@
 <?php
-
+require '../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
+$dotenv->load();
 header('Content-Type: application/json');
 require_once("../models/Proveedor.php");
 require_once("../models/Administrador.php");
 require_once("../database/conexion.php");
 require_once("../models/Auth.php");
-require_once("../config.php");
 $auth = new Auth;
 $database = new Database();
 $conexion = $database->connect();
@@ -22,12 +23,20 @@ $idproveedor = ($path !== '/') ? end($Bidproveedor) : null;
 
 switch ($metodo) {
     case 'GET':
+        $auth->setToken($_ENV['PROVEDOR_GET']);
+        if($auth->verificarToken($authorizationHeader)){
         $result = $proveedor->GETproveedores($conexion, $idproveedor);
         echo json_encode($result);
+        }else{
+            header('HTTP/1.0 401 Unauthorized');
+            echo json_encode(array('exito'=>false,'message' => 'Acceso no autorizado'));
+            exit;
+        }
         break;
     case 'POST':
+        $auth->setToken($_ENV['PROVEDOR_POST']);
+        if($auth->verificarToken($authorizationHeader)){
         $data = json_decode(file_get_contents('php://input'), true);
-
         $proveedor->setIdProveedor(rand(1000,9999));
         $proveedor->setNombre($data['nombre']);
         $proveedor->setCiudad($data['ciudad']);
@@ -40,9 +49,16 @@ switch ($metodo) {
             echo json_encode(array("acceso" => true, "mensaje" => $result['mensaje']));
         } else {
             echo json_encode(array("acceso" => false, "mensaje" => $result['mensaje']));
-        }  
+        }
+    }else{
+        header('HTTP/1.0 401 Unauthorized');
+            echo json_encode(array('exito'=>false,'message' => 'Acceso no autorizado'));
+            exit;
+    }
         break;
     case 'PUT':
+        $auth->setToken($_ENV['PROVEDOR_PUT']);
+        if($auth->verificarToken($authorizationHeader)){    
         $data = json_decode(file_get_contents('php://input'), true);
         $proveedor->setNombre($data['nombreP']);
         $proveedor->setCiudad($data['ciudad']);
@@ -56,9 +72,14 @@ switch ($metodo) {
         }else{
             echo json_encode(['status'=>false,'mensaje'=>$result['mensaje']]);
         }
+    }else{
+        header('HTTP/1.0 401 Unauthorized');
+            echo json_encode(array('exito'=>false,'message' => 'Acceso no autorizado'));
+            exit;
+    }
         break;
     case 'DELETE':
-        $auth->setToken(dku);
+        $auth->setToken($_ENV['dku']);
         if($auth->verificarToken($authorizationHeader)){
         $result = $admin->DesactivarProveedor($conexion,$idproveedor);
         if($result['status']){

@@ -1,5 +1,7 @@
 <?php
-require_once("../config.php");
+require '../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
+$dotenv->load();
 require_once("../database/conexion.php");
 require_once("../models/Usuarios.php");
 
@@ -125,7 +127,7 @@ $conexion = $database->connect();
                         CURLOPT_CUSTOMREQUEST => 'PUT',
                         CURLOPT_POSTFIELDS => $payload,
                         CURLOPT_HTTPHEADER => array(
-                            'Authorization: ' . API_POST_USER,
+                            'Authorization: ' . $_ENV['API_POST_USER'],
                             'Content-Type: application/json'
                         ),
                     ));

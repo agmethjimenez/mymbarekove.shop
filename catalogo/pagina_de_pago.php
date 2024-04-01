@@ -122,7 +122,7 @@ if ((!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido']
     ?>
     <div class="mp">
     <p>Seras dirigido a mercado pago para realizar el pago del pedido</p>
-    <a href="checkout.php" class="button is-link" style="width: 200px;">Realizar Pagar</a>
+    <a href="checkout.php" class="button is-info is-outlined" style="width: 200px;">Realizar Pago</a>
     </div>
     <?php } ?>
 </div>
