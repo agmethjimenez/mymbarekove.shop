@@ -46,7 +46,6 @@ $conexion = $database->connect();
       $bin->execute();
       $result = $bin->get_result();
       $token = bin2hex(random_bytes(16));
-      #$token = str_pad($token, strlen($token) + (strlen($token) % 2), '0', STR_PAD_LEFT);
 
       if ($result->num_rows > 0){
         require_once 'mailreset.php';

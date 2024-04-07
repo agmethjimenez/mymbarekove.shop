@@ -1,3 +1,18 @@
+<?Php 
+session_start();
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+    $id_admin = $_SESSION['id_admin'];
+    $username = $_SESSION['username'];
+    $email = $_SESSION['email'];
+    $token = $_SESSION['token'];
+} else {
+    header("Location: ../../catalogo/login.php");
+    exit; 
+}
+require '../../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../'); // Corregido el directorio donde se encuentra el archivo .env
+$dotenv->load();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -156,30 +171,63 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stock = $_POST['stock'];
     $imagen = $_POST['direccion'];
 
-    
-    $sqli = "UPDATE productos SET `idProducto` = '$ida', `proveedor` = '$proveedor', `nombre` = '$nombre', `descripcionP` = '$descripcion', `contenido` = '$contenido', `precio` = '$precio', `marca` = '$marca', `categoria` = '$categoria', `cantidadDisponible`= '$stock', `imagen`='$imagen' WHERE `productos`.`idProducto` = '$ida'";
-   
-    $resultado = mysqli_query($conexion, $sqli);
-    
-    if ($resultado == true) {
-        echo '<div class="message is-primary" id="message">';
-        echo '<p>Actualización de producto exitosa</p>';
-        echo '<a href="productos.php" class="button is-primary">Volver</a>';
-        echo '</div>';
+    // Realizar la solicitud cURL para actualizar el producto en la otra aplicación
+    $curl = curl_init();
 
-        $sql = "SELECT * FROM usuarios WHERE id='$ida'";
-        $result = $conexion->query($sql);
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://localhost/mymbarekove.shop/controller/producto',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'PUT',
+        CURLOPT_POSTFIELDS => '{
+            "idProducto": ' . $ida . ',
+            "nombre": "' . $nombre . '",
+            "descripcionP": "' . $descripcion . '",
+            "contenido": "' . $contenido . '",
+            "precio": "' . $precio . '",
+            "descripcion": "' . $marca . '",
+            "cantidadDisponible": ' . $stock . ',
+            "imagen": "' . $imagen . '"
+        }',
+        CURLOPT_HTTPHEADER => array(
+            'token: Bearer '.$_ENV['PUT_PRODUCT'].'',
+            'Content-Type: application/json'
+        ),
+    ));
 
-        if ($result) {
-            $row = $result->fetch_assoc();
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+
+    // Verificar la respuesta de la solicitud cURL
+    if ($response !== false) {
+        $responseData = json_decode($response, true);
+        if (isset($responseData['status']) && $responseData['status'] === true) {
+            echo '<div class="notification is-success">';
+            echo '<button class="delete"></button>';
+            echo '¡Producto actualizado correctamente';
+            echo '<br><a href="./productos.php">Volver</a>';
+            echo '</div>';
         } else {
-            echo "Error al cargar los datos actualizados";
+            echo '<div class="notification is-danger">';
+            echo '<button class="delete"></button>';
+            echo 'Error al actualizar el producto en la otra aplicación: ' . $responseData['mensaje'];
+            echo '</div>';
         }
     } else {
-        echo "Error al actualizar el usuario: " . $conexion->error;
+        echo '<div class="notification is-danger">';
+        echo '<button class="delete"></button>';
+        echo 'Error al realizar la solicitud cURL para actualizar el producto en la otra aplicación';
+        echo '</div>';
     }
 }
 ?>
+
+
 
     </div>
     </form>

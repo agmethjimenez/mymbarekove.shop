@@ -1,6 +1,17 @@
 <?php
 header('Content-Type: application/json');
-require_once("../config.php");
+header("Access-Control-Allow-Origin: *");
+
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit();
+}
+header("Access-Control-Allow-Headers: Authorization, Content-Type");
+require '../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); 
+$dotenv->load();
 require_once("../models/Auth.php");
 require_once("../models/Usuarios.php");
 require_once("../database/conexion.php");
@@ -12,7 +23,7 @@ $usuario = new Usuario();
 $admin = new Admin();
 
 $headers = getallheaders();
-$authorizationHeader = $headers['Authorization'] ?? null;
+$authorizationHeader = $headers['token'] ?? null;
 
 
 
@@ -24,9 +35,10 @@ $idusuario = ($path!=='/') ? end($BidUsuario):null;
 
 switch ($metodo) {
     case 'GET':
-        $auth->setToken(API_KEY_GET);
+        $auth->setToken($_ENV['API_KEY_GET']);
         if ($auth->verificarToken($authorizationHeader)) {
         $funcion = $usuario->GETusuarios($conexion,$idusuario);
+        http_response_code(200);
         echo json_encode($funcion);
         }else{
         header('HTTP/1.0 401 Unauthorized');
@@ -35,7 +47,7 @@ switch ($metodo) {
         }
         break;
     case 'POST':
-        $auth->setToken(API_POST_USER);
+        $auth->setToken($_ENV['API_POST_USER']);
         if ($auth->verificarToken($authorizationHeader)) {
             $data = json_decode(file_get_contents('php://input'), true);
             $usuario->setIdentificacion($data['identificacion']);
@@ -54,14 +66,14 @@ switch ($metodo) {
                 echo json_encode(array('exito' => false, 'mensaje' => $result['mensaje']));
             }
         }else{
-            header('HTTP/1.0 401 Unauthorized');
+            http_response_code(401);
             echo json_encode(array('exito'=>false,'mensaje' => 'Acceso no autorizado'));
             exit;
         }
         
         break;
     case 'PUT':
-        $auth->setToken(API_POST_USER);
+        $auth->setToken($_ENV['API_POST_USER']);
         if ($auth->verificarToken($authorizationHeader)){
 
         
@@ -88,28 +100,32 @@ switch ($metodo) {
             $usuario->actualizarDatos($conexion);
 
             header('Content-Type: application/json');
+            http_response_code(200);
             echo json_encode(['exito'=>true,'message' => 'Datos actualizados con exito']);
         } else {
             header('Content-Type: application/json', true, 400);
+            http_response_code(400);
             echo json_encode(['error' => 'JSON no válido']);
         }
     }else{
-        header('HTTP/1.0 401 Unauthorized');
+        http_response_code(401);
         echo json_encode(array('exito'=>false,'mensaje' => 'Acceso no autorizado'));
         exit;
     }
         break;
     case 'DELETE':
-        $auth->setToken(dku);
+        $auth->setToken($_ENV['dku']);
         if ($auth->verificarToken($authorizationHeader)){
         $result = $admin->DesactivarUsuario($conexion,$idusuario);
         if ($result['acceso']) {
+            http_response_code(200);
             echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));
         } else {
+            http_response_code(400);
             echo json_encode(array('exito' => false, 'mensaje' => $result['mensaje']));
         }
     }else{
-        header('HTTP/1.0 401 Unauthorized');
+        http_response_code(401);
         echo json_encode(array('exito'=>false,'mensaje' => 'Acceso no autorizado'));
         exit;
     }

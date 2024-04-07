@@ -68,7 +68,7 @@ class Proveedor
     }
 
     public function PUTprovedores($conexion){
-        $sql = "UPDATE proveedores SET nombreP = ?, ciudad = ?, correo = ?, telefono = ? WHERE idProveedor ? AND estado = 'SI' ";
+        $sql = "UPDATE proveedores SET nombreP = ?, ciudad = ?, correo = ?, telefono = ? WHERE idProveedor = ? AND estado = 'SI' ";
         $bin = $conexion->prepare($sql);
         $bin->bind_param("sssss",$this->nombre, $this->ciudad, $this->correo, $this->telefono, $this->idProveedor);
 

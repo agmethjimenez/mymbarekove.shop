@@ -1,5 +1,15 @@
 <!DOCTYPE html>
-<?php
+<?
+session_start();
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+    $id_admin = $_SESSION['id_admin'];
+    $username = $_SESSION['username'];
+    $email = $_SESSION['email'];
+    $token = $_SESSION['token'];
+} else {
+    header("Location: ../../catalogo/login.php");
+    exit; 
+}
 require '../../database/conexion.php';
 require_once("../../models/administrador.php");
 ?>

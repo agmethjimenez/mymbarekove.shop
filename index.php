@@ -548,13 +548,6 @@ cursor: pointer;
 
             </section>
         </div>
-        <div class="hero_wave" style="overflow: hidden;" ><svg viewBox="0 0 100 100" preserveAspectRatio="none" style="height: 100%; width: 100%;"><path d="M0.00,49.98 C149.99,150.00 349.20,-49.98 500.00,49.98 L500.00,150.00 L0.00,150.00 Z" style="stroke: none; fill: #a89166;"></path></svg></div>
-       
-<?php include_once 'catalogo/footer.php' ?>
-            
-
-          
-
-           
+        <div class="hero_wave" style="overflow: hidden;" ><svg viewBox="0 0 100 100" preserveAspectRatio="none" style="height: 100%; width: 100%;"><path d="M0.00,49.98 C149.99,150.00 349.20,-49.98 500.00,49.98 L500.00,150.00 L0.00,150.00 Z" style="stroke: none; fill: #a89166;"></path></svg></div>           
 </body>
 </html>

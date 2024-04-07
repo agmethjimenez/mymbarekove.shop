@@ -1,3 +1,15 @@
+<?
+session_start();
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+    $id_admin = $_SESSION['id_admin'];
+    $username = $_SESSION['username'];
+    $email = $_SESSION['email'];
+    $token = $_SESSION['token'];
+} else {
+    header("Location: ../../catalogo/login.php");
+    exit; 
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,30 +46,30 @@
         </table>
     </div>
 
-    <script>
+    <script src="../../config.js"></script>
+<script>
+    fetch(`http://${URLS}/controller/pedido.php`)
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('pedidoTableBody');
 
-        fetch('http://localhost/mymbarekove.shop/controller/pedido.php')
-            .then(response => response.json())
-            .then(data => {
-                const tableBody = document.getElementById('pedidoTableBody');
-
-                data.forEach(pedido => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${pedido.idPedido}</td>
-                        <td>${pedido.usuario}</td>
-                        <td>${pedido.ciudad}</td>
-                        <td>${pedido.direccion}</td>
-                        <td>${pedido.fecha}</td>
-                        <td>$${pedido.total}</td>
-                        <td>${pedido.estado}</td>
-                        <td><a href="update.php?id=${pedido.idPedido}" class="button is-link">Ver/Editar</a> <a href="delete.php?id=${pedido.idPedido}" class="button is-danger">Desactivar</a></td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            })
-            .catch(error => console.error('Error al obtener los datos de pedidos:', error));
-    </script>
+            data.map(pedido => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${pedido.idPedido}</td>
+                    <td>${pedido.nombreCompleto}</td>
+                    <td>${pedido.ciudad}</td>
+                    <td>${pedido.direccion}</td>
+                    <td>${pedido.fecha}</td>
+                    <td>$${pedido.total}</td>
+                    <td>${pedido.estado}</td>
+                    <td><a href="update.php?id=${pedido.idPedido}" class="button is-link">Ver/Editar</a></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error al obtener los datos de pedidos:', error));
+</script>
 
 </body>
 

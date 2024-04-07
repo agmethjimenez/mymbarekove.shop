@@ -1,5 +1,4 @@
 <?php
-require_once("../database/conexion.php");
 class Producto
 {
     private $id_producto;
@@ -44,23 +43,41 @@ class Producto
         $this->imagen = $imagen;
     }
 
-    public function GetProductos($conexion,$id){
-        if($id === null){
-            $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion,p.cantidadDisponible, p.imagen FROM productos as p 
-        INNER JOIN proveedores as pr ON p.proveedor = pr.idProveedor
-        INNER JOIN marcas as m ON p.marca = m.idMarca
-        INNER JOIN categorias as c ON p.categoria = c.categoria
-        WHERE p.activo = 1";
-        }else{
-            $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion,p.cantidadDisponible, p.imagen FROM productos as p 
-        INNER JOIN proveedores as pr ON p.proveedor = pr.idProveedor
-        INNER JOIN marcas as m ON p.marca = m.idMarca
-        INNER JOIN categorias as c ON p.categoria = c.categoria
-        WHERE p.activo = 1 AND idProducto = $id";
+    public function GetProductos($conexion, $id, $busqueda, $categoria) {
+        if ($id === null) {
+            if ($busqueda !== null) {
+                $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion, p.cantidadDisponible, p.imagen 
+                        FROM productos AS p 
+                        INNER JOIN proveedores AS pr ON p.proveedor = pr.idProveedor
+                        INNER JOIN marcas AS m ON p.marca = m.idMarca
+                        INNER JOIN categorias AS c ON p.categoria = c.categoria
+                        WHERE p.activo = 1 AND p.nombre LIKE '%$busqueda%'";
+            } else if ($categoria !== null) {
+                $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion, p.cantidadDisponible, p.imagen 
+                        FROM productos AS p 
+                        INNER JOIN proveedores AS pr ON p.proveedor = pr.idProveedor
+                        INNER JOIN marcas AS m ON p.marca = m.idMarca
+                        INNER JOIN categorias AS c ON p.categoria = c.categoria
+                        WHERE p.activo = 1 AND p.categoria = $categoria";
+            } else {
+                $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion, p.cantidadDisponible, p.imagen 
+                        FROM productos AS p 
+                        INNER JOIN proveedores AS pr ON p.proveedor = pr.idProveedor
+                        INNER JOIN marcas AS m ON p.marca = m.idMarca
+                        INNER JOIN categorias AS c ON p.categoria = c.categoria
+                        WHERE p.activo = 1";
+            }
+        } else {
+            $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion, p.cantidadDisponible, p.imagen 
+                    FROM productos AS p 
+                    INNER JOIN proveedores AS pr ON p.proveedor = pr.idProveedor
+                    INNER JOIN marcas AS m ON p.marca = m.idMarca
+                    INNER JOIN categorias AS c ON p.categoria = c.categoria
+                    WHERE p.activo = 1 AND idProducto = $id";
         }
         
-    $resultados = array();
-
+        $resultados = array();
+    
         if ($resultado = $conexion->query($sql)) {
             while ($fila = $resultado->fetch_assoc()) {
                 $resultados[] = $fila;
@@ -68,7 +85,8 @@ class Producto
             $resultado->free();
         }
         return $resultados;
-}
+    }
+    
     
     public function AgregarProducto($conexion){
         $id = rand(1000,9999);
@@ -78,7 +96,7 @@ class Producto
         if($bin->execute()){
             return["accesso"=>true,"mensaje"=>"Producto Agregado exitosamente"];
         }else{
-            return["accesso"=>false,"mensaje"=>"Producto no agregado"];
+            return["accesso"=>false,"mensaje"=>"Producto no agregado","error"=>$conexion->error];
         }
     }
     public function ActualizarProducto($conexion){

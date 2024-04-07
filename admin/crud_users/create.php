@@ -1,3 +1,15 @@
+<? require '../../config.php'; 
+session_start();
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+    $id_admin = $_SESSION['id_admin'];
+    $username = $_SESSION['username'];
+    $email = $_SESSION['email'];
+    $token = $_SESSION['token'];
+} else {
+    header("Location: ../../catalogo/login.php");
+    exit; 
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,16 +25,13 @@
 <div class="contenedor">
     <form action="create.php" method="post">
     <?php
-$conexion = new mysqli("localhost", "root", "", "mymba", 3306);
-$conexion->set_charset("utf8");
-
 ?>
     <div class="title" ><h1>Agregar Usuario</h1></div>
         <div class="con1">
             <div class="con1-1">
         <label for="" class="label">Tipo ID</label>
         <div class="select is-primary" id= "select" name="tipoid">
-            <select name="tipoid" id="tipoid">
+            <select name="tipoid" id="tipoid" required>
                 <option value="0">Seleccione un tipo de id</option>
                 <option value="1">Cedula de Ciudadania</option>
                 <option value="2">Cedula de Extranjeria</option>
@@ -33,7 +42,7 @@ $conexion->set_charset("utf8");
         </div>
         <div class="con1-2">
         <label for="" class="label">Identificacion</label>
-        <input class="input is-primary" type="text"  name="identificacion">
+        <input class="input is-primary" type="text"  name="identificacion" required>
         </div>   
     </div>
 
@@ -41,37 +50,37 @@ $conexion->set_charset("utf8");
         <div class="con2">
             <div class="con2-1">
         <label for="" class="label">Primer nombre</label>
-        <input class="input is-primary" type="text" name="nombre1">
+        <input class="input is-primary" type="text" name="nombre1" required>
         </div>
         <div class="con2-2">
         <label for="" class="label">Segundo nombre</label>
-        <input class="input is-primary" type="text" name="nombre2">
+        <input class="input is-primary" type="text" name="nombre2" required>
         </div>
         </div>
         <div class="con3">
         <div class="con3-1">
         <label for="" class="label">Primer apellido</label>
-        <input class="input is-primary" type="text" name="apellido1">
+        <input class="input is-primary" type="text" name="apellido1" required>
         </div>
         <div class="con3-2">
         <label for="" class="label">Segundo apellido</label>
-        <input class="input is-primary" type="text" name="apellido2">
+        <input class="input is-primary" type="text" name="apellido2" required>
         </div>    
     </div>
         <div class="con4">
             <div class="con4-1">
             <label for="" class="label">Email</label>
-        <input class="input is-primary" type="email" name="email">
+        <input class="input is-primary" type="email" name="email" required>
         </div>
         <div class="con4-2">
         <label for="" class="label">Telefono</label>
-        <input class="input is-primary" type="text"  name="telefono">
+        <input class="input is-primary" type="text"  name="telefono" required>
         </div>    
     </div>
         <div class="con5">
             <div class="con5-1">
         <label for="" class="label">Contraseña</label>
-        <input class="input is-primary" name="password" type="password">
+        <input class="input is-primary" name="password" type="password" required>
         </div>   
     </div>
     <div class="butcon">
@@ -93,24 +102,57 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $hashed = password_hash($contraseña, PASSWORD_BCRYPT);
 
-    $sqli = "INSERT INTO usuarios VALUES(NULL,'$id_usuario','$cod_id','$primernombre','$segundonombre','$primerapellido','$segundoapellido','$telefono','$email',1,'$hashed');";
+    $data = array(
+        "identificacion" => $id_usuario,
+        "tipoid" => $cod_id,
+        "nombre1" => $primernombre,
+        "nombre2" => $segundonombre,
+        "apellido1" => $primerapellido,
+        "apellido2" => $segundoapellido,
+        "email" => $email,
+        "telefono" => $telefono,
+        "password" => $hashed
+    );
 
-if ($conexion->query($sqli) === true) {
-    echo '<div class="message is-primary" id="message">';
-    echo '<p>Insercion de usuario Exitosa</p>';
-    echo '<a href="crud.php" class="button is-primary">Volver</a>';
-    echo '</div>';
-} else {
-    echo "Error al agregar el usuario: "          ;         
-    echo '<div class="message is-danger" id="message">';
-    echo '<p>Insercion de usuario no exitosa</p>';
-    echo $conexion->error;
-    echo '<a href="crud.php" class="button is-primary">Volver</a>';
-    echo '</div>';
-}
-}
+    $payload = json_encode($data);
 
-    ?>
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://'.URL.'/controller/users',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $payload,
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+            'token: '.API_POST_USER
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    $responsecode = json_decode($response, true);
+
+    if ($responsecode && $responsecode['exito']) {
+        echo '<div class="notification is-success">';
+        echo '<button class="delete"></button>';
+        echo '¡Usuario insertado correctamente!';
+        echo '<a href="./crud.php">Volver</a>';
+        echo '</div>';
+    } else {
+        echo '<div class="notification is-danger">';
+        echo '<button class="delete"></button>';
+        echo '¡Error! ' . ($responsecode['mensaje'] ?? 'No se pudo completar la solicitud');
+        echo '</div>';
+    }
+
+    curl_close($curl);
+}
+?>
     </div>
     </form>
     </body>

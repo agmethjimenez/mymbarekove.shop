@@ -67,7 +67,7 @@ switch($metodo) {
 
         try {
             $pedido = new Pedido();
-            $pedido->setIdUsuario(isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : (isset($_COOKIE['id_usuario']) ? $_COOKIE['id_usuario'] : null));
+            $pedido->setIdUsuario($pedido_data['usuario']);
             $pedido->setIdPedido(substr(uniqid(), 0, 10));
             $pedido->setCiudad($pedido_data['ciudad']);
             $pedido->setDireccion($pedido_data['direccion']);
