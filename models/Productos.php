@@ -1,5 +1,4 @@
 <?php
-require_once("../database/conexion.php");
 class Producto
 {
     private $id_producto;

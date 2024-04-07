@@ -1,5 +1,4 @@
 <?php
-require_once("../database/conexion.php");
 
 class Usuario
 {
@@ -68,40 +67,40 @@ class Usuario
     }
 
     public function registrarse($conexion, $clave)
-    {
-        $hashedPassword = password_hash($clave, PASSWORD_BCRYPT);
-        $conexion->begin_transaction();
-        $enviado = true;
+{
+    $hashedPassword = password_hash($clave, PASSWORD_BCRYPT);
+    $conexion->begin_transaction();
+    $enviado = true;
 
-        if ($enviado) {
-            $sql = "INSERT INTO usuarios (identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email, activo)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
-            $bin = $conexion->prepare($sql);
-            $bin->bind_param("ssssssss", $this->identificacion, $this->tipoId, $this->nombre1, $this->nombre2, $this->apellido1, $this->apellido2, $this->telefono, $this->email);
+    if ($enviado) {
+        $sql = "INSERT INTO usuarios (identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email, activo)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
+        $bin = $conexion->prepare($sql);
+        $bin->bind_param("ssssssss", $this->identificacion, $this->tipoId, $this->nombre1, $this->nombre2, $this->apellido1, $this->apellido2, $this->telefono, $this->email);
 
-            if ($bin->execute()) {
-                $token = bin2hex(random_bytes(16));
-                $id_aut = $conexion->insert_id;
-                $sql2 = "INSERT INTO credenciales (id, email, token, codigo, fecha_cambio, password) VALUES (?, ?, ?, ?, NOW(), ?)";
-                $bin2 = $conexion->prepare($sql2);
-                $codigo = rand(1000, 9999);
-                $bin2->bind_param("sssss", $id_aut, $this->email, $token, $codigo, $hashedPassword);
+        if ($bin->execute()) {
+            $token = bin2hex(random_bytes(16));
+            $id_aut = $conexion->insert_id;
+            $sql2 = "INSERT INTO credenciales (id, email, token, codigo, fecha_cambio, password) VALUES (?, ?, ?, ?, NOW(), ?)";
+            $bin2 = $conexion->prepare($sql2);
+            $codigo = rand(1000, 9999);
+            $bin2->bind_param("sssss", $id_aut, $this->email, $token, $codigo, $hashedPassword);
 
-                if ($bin2->execute()) {
-                    $conexion->commit();
-                    return ["success" => true, "mensaje" => "Registrado"];
-                } else {
-                    $conexion->rollback();
-                    return ["success" => false, "mensaje" => "Error al registrar"];
-                }
+            if ($bin2->execute()) {
+                $conexion->commit();
+                return ["success" => true, "mensaje" => "Registrado"];
             } else {
                 $conexion->rollback();
-                return ["success" => false, "mensaje" => "Error al registrar el usuario: " . $conexion->error];
+                return ["success" => false, "mensaje" => "Error al registrar la credencial: " . $bin2->error];
             }
         } else {
-            return ["success" => false, "mensaje" => "Error al verificar correo"];
+            $conexion->rollback();
+            return ["success" => false, "mensaje" => "Error al registrar el usuario: " . $bin->error];
         }
+    } else {
+        return ["success" => false, "mensaje" => "Error al verificar correo"];
     }
+}
 
     public function Login($conexion, $contraseña)
     {
@@ -231,4 +230,37 @@ class Usuario
             return false;
         }
     }
+
+    public function resetPassword($conexion) {
+        $email = $this->email;
+        $sql = "SELECT * FROM credenciales WHERE email = ?";
+        $bin = $conexion->prepare($sql);
+        $bin->bind_param("s", $email);
+        $bin->execute();
+        $result = $bin->get_result();
+        $token = bin2hex(random_bytes(16));
+        
+        if ($result->num_rows > 0) {
+            include 'mailrestart.php';            
+            if ($enviado) {
+                $sql2 = "UPDATE credenciales SET token = ?, codigo = ?, fecha_cambio = NOW() WHERE email = ?";
+                $bin2 = $conexion->prepare($sql2);
+                $bin2->bind_param("sss", $token, $codigo, $email);
+                
+                if ($bin2->execute()) {
+                    return ['status'=>true, "mensaje"=>"Enviado"]; 
+                } else {
+                    return ['status'=>false, "mensaje"=>"No ejecutado"]; 
+                }
+            } else {
+                return ['status'=>false, "mensaje"=>"Correo no enviado"]; 
+            }
+        } else {
+            return ['status'=>false, "mensaje"=>"Correo no existe"]; 
+        }
+    }
+    
+    
+    
+    
 }

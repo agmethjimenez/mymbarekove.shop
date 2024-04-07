@@ -1,10 +1,11 @@
 <?php
+require '../config.php';
 session_start();
 // Obtener el ID del pedido de la URL
 $pedidoID = $_SESSION['num_pedido'];
 
 // URL de la API local
-$url_api = "http://localhost/mymbarekove.shop/controller/pedido/$pedidoID";
+$url_api = 'http://'.URL.'/controller/pedido/'.$pedidoID.'';
 
 // Inicializar cURL
 $ch = curl_init();

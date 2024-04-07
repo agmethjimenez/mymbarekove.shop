@@ -7,8 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Terminos y condiciones</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
     body {
-      font-family: "Times New Roman", Times, serif;
+      font-family: 'Oxygen', sans-serif;
       background: linear-gradient(135deg, #caa678, #f5f5f5);
       padding: 0;
       margin: 0;

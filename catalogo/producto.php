@@ -1,17 +1,18 @@
 <?php
+require '../config.php';
 require '../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); 
 $dotenv->load();
 include_once("../models/Productos.php");
 if(isset($_GET['producto'])){
     $id = $_GET['producto'];
 
     
-    $apiUrl = "http://localhost/mymbarekove.shop/controller/producto/$id";
+    $apiUrl = 'http://'.URL.'/controller/producto/'.$id.'';
     $ch = curl_init($apiUrl);
     $token = $_ENV['KEY_PRODUCTS'];
     $headers = array(
-        'Authorization: Bearer ' . $token
+        'token: Bearer ' . $token
     );
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

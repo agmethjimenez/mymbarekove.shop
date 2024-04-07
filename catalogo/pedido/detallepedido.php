@@ -247,18 +247,13 @@ if($pedido['estad'] = "Pendiente" ){
         $tottQuery = "SELECT SUM(dp.total) AS total_pedido FROM detallepedido as dp WHERE dp.idPedido = '$idPedido'";
         $resultTott = $conexion->query($tottQuery);
         
-        // Verificar si la consulta fue exitosa
         if ($resultTott) {
-            // Obtener el resultado como un array asociativo
             $totalRow = $resultTott->fetch_assoc();
         
-            // Obtener el total
             $total_pedido = $totalRow['total_pedido'];
         
-            // Imprimir el total
             echo "<h1><strong>Total:$$total_pedido</strong></h1>";
         } else {
-            // Manejar el error si la consulta no fue exitosa
             echo "Error en la consulta: " . $conexion->error;
         }
 

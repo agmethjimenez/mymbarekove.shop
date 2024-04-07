@@ -1,3 +1,20 @@
+<?php
+require '../../config.php';
+require '../../database/conexion.php';
+
+$database = new Database;
+$conexion = $database->connect();
+session_start();
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+    $id_admin = $_SESSION['id_admin'];
+    $username = $_SESSION['username'];
+    $email = $_SESSION['email'];
+    $token = $_SESSION['token'];
+} else {
+    header("Location: ../../catalogo/login.php");
+    exit; 
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,11 +30,10 @@
 <div class="contenedor">
     <form action="update.php" method="post">
     <?php
-$conexion = new mysqli("localhost", "root", "", "mymba", 3306);
-$conexion->set_charset("utf8");
+
 if($_SERVER["REQUEST_METHOD"] === "GET"){
 $id = $_GET["id"];
-$sql = "SELECT*FROM proveedores WHERE idProveedor = '$id'";
+$sql = "SELECT * FROM proveedores WHERE idProveedor = '$id'";
 $result = $conexion->query($sql);
 
 if ($result) {
@@ -59,41 +75,56 @@ if ($result) {
     <div class="butcon">
     <button class="button is-success" type="submit">Actualizar</button>
     </div>
-    
+    </form>
+    </div>
 
 <?php
 if($_SERVER["REQUEST_METHOD"] === "POST") {
     $ida = $_POST['id'];
-    $nombre = $_POST['nombre'];
+    $nombreProveedor = $_POST['nombre'];
     $ciudad = $_POST['ciudad'];
     $correo = $_POST['correo'];
     $telefono = $_POST['telefono'];
     $estado = $_POST['estado'];
 
-    $sqli = "UPDATE `proveedores` SET `nombreP` = '$nombre', `ciudad` = '$ciudad', `correo` = '$correo', `telefono` = '$telefono' WHERE `proveedores`.`idProveedor` = '$ida'";
+    $curl = curl_init();
 
-if ($conexion->query($sqli) === true) {
-    echo '<div class="message is-primary" id="message">';
-    echo '<p>Actualización exitosa</p>';
-    echo '<a href="provedores.php" class="button is-primary">Volver</a>';
-    echo '</div>';
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://'.URL.'/controller/proveedor',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'PUT',
+        CURLOPT_POSTFIELDS =>'{
+            "idProveedor": '.$ida.',
+            "nombreP": "'.$nombreProveedor.'",
+            "ciudad": "'.$ciudad.'",
+            "correo": "'.$correo.'",
+            "telefono": "'.$telefono.'"
+        }',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer glNXMgjPLVbBPf5zUUfeI1nFOCjhwa4TDdYXWWyvGMHdSbtUtBY6M6Ow6uaoXVs9S1TBrdhysLnUgea0z1Tds32oM65mrXCT7d7FoSDBVjcXtd1kDat',
+            'Content-Type: application/json',
+            'Cookie: PHPSESSID=u8715ej4gmj7teu6hegneotmcr'
+        ),
+    ));
 
-    $sql = "SELECT * FROM usuarios WHERE id='$ida'";
-    $result = $conexion->query($sql);
+    $response = curl_exec($curl);
+    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-    if ($result) {
-        $row = $result->fetch_assoc();
+    if($http_status == 200){
+        echo '<script>alert(Actualizado con exito!)</script>';
+        header("Location: provedores.php");
+        exit;
     } else {
-        echo "Error al cargar los datos actualizados";
-        
+        echo "Error en la actualización. Código de estado: " . $http_status;
     }
-} else {
-    echo "Error al actualizar el usuario: " . $conexion->error;
-}
-}
 
-    ?>
-    </div>
-    </form>
-    </body>
+    curl_close($curl);
+}
+?>
+</body>
 </html>

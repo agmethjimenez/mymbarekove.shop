@@ -1,4 +1,18 @@
-
+<?
+require '../../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+$dotenv->load();
+session_start();
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+    $id_admin = $_SESSION['id_admin'];
+    $username = $_SESSION['username'];
+    $email = $_SESSION['email'];
+    $token = $_SESSION['token'];
+} else {
+    header("Location: ../../catalogo/login.php");
+    exit; 
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,16 +28,21 @@
 <div class="contenedor">
     <form action="update.php" method="post">
     <?php
-$conexion = new mysqli("localhost", "root", "", "mymba", 3306);
-$conexion->set_charset("utf8");
-if($_SERVER["REQUEST_METHOD"] === "GET"){
-$id = $_GET["id"];
-$sql = "SELECT * FROM usuarios WHERE id='$id'";
-$result = $conexion->query($sql);
+require '../../database/conexion.php';
+$database = new Database;
+$conexion = $database->connect();
 
-if ($result) {
-    $row = $result->fetch_assoc();
-}}
+if($_SERVER["REQUEST_METHOD"] === "GET"){
+    $id = $conexion->real_escape_string($_GET["id"]);
+    $sql = "SELECT * FROM usuarios WHERE id=?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("s", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+    }
+}
 ?>
     <div class="title" ><h1>Actualizar Datos</h1></div>
         <div class="con1">
@@ -89,35 +108,48 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST['email'];
     $telefono = $_POST['telefono'];
 
-    $sqli = "UPDATE usuarios 
-    SET id ='$ida', identificacion = '$id_usuario',
-    tipoId = '$cod_id',
-    primerNombre = '$primernombre',
-    segundoNombre = '$segundonombre',
-    primerApellido = '$primerapellido',
-    segundoApellido = '$segundoapellido',
-    email = '$email',
-    telefono = '$telefono' 
-    WHERE id ='$ida';";
+    $curl = curl_init();
 
-if ($conexion->query($sqli) === true) {
-    echo '<div class="message is-primary" id="message">';
-    echo '<p>Actualización exitosa</p>';
-    echo '<a href="crud.php" class="button is-primary">Volver</a>';
-    echo '</div>';
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://localhost/mymbarekove.shop/controller/users',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'PUT',
+        CURLOPT_POSTFIELDS => json_encode(array(
+            "id" => $ida,
+            "identificacion" => $id_usuario,
+            "primerNombre" => $primernombre,
+            "segundoNombre" => $segundonombre,
+            "primerApellido" => $primerapellido,
+            "segundoApellido" => $segundoapellido,
+            "telefono" => $telefono,
+            "email" => $email
+        )),
+        CURLOPT_HTTPHEADER => array(
+            'token: Bearer '.$_ENV['API_POST_USER'].'',
+            'Content-Type: application/json'
+        ),
+    ));
 
-    $sql = "SELECT * FROM usuarios WHERE id='$ida'";
-    $result = $conexion->query($sql);
+    $response = curl_exec($curl);
+    $response_data = json_decode($response, true);
 
-    if ($result) {
-        $row = $result->fetch_assoc();
+    if ($response_data && $response_data['exito']) {
+        echo '<div class="message is-success" id="message">';
+        echo '<p>' . $response_data['message'] . '</p>';
+        echo '<a href="./crud.php">Volver</a>';
+        echo '</div>';
     } else {
-        echo "Error al cargar los datos actualizados";
-        
+        echo '<div class="message is-danger" id="message">';
+        echo '<p>Error en la actualización: ' . ($response_data['message'] ?? 'No se pudo completar la solicitud') . '</p>';
+        echo '</div>';
     }
-} else {
-    echo "Error al actualizar el usuario: " . $conexion->error;
-}
+
+    curl_close($curl);
 }
 
     ?>

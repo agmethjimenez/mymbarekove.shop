@@ -1,4 +1,5 @@
 <?php
+require '../config.php';
 session_start();
 require '../vendor/autoload.php';
 //este es el de la cuenbta
@@ -38,8 +39,8 @@ if (isset($_SESSION['carrito'])) {
     );
 
     $preference->back_urls = array(
-        "success" => "http://localhost/mymbarekove.shop/catalogo/success.php",
-        "failure" => "http://localhost/mymbarekove.shop/catalogo/fail.php"
+        "success" => 'http://'.URL.'/catalogo/success.php',
+        "failure" => 'http://'.URL.'/catalogo/fail.php'
     );
 
     $preference->auto_return = "approved";

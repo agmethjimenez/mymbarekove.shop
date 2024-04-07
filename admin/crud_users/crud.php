@@ -1,3 +1,20 @@
+<?php
+if(isset($_GET['success']) && $_GET['success'] ){
+    echo '<script>alert("Desactivado correctamente")</script>';
+}else{
+
+}
+session_start();
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+    $id_admin = $_SESSION['id_admin'];
+    $username = $_SESSION['username'];
+    $email = $_SESSION['email'];
+    $token = $_SESSION['token'];
+} else {
+    header("Location: ../../catalogo/login.php");
+    exit; 
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,10 +49,13 @@
     </thead>
     <tbody>
         <?php
-        $conexion = new mysqli("localhost", "root", "", "mymba", 3306);
-        $conexion->set_charset("utf8");
+        require '../../database/conexion.php';
+        $database = new Database;
+        $conexion = $database->connect();
 
-        $sql = "SELECT c.id, tp.id AS tipo_id, c.identificacion, c.primerNombre, c.segundoNombre, c.primerApellido, c.segundoApellido, c.telefono, c.email FROM usuarios AS c LEFT JOIN tiposid AS tp ON tp.codId = c.tipoId";
+        $sql = "SELECT c.id, tp.id AS tipo_id, c.identificacion, c.primerNombre, c.segundoNombre, c.primerApellido, c.segundoApellido, c.telefono, c.email FROM usuarios AS c 
+        LEFT JOIN tiposid AS tp ON tp.codId = c.tipoId
+        WHERE c.activo = 1";
         $result = $conexion->query($sql);
 
         if ($result->num_rows > 0) {

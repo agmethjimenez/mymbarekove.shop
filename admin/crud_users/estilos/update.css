@@ -4,6 +4,7 @@ body{
     font-family: 'Oxygen', sans-serif;
     padding: 0;
     margin: 0;
+    height: 100%;
 }
 .contenedor{
     height: 100vh;
@@ -11,6 +12,8 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow-y: auto;
+
 }
 form{
     background-color: white;

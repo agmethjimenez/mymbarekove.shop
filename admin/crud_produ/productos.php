@@ -1,4 +1,14 @@
 <?php
+session_start();
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+    $id_admin = $_SESSION['id_admin'];
+    $username = $_SESSION['username'];
+    $email = $_SESSION['email'];
+    $token = $_SESSION['token'];
+} else {
+    header("Location: ../../catalogo/login.php");
+    exit; 
+}
 if (isset($_GET['success'])) {
     if ($_GET['success'] === 'true') {
         echo '<script>alert("Desactivado exitosamente");</script>';
@@ -6,6 +16,7 @@ if (isset($_GET['success'])) {
         echo '<script>alert("No desactivado");</script>';
     }
 }
+
 ?>
 
 <!DOCTYPE html>

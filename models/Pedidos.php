@@ -98,13 +98,15 @@ class Pedido {
 
     public function getPedidos($conexion, $id) {
         if ($id === null) {
-            $sql = "SELECT p.idPedido,u.identificacion, CONCAT(u.primerNombre, ' ', COALESCE(u.segundoNombre, ''), ' ', u.primerApellido, ' ', COALESCE(u.segundoApellido, '')) AS nombreCompleto, p.ciudad, p.direccion, p.fecha, p.total, p.detalles_pago 
+            $sql = "SELECT p.idPedido,u.identificacion, CONCAT(u.primerNombre, ' ', COALESCE(u.segundoNombre, ''), ' ', u.primerApellido, ' ', COALESCE(u.segundoApellido, '')) AS nombreCompleto, p.ciudad, p.direccion, p.fecha, p.total, p.detalles_pago, e.estado 
                     FROM pedidos as p
-                    LEFT JOIN usuarios as u ON p.usuario = u.id";
+                    LEFT JOIN usuarios as u ON p.usuario = u.id
+                    LEFT JOIN estados as e ON e.codEst = p.estado";
         } else {
-            $sql = "SELECT p.idPedido,u.identificacion, CONCAT(u.primerNombre, ' ', COALESCE(u.segundoNombre, ''), ' ', u.primerApellido, ' ', COALESCE(u.segundoApellido, '')) AS nombreCompleto, p.ciudad, p.direccion, p.fecha, p.total, p.detalles_pago 
+            $sql = "SELECT p.idPedido,u.identificacion, CONCAT(u.primerNombre, ' ', COALESCE(u.segundoNombre, ''), ' ', u.primerApellido, ' ', COALESCE(u.segundoApellido, '')) AS nombreCompleto, p.ciudad, p.direccion, p.fecha, p.total, p.detalles_pago,e.estado 
                     FROM pedidos as p 
                     LEFT JOIN usuarios as u ON p.usuario = u.id
+                    LEFT JOIN estados as e ON e.codEst = p.estado
                     WHERE p.idPedido = ?";
         }
     

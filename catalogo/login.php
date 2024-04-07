@@ -1,4 +1,5 @@
 <?php
+require '../config.php';
 require '../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
 $dotenv->load();
@@ -83,12 +84,12 @@ if (!empty($_POST["submit"])) {
                 "email" => $correo,
                 "password" => $contraseña
             );
-            $url = 'http://localhost/mymbarekove.shop/controller/login.php';
+            $url = 'http://'.URL.'/controller/login.php';
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($datos));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Authorization: Bearer ' . $_ENV['login']));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','token:' . $_ENV['login']));
 
             $response = curl_exec($ch);
 
@@ -101,6 +102,7 @@ if (!empty($_POST["submit"])) {
                     $_SESSION['id_admin'] = $response['data']['id_admin'];
                     $_SESSION['username'] = $response['data']['username'];
                     $_SESSION['email'] = $response['data']['email'];
+                    $_SESSION['token'] = $response['data']['token'];
 
                     echo "Inicio de sesión exitoso como administrador";
                     header("location: catalogo.php");

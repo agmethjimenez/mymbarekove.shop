@@ -26,6 +26,7 @@ switch ($metodo) {
         $auth->setToken($_ENV['PROVEDOR_GET']);
         if($auth->verificarToken($authorizationHeader)){
         $result = $proveedor->GETproveedores($conexion, $idproveedor);
+        http_response_code(200);
         echo json_encode($result);
         }else{
             header('HTTP/1.0 401 Unauthorized');
@@ -46,6 +47,7 @@ switch ($metodo) {
         $result = $proveedor->POSTproveedores($conexion);
 
         if ($result['acceso']) {
+            http_response_code(201);
             echo json_encode(array("acceso" => true, "mensaje" => $result['mensaje']));
         } else {
             echo json_encode(array("acceso" => false, "mensaje" => $result['mensaje']));
@@ -68,8 +70,10 @@ switch ($metodo) {
 
         $result = $proveedor->PUTprovedores($conexion);
         if($result['acceso']){
+            http_response_code(200);
             echo json_encode(['status'=>true,'mensaje'=>$result['mensaje']]);
         }else{
+            http_response_code(400);
             echo json_encode(['status'=>false,'mensaje'=>$result['mensaje']]);
         }
     }else{
@@ -83,8 +87,10 @@ switch ($metodo) {
         if($auth->verificarToken($authorizationHeader)){
         $result = $admin->DesactivarProveedor($conexion,$idproveedor);
         if($result['status']){
+            http_response_code(200);
             echo json_encode(['status'=>true,'message'=>$result['message']]);
         }else{
+            http_response_code(400);
             echo json_encode(['status'=>false,'message'=>$result['message']]);
         }
         }else{

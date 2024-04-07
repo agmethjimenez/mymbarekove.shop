@@ -1,4 +1,5 @@
 <?php
+require '../config.php';
 require '../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
 $dotenv->load();
@@ -98,7 +99,7 @@ $conexion = $database->connect();
                     <div class="g-recaptcha" data-sitekey="6LelmxwpAAAAAFS3KlCNxJf9TfDpe70SP2y0Ie3w"></div>
                 </div>
                 <div class="boton">
-                    <input type="submit" class="button is-black" name="submit" value="Actualizar" onclick="updatesuer()">
+                    <input type="submit" class="button is-black" name="submit" value="Actualizar">
                 </div>
                 <?php
                 if (isset($_POST['submit'])) {
@@ -117,7 +118,7 @@ $conexion = $database->connect();
                     $payload = json_encode($data);
 
                     curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'http://localhost/mymbarekove.shop/controller/users',
+                        CURLOPT_URL => 'http://'.URL.'/controller/users',
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
@@ -127,7 +128,7 @@ $conexion = $database->connect();
                         CURLOPT_CUSTOMREQUEST => 'PUT',
                         CURLOPT_POSTFIELDS => $payload,
                         CURLOPT_HTTPHEADER => array(
-                            'Authorization: ' . $_ENV['API_POST_USER'],
+                            'token: ' . $_ENV['API_POST_USER'],
                             'Content-Type: application/json'
                         ),
                     ));
@@ -140,8 +141,6 @@ $conexion = $database->connect();
                         echo '<div class="message is-primary" id="message">';
                         echo '<p>Datos Actualizados</p>';
                         echo '</div>';
-                        header("Location: {$_SERVER['PHP_SELF']}");
-                        exit();
                     } else {
                         echo '<div class="message is-danger" id="message">';
                         echo '<p>Datos no actualizados</p>';

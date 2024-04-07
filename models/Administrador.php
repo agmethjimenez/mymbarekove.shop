@@ -6,6 +6,35 @@ class Admin{
     private $username;
     private $email;
     private $token;
+    
+    public function setId($id){
+        $this->id = $id;
+    }
+    public function setUsername($username){
+        $this->username = $username;
+    }
+    public function setEmail($email){
+        $this->email = $email;
+    }
+    public function setToken($token){
+        $this->token = $token;
+    }
+
+    public function getAdmin($conexion){
+        $sql = "SELECT * FROM administradores WHERE id = ? AND token = ?";
+        $bin = $conexion->prepare($sql);
+        $bin->bind_param("ss", $this->id, $this->token);
+        $bin->execute();
+        $result = $bin->get_result();
+    
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc(); // Obtener la primera fila como un array asociativo
+            return json_encode($row); // Devolver los datos como un array asociativo
+        } else {
+            return false;
+        }
+    }
+    
 
     public function Registro($username, $email, $password){
         global $conexion;
@@ -26,38 +55,39 @@ class Admin{
         }
 
     }
-    public function LogIn($correo,$contraseña){
+    public function LogIn($correo, $contraseña){
         global $conexion;
-        $query = "SELECT * FROM administradores WHERE email='$correo' AND activo = 1";
-        $result = $conexion->query($query);
-
+        $query = "SELECT * FROM administradores WHERE email=? AND activo=1";
+        $statement = $conexion->prepare($query);
+        $statement->bind_param("s", $correo);
+        $statement->execute();
+        $result = $statement->get_result();
         if ($result !== false) {
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
                 $hashedPassword = $row['clave'];
-
                 if (password_verify($contraseña, $hashedPassword)) {
-                    /*$_SESSION['id_admin'] = $row['id'];
-                    $_SESSION['username'] = $row['username'];
-                    $_SESSION['email'] = $row['email'];*/
-                    return["accesso"=> true, "mensaje" => "Verificado correctamente", 'usuario' =>[
-                        "id_admin" => $row['id'],
-                        "username" => $row['username'],
-                        "email" => $row['email']
-                    ]];
-                } else {          
-                    return["accesso" => false, "mensaje" => "Contraseña incorrecta"];
-
+                    return [
+                        "accesso" => true,
+                        "mensaje" => "Verificado correctamente",
+                        'usuario' => [
+                            "id_admin" => $row['id'],
+                            "username" => $row['username'],
+                            "token" => $row['token'],
+                            "email" => $row['email']
+                        ]
+                    ];
+                } else {
+                    return ["accesso" => false, "mensaje" => "Contraseña incorrecta"];
                 }
-            } else {  
-                return["accesso" => false, "mensaje" => "Usuario no encontrado"];
-
+            } else {
+                return ["accesso" => false, "mensaje" => "Usuario no encontrado"];
             }
         } else {
-            return["accesso" => false, "mensaje" => 'Error en la cosulta = '.$conexion->error.''];
+            return ["accesso" => false, "mensaje" => 'Error en la consulta: ' . $conexion->error];
         }
-
     }
+    
     
     public function AgregarMarca($nombre) {
         global $conexion;

@@ -1,3 +1,22 @@
+<?
+require '../../database/conexion.php';
+require '../../models/Administrador.php';
+$admin = new Admin();
+$database = new Database();
+
+$conexion = $database->connect();
+
+session_start();
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+    $id_admin = $_SESSION['id_admin'];
+    $username = $_SESSION['username'];
+    $email = $_SESSION['email'];
+    $token = $_SESSION['token'];
+} else {
+    header("Location: ../../catalogo/login.php");
+    exit; 
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -105,12 +124,24 @@
                 <a href="../admin_action/admins.php">Administradores</a>
             </nav>
         </aside>
-        <section class="user-info">
-        <h2>Información del Administrador</h2>
-            <p>Correo: admin@example.com</p>
-            <p>Nombre: Admin Nombre</p>
-            <p>ID: 123456</p>
-        </section>
+        <?php
+$admin->setId($id_admin);
+$admin->setToken($token);
+$data = $admin->getAdmin($conexion);
+$data = json_decode($data, true);
+if ($data) { // Verificar si se obtuvieron datos
+?>
+<section class="user-info">
+    <h2>Información del Administrador</h2>
+    <p>Correo: <?php echo $data['email']; ?></p>
+    <p>Nombre: <?php echo $data['username']; ?></p>
+    <p>ID:  <?php echo $data['id']; ?></p>
+</section>
+<?php
+} else {
+    echo "No se encontraron datos de administrador.";
+}
+?>
     </main>
 
 </body>

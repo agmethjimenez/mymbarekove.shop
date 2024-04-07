@@ -411,7 +411,11 @@ h1 {
 }
 .contenedor>div:hover{
     background-color: #F2E2CE;
+    transform: scale(1.1);
     color: #000;
+}
+.contenedor>div:hover a{
+  color: black;
 }
 .informacion > a:first-child {
   font-family: 'Oxygen', sans-serif;
@@ -456,6 +460,9 @@ h1 {
   background-color:#333;
 }
 .detalles a{
+  color: white;
+}
+.detalles a:hover{
   color: white;
 }
 .informacion .comprar:hover{

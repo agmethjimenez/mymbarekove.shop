@@ -3,6 +3,17 @@
 require '../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
 $dotenv->load();
+header("Access-Control-Allow-Origin: *");
+
+// Permitir los métodos de solicitud que deseas permitir
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit();
+}
+// Permitir los encabezados que deseas permitir en las solicitudes
+header("Access-Control-Allow-Headers: Authorization, Content-Type");
 header('Content-Type: application/json');
 require '../models/Auth.php';
 require '../models/Administrador.php';
@@ -13,7 +24,7 @@ $conexion = $database->connect();
 $producto = new Producto();
 $auth = new Auth;
 $headers = getallheaders();
-$authorizationHeader = $headers['Authorization'] ?? null;
+$authorizationHeader = $headers['token'] ?? null;
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 

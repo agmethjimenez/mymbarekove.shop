@@ -188,11 +188,11 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
 
           $ch = curl_init();
 
-          curl_setopt($ch, CURLOPT_URL, 'http://localhost/mymbarekove.shop/controller/users.php');
+          curl_setopt($ch, CURLOPT_URL, 'http://'.URL.'/controller/users.php');
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
           curl_setopt($ch, CURLOPT_POST, true);
           curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-          curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Bearer ' . $_ENV['API_POST_USER']));
+          curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'token: Bearer ' . $_ENV['API_POST_USER']));
           $response = curl_exec($ch);
 
           curl_close($ch);
