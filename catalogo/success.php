@@ -23,7 +23,6 @@ $ciudad = $_SESSION['ciudad'];
 $detallesproducto = $_SESSION['carrito'];
 echo $ciudad;
 echo $direcciontotal;
-echo $_SESSION['id_usuario'];
 
 $sumaTotal = 0;
 foreach ($detallesproducto as $producto) {

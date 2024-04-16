@@ -22,6 +22,7 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
     <link rel="stylesheet" href="../crud_produ/estyles/cri.css">
     <title>Pedidos</title>
 </head>
+<a class="button is-warning" href="../admin_action/panel.php">Volver al panel</a>
 
 <body>
     <div class="title" style="padding: 20px; display: flex; justify-content: space-between; color:white;">

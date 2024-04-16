@@ -68,7 +68,7 @@ class Usuario
 
     public function registrarse($conexion, $clave)
 {
-    $hashedPassword = password_hash($clave, PASSWORD_BCRYPT);
+    $hashedPassword = password_hash($clave, PASSWORD_DEFAULT);
     $conexion->begin_transaction();
     $enviado = true;
 

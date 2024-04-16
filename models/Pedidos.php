@@ -58,7 +58,7 @@ class Pedido {
 
     public function traerPedido($conexion) {    
         try {
-            $sql = "INSERT INTO pedidos VALUES (?, ?, ?, ?, NOW(), ?, ?, 4)";
+            $sql = "INSERT INTO pedidos VALUES (?, ?, ?, ?, NOW(), ?, ?, 1)";
             $stmt = $conexion->prepare($sql);
             $detallesPagoJSON = json_encode($this->detallesPago);
             $detallesPagoJSON = substr($detallesPagoJSON, 0, 255); 

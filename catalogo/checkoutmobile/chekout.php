@@ -53,8 +53,8 @@ if (isset($data['idUsuario'], $data['carrito'], $data['direccion'], $data['ciuda
             )
         );
         $preference->back_urls = array(
-            "success" => 'https://463e-2800-486-81a-1f00-d41b-cede-7eab-85c5.ngrok-free.app/mymbarekove.shop/catalogo/checkoutmobile/success.php',
-            "failure" => 'https://463e-2800-486-81a-1f00-d41b-cede-7eab-85c5.ngrok-free.app/mymbarekove.shop/catalogo/fail.php',
+            "success" => ''.URL3.'/catalogo/checkoutmobile/success.php',
+            "failure" => ''.URL3.'/catalogo/fail.php',
         );
         $preference->auto_return = "approved";
         $preference->binary_mode = true;
