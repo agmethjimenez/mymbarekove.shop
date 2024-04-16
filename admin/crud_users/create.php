@@ -1,4 +1,4 @@
-<? 
+<?php 
 require '../../config.php'; 
 require '../../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../'); // Corregido el directorio donde se encuentra el archivo .env

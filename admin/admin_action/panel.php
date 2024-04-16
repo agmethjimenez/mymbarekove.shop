@@ -1,4 +1,4 @@
-<?
+<?php
 require '../../database/conexion.php';
 require '../../models/Administrador.php';
 $admin = new Admin();

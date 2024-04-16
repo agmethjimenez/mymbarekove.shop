@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];

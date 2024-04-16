@@ -16,7 +16,6 @@ $conexion = $database->connect();
 if (isset($_GET['id'])) {
     $idPedido = $_GET['id'];
 
-    // Consulta para obtener detalles del pedido
     $sqlDetalles = "SELECT dp.idProducto, p.nombre, p.precio, dp.cantidad, dp.total 
                     FROM detallepedido as dp
                     INNER JOIN productos as p ON dp.idProducto = p.idProducto
@@ -25,7 +24,6 @@ if (isset($_GET['id'])) {
     
     $resultDetalles = $conexion->query($sqlDetalles);
 
-    // Consulta para obtener información general del pedido
     $sqlPedido = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha, e.estado as estad FROM pedidos as p 
     INNER JOIN estados as e ON p.estado = e.codEst WHERE p.idPedido = ?";
 
@@ -34,15 +32,12 @@ if (isset($_GET['id'])) {
     $stmtPedido->execute();
     $resultPedido = $stmtPedido->get_result();
 
-    // Verificar si el pedido existe y pertenece al usuario actual
     if ($resultPedido->num_rows > 0) {
         $pedido = $resultPedido->fetch_assoc();
     } else {
-        // Redirigir si el pedido no existe o no pertenece al usuario
 
     }
 } else {
-    // Redirigir si no se proporciona un ID de pedido válido
 }
 /*$pruebapedido = false;
 if($pedido['estad'] != "Cancelado" ){
