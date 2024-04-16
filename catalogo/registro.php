@@ -1,4 +1,5 @@
 <?php
+require '../config.php';
 require '../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); 
 $dotenv->load();
@@ -43,7 +44,7 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
 
         <div class="field">
           <div class="control has-icons-left has-icons-right">
-            <input class="input" type="text" placeholder="Segundo nombre" name="nombre2" id="nombre2" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]*" />
+            <input class="input" type="text" placeholder="Segundo nombre" name="nombre2" id="nombre2" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]*" />
             <span class="icon is-small is-left">
               <i class="fas fa-user"></i>
             </span>
@@ -63,7 +64,7 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
 
         <div class="field">
           <div class="control has-icons-left has-icons-right">
-            <input class="input" type="text" placeholder="Segundo apellido" name="apellido2" id="apellido2" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]*" />
+            <input class="input" type="text" placeholder="Segundo apellido" name="apellido2" id="apellido2" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]*" />
             <span class="icon is-small is-left">
               <i class="fas fa-user"></i>
             </span>
@@ -160,62 +161,71 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
         $_POST['password'],
         $_POST['password2'],
         $_POST['g-recaptcha-response']
-      )) {
+    )) {
         if (!empty($_POST['g-recaptcha-response'])) {
-
-          $id_usuario = $_POST['identificacion'];
-          $cod_id = $_POST['tipoIdentificacion'];
-          $primernombre = $_POST['nombre1'];
-          $segundonombre = $_POST['nombre2'];
-          $primerapellido = $_POST['apellido1'];
-          $segundoapellido = $_POST['apellido2'];
-          $email = $_POST['email'];
-          $telefono = $_POST['telefono'];
-          $contrasena = $_POST['password'];
-          $contraseña2 = $_POST['password2'];
-
-          $data = array(
-            'identificacion' => $id_usuario,
-            'tipoid' => $cod_id,
-            'nombre1' => $primernombre,
-            'nombre2' => $segundonombre,
-            'apellido1' => $primerapellido,
-            'apellido2' => $segundoapellido,
-            'email' => $email,
-            'telefono' => $telefono,
-            'password' => $contrasena,
-          );
-
-          $ch = curl_init();
-
-          curl_setopt($ch, CURLOPT_URL, 'http://'.URL.'/controller/users.php');
-          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-          curl_setopt($ch, CURLOPT_POST, true);
-          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-          curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'token: Bearer ' . $_ENV['API_POST_USER']));
-          $response = curl_exec($ch);
-
-          curl_close($ch);
-          $responseData = json_decode($response, true);
-          if (isset($responseData['exito']) && $responseData['exito']) {
-            echo '<div class="message is-primary" id="message">';
-            echo '<p>Registro exitoso <a href="login.php">Inicie Sesión</a></p>';
-            echo '</div>';
-            echo '<script>event.preventDefault()</script>';
-          } else {
-            echo '<div class="message is-danger" id="message">';
-            echo '<p>Usuario no registrado</p>';
-            echo '</div>';
-            echo '<script>event.preventDefault()</script>';
-          }
+    
+            $id_usuario = $_POST['identificacion'];
+            $cod_id = $_POST['tipoIdentificacion'];
+            $primernombre = $_POST['nombre1'];
+            $segundonombre = $_POST['nombre2'];
+            $primerapellido = $_POST['apellido1'];
+            $segundoapellido = $_POST['apellido2'];
+            $email = $_POST['email'];
+            $telefono = $_POST['telefono'];
+            $contrasena = $_POST['password'];
+            $contraseña2 = $_POST['password2'];
+    
+            // Validar que las contraseñas sean iguales
+            if ($contrasena !== $contraseña2) {
+                echo '<div class="message is-danger" id="message">';
+                echo '<p>Las contraseñas no coinciden</p>';
+                echo '</div>';
+                echo '<script>event.preventDefault()</script>';
+                exit; // Terminar la ejecución del script si las contraseñas no coinciden
+            }
+    
+            $data = array(
+                'identificacion' => $id_usuario,
+                'tipoid' => $cod_id,
+                'nombre1' => $primernombre,
+                'nombre2' => $segundonombre,
+                'apellido1' => $primerapellido,
+                'apellido2' => $segundoapellido,
+                'email' => $email,
+                'telefono' => $telefono,
+                'password' => $contrasena,
+            );
+    
+            $ch = curl_init();
+    
+            curl_setopt($ch, CURLOPT_URL, 'http://' . URL . '/controller/users.php');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'token: Bearer ' . $_ENV['API_POST_USER']));
+            $response = curl_exec($ch);
+    
+            curl_close($ch);
+            $responseData = json_decode($response, true);
+            if (isset($responseData['exito']) && $responseData['exito']) {
+                echo '<div class="message is-primary" id="message">';
+                echo '<p>Registro exitoso <a href="login.php">Inicie Sesión</a></p>';
+                echo '</div>';
+            } else {
+                echo '<div class="message is-danger" id="message">';
+                echo '<p>Usuario no registrado</p>';
+                echo '</div>';
+            }
         } else {
-          echo '<div class="message is-danger" id="message">';
-          echo '<p>Por favor, marque el reCAPTCHA</p>';
-          echo '</div>';
-          echo '<script>event.preventDefault()</script>';
+            echo '<div class="message is-danger" id="message">';
+            echo '<p>Por favor, marque el reCAPTCHA</p>';
+            echo '</div>';
+            echo '<script>event.preventDefault()</script>';
+
         }
-      }
-      ?>
+    }
+    ?>
+    
 
 
       <p class="error" id="error"></p>

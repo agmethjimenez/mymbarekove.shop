@@ -1,4 +1,5 @@
-<? require '../../config.php'; 
+<? 
+require '../../config.php'; 
 require '../../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../'); // Corregido el directorio donde se encuentra el archivo .env
 $dotenv->load();
@@ -144,7 +145,6 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
         echo '<div class="notification is-success">';
         echo '<button class="delete"></button>';
         echo '¡Usuario insertado correctamente!';
-        echo '<a href="./crud.php">Volver</a>';
         echo '</div>';
     } else {
         echo '<div class="notification is-danger">';
