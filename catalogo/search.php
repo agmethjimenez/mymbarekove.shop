@@ -9,10 +9,8 @@ $resultado = "";
 if(isset($_GET['producto'])){
     $nombreProducto = $_GET['producto'];
     
-    // Buscar productos por nombre utilizando la función BuscarProducto de la clase Productos
     $resultado = Producto::BuscarProducto($conexion, $nombreProducto);
 
-    // Decodificar el JSON obtenido en un array asociativo
     $resultado = json_decode($resultado, true);
 }
 
@@ -33,7 +31,6 @@ $conexion->close();
 <style>
   
   body{
-    /*background: linear-gradient(135deg, #caa678, #f5f5f5 );*/
     background-color: #e7c6b2;
     height: 100vh;
     overflow-y: auto;
@@ -46,7 +43,6 @@ $conexion->close();
 </style>
 <?php
 include 'header.php';
-// Verificar si se encontró algún producto
 if (!empty($resultado)) {
     ?>
     <div class="title1">

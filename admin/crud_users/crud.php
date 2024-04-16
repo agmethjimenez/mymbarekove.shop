@@ -30,6 +30,8 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
     <div class="title" style="padding: 20px; display: flex; justify-content: space-between; color:white;" >
     <h1>Usuarios</h1>
     <a href="create.php" class="button is-primary">Nuevo usuario</a>
+    <a class="button is-warning" href="../admin_action/panel.php">Volver al panel</a>
+
 </div>
 <div class="tata">
 <table class="table is-bordered">

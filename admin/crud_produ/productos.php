@@ -35,16 +35,13 @@ if (isset($_GET['success'])) {
 <body>
     <div class="title" style="padding: 20px; display: flex; justify-content: space-between; color:white;">
         <h1>Productos</h1>
+        <a class="button is-warning" href="../admin_action/panel.php">Volver al panel</a>
+
         <a href="create.php" class="button is-primary">Nuevo producto</a>
     </div>
     <div class="tata">
         <table class="table" style="width: 90%;">
             <thead>
-                <tr>
-                    <th>Proveedores</h1>
-                    </th>
-                    <th> <a href="create.php" class="button is-primary">Nuevo producto</a></th>
-                </tr>
                 <tr>
                     <th>ID</th>
                     <th>Proveedor</th>

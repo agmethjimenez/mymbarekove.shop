@@ -1,6 +1,8 @@
 <?php
 
 define("URL","localhost/mymbarekove.shop");
+define("URL2","192.168.20.47/mymbarekove.shop");
+define("URL3","https://wet-hoops-hang.loca.lt/mymbarekove.shop");
 //define("URL","localhost:8000");
 //ver usuarios
 define("API_KEY_GET", "679c24fa89565a6fc9fed4865d072905359a417631707c6fdcecccf25f5ffd5c4aa570cb648f97a290872f3c77554b7684d707e879a4fe39");

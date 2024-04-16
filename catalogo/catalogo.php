@@ -26,7 +26,6 @@ $conexion->set_charset("utf8");
 
 if (isset($_SESSION['carrito'])) {
     $productos = $_SESSION['carrito'];
-    //echo json_encode($productos);
 }
 ?>
 <style>

@@ -4,26 +4,34 @@ let carritoProductos =   JSON.parse(localStorage.getItem("carritoProductos")) ||
 
 
 function EnviarDatosCarrito() {
-  let sumaTotal = 0;
-  for (let i = 0; i < carritoProductos.length; i++) {
-     sumaTotal += carritoProductos[i].total;  
-  }
-  let datos = {
-      detalles: carritoProductos,
-  };
-  fetch('http://localhost/mymbarekove.shop/catalogo/guardar_carrito.php', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(datos),
-  })
-      .then(response => response.json())
-      .catch(error => {
-          console.error('Error en la solicitud fetch:', error);
-      });
-      return false;
-  }
+    let carritoProductos = JSON.parse(localStorage.getItem("carritoProductos"));
+    if (!carritoProductos) return false; // Verificar si el carrito existe
+
+    let sumaTotal = 0;
+    for (let i = 0; i < carritoProductos.length; i++) {
+       sumaTotal += carritoProductos[i].total;  
+    }
+    let datos = {
+        detalles: carritoProductos,
+    };
+    fetch('guardar_carrito.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(datos),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data); // Manejar la respuesta del servidor si es necesario
+        return false; // Devolver false después de manejar la respuesta
+    })
+    .catch(error => {
+        console.error('Error en la solicitud fetch:', error);
+        return false; // Devolver false en caso de error
+    });
+}
+
 EnviarDatosCarrito();
 numerito();
 

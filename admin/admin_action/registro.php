@@ -113,8 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
     $id_admin = substr(uniqid(), 0, 10);
-
-    $sql = "INSERT INTO administradores VALUES (?,?,?,?,1)";
+    $token = bin2hex(random_bytes(16));
+    $sql = "INSERT INTO administradores VALUES (?,?,?,?,?,1)";
     $bin = $conexion->prepare($sql);
 
     if (!$bin) {
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    $bin->bind_param("ssss", $id_admin, $username, $email, $hashedPassword);
+    $bin->bind_param("sssss", $id_admin, $username, $email,$token, $hashedPassword);
 
     if ($bin->execute()) {
         echo '<div class="message is-primary" id="message">';

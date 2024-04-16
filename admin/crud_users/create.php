@@ -1,4 +1,7 @@
 <? require '../../config.php'; 
+require '../../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../'); // Corregido el directorio donde se encuentra el archivo .env
+$dotenv->load();
 session_start();
 if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
@@ -119,7 +122,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://'.URL.'/controller/users',
+        CURLOPT_URL => 'http://'.$_ENV['URL'].'/controller/users',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
