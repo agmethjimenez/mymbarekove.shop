@@ -1,7 +1,9 @@
 <?php
+include_once '../../models/Usuarios.php';
 include_once '../../database/conexion.php';
 $database = new Database();
 $conexion = $database->connect();
+$usuario = new Usuario;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,30 +42,14 @@ $conexion = $database->connect();
         <?php
       if(isset($_POST['email'])){
       $email = $_POST['email'];
-      $sql = "SELECT*FROM credenciales WHERE email = ?";
-      $bin = $conexion->prepare($sql);
-      $bin->bind_param("s",$email);
-      $bin->execute();
-      $result = $bin->get_result();
-      $token = bin2hex(random_bytes(16));
+      $usuario->setEmail($email);
+      $enviarCorreo = $usuario->resetPassword($conexion);
 
-      if ($result->num_rows > 0){
-        require_once 'mailreset.php';
-        if($enviado){
-            $sql2 = "UPDATE credenciales SET token = ?, codigo = ?, fecha_cambio = NOW() WHERE email = ?";
-            $bin2 = $conexion->prepare($sql2);
-            $bin2->bind_param("sss",$token,$codigo,$email);
-            if($bin2->execute()){
-                echo '<script>alert("Verifica tu correo")</script>';
-            }else{
-                echo $conexion->error;
-            }
-
-        }
+      if($enviarCorreo['status']){
+        echo "<script>alert(".$enviarCorreo['mensaje'].")</script>";
       }else{
-        echo '<div class="message is-danger" id="message">';
-        echo '<p>Correo no encontrado</p>';
-        echo '</div>';
+        echo "<script>alert(".$enviarCorreo['mensaje'].")</script>";
+
       }
     }
       ?>

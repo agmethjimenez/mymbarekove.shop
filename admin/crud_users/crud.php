@@ -58,10 +58,12 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
         $sql = "SELECT c.id, tp.id AS tipo_id, c.identificacion, c.primerNombre, c.segundoNombre, c.primerApellido, c.segundoApellido, c.telefono, c.email FROM usuarios AS c 
         LEFT JOIN tiposid AS tp ON tp.codId = c.tipoId
         WHERE c.activo = 1";
-        $result = $conexion->query($sql);
+        $result = $conexion->prepare($sql);
+        $result->execute();
+        $usuarios = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
+        if ($usuarios !== null) {
+            foreach($usuarios as $row) {
                 echo "<tr>";
                 echo "<td>" . $row["id"] . "</td>";
                 echo "<td>" . $row["tipo_id"] . "</td>";
@@ -79,8 +81,6 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
         } else {
             echo "<tr><td colspan='10'>No se encontraron usuarios.</td></tr>";
         }
-
-        $conexion->close();
         ?>
     </tbody>
 </table>

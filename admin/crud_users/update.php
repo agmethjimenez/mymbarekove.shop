@@ -32,15 +32,20 @@ require '../../database/conexion.php';
 $database = new Database;
 $conexion = $database->connect();
 
-if($_SERVER["REQUEST_METHOD"] === "GET"){
-    $id = $conexion->real_escape_string($_GET["id"]);
-    $sql = "SELECT * FROM usuarios WHERE id=?";
+if ($_SERVER["REQUEST_METHOD"] === "GET") {
+    $id = $_GET["id"];
+
+    $sql = "SELECT * FROM usuarios WHERE id = :id";
+
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("s", $id);
+    $stmt->bindParam(':id', $id, PDO::PARAM_STR);
     $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row !== false) {
+    } else {
+        echo "No se encontró ningún usuario con el ID proporcionado.";
     }
 }
 ?>

@@ -1,7 +1,10 @@
 <?php
 include_once '../../database/conexion.php';
+include_once '../../models/Usuarios.php';
 $database = new Database();
 $conexion = $database->connect();
+$usuario = new Usuario;
+
 
 
 $correcto = false;
@@ -10,30 +13,9 @@ if(isset($_POST['codigo']) && isset($_POST['token']) && isset($_POST['email'])){
     $codigo = $_POST['codigo'];
     $email = $_POST['email'];
     $token = $_POST['token'];
-    $sql = "SELECT * FROM credenciales WHERE email = ? AND token = ? AND codigo = ?";
-    $bin = $conexion->prepare($sql);
-    $bin->bind_param("sss",$email,$token,$codigo);
-    $bin->execute();
-    $result = $bin->get_result();
     
-    if ($result->num_rows>0) {
-    $row = $result->fetch_assoc();
-
-    $sql2 = "SELECT * FROM credenciales WHERE email = ? AND token = ? AND codigo = ? AND TIMESTAMPDIFF(MINUTE, fecha_cambio, NOW()) < 30";
-    $bin2 = $conexion->prepare($sql2);
-    $bin2->bind_param("sss",$email,$token,$codigo);
-    $bin2->execute();
-    $result2 = $bin2->get_result();
-    if($result2->num_rows>0){
-      $correcto = true;
-    }else{
-      $correcto = false;
-      $error = 'Codigo caducado';
-    }
-    }else{
-        $correcto = false;
-        $error = "No encontrado";
-    }
+    $usuario->setEmail($email);
+    $correcto = $usuario->VerificarExistenciayCaducidad($conexion, $token, $codigo);
 }      
 ?>
 
@@ -51,7 +33,7 @@ if(isset($_POST['codigo']) && isset($_POST['token']) && isset($_POST['email'])){
 </head>
 <body>
     <?php
-    if($correcto){
+    if($correcto['status']){
     ?>
     <div class="container">
     <div class="container">

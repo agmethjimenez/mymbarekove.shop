@@ -5,7 +5,6 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el dire
 $dotenv->load();
 require_once("../database/conexion.php");
 require_once("../models/Productos.php");
-$conexion->set_charset("utf8");
 ?>
 
 <!DOCTYPE html>

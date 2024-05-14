@@ -66,10 +66,12 @@ if (isset($_GET['success'])) {
         INNER JOIN marcas as m ON p.marca = m.idMarca
         INNER JOIN categorias as c ON p.categoria = c.categoria
         WHERE activo = 1";
-                $result = $conexion->query($sql);
+                $result = $conexion->prepare($sql);
+                $result->execute();
 
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
+                if ($result !== null) {
+                    $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($rows as $row){
                         echo "<tr>";
                         echo "<td>" . $row["idProducto"] . "</td>";
                         echo "<td>" . $row["nombreP"] . "</td>";
@@ -92,7 +94,6 @@ if (isset($_GET['success'])) {
                     echo "<tr><td colspan='10'>No se encontraron usuarios.</td></tr>";
                 }
 
-                $conexion->close();
                 ?>
             </tbody>
         </table>

@@ -58,93 +58,110 @@ class Pedido {
 
     public function traerPedido($conexion) {    
         try {
-            $sql = "INSERT INTO pedidos VALUES (?, ?, ?, ?, NOW(), ?, ?, 1)";
-            $stmt = $conexion->prepare($sql);
             $detallesPagoJSON = json_encode($this->detallesPago);
             $detallesPagoJSON = substr($detallesPagoJSON, 0, 255); 
-            $stmt->bind_param("ssssds", $this->idPedido, $this->idUsuario, $this->ciudad, $this->direccion, $this->totalP, $detallesPagoJSON);
-            $stmt->execute();
+    
+            $conexion->beginTransaction();
+    
+            $sqlPedido = "INSERT INTO pedidos (idPedido, usuario, ciudad, direccion, fecha, total, detalles_pago, estado) 
+                          VALUES (:idPedido, :idUsuario, :ciudad, :direccion, NOW(), :total, :detalles_pago, 1)";
+            $stmtPedido = $conexion->prepare($sqlPedido);
+    
+            $stmtPedido->bindParam(":idPedido", $this->idPedido);
+            $stmtPedido->bindParam(":idUsuario", $this->idUsuario);
+            $stmtPedido->bindParam(":ciudad", $this->ciudad);
+            $stmtPedido->bindParam(":direccion", $this->direccion);
+            $stmtPedido->bindParam(":total", $this->totalP);
+            $stmtPedido->bindParam(":detalles_pago", $detallesPagoJSON);
+    
+            $stmtPedido->execute();
     
             foreach ($this->detalles as $producto) {
                 $idProducto = $producto['id'];
                 $cantidad = $producto['cantidad'];
                 $total = $producto['total'];
     
-                $sqlDetalle = "INSERT INTO detallepedido VALUES (?, ?, ?, ?)";
+                $sqlDetalle = "INSERT INTO detallepedido (idPedido, idProducto, cantidad, total) 
+                               VALUES (:idPedido, :idProducto, :cantidad, :total)";
                 $stmtDetalle = $conexion->prepare($sqlDetalle);
     
-                $stmtDetalle->bind_param("ssdd", $this->idPedido, $idProducto, $cantidad, $total);
+                $stmtDetalle->bindParam(":idPedido", $this->idPedido);
+                $stmtDetalle->bindParam(":idProducto", $idProducto);
+                $stmtDetalle->bindParam(":cantidad", $cantidad);
+                $stmtDetalle->bindParam(":total", $total);
     
                 if (!$stmtDetalle->execute()) {
-                    throw new Exception("Error al insertar detalle de pedido: " . $stmtDetalle->error);
+                    throw new Exception("Error al insertar detalle de pedido: " . $stmtDetalle->errorInfo()[2]);
                 }
-
-                $sqlStock = "UPDATE productos SET cantidadDisponible = cantidadDisponible - ? WHERE idProducto = ? ";
+    
+                $sqlStock = "UPDATE productos SET cantidadDisponible = cantidadDisponible - :cantidad WHERE idProducto = :idProducto";
                 $stmtStock = $conexion->prepare($sqlStock);
-                $stmtStock->bind_param("ss",$cantidad,$idProducto);
+                $stmtStock->bindParam(":cantidad", $cantidad);
+                $stmtStock->bindParam(":idProducto", $idProducto);
                 $stmtStock->execute();
-
-                $stmtDetalle->close();
+    
+                $stmtDetalle->closeCursor(); 
             }
     
             $conexion->commit();
     
             return json_encode(['exito' => true, 'mensaje' => 'Pedido exitoso']);
-        } catch (Exception $e) {
-            $conexion->rollback();
+        } catch (PDOException $e) {
+            $conexion->rollBack();
             throw $e;
         }
     }
 
     public function getPedidos($conexion, $id) {
         if ($id === null) {
-            $sql = "SELECT p.idPedido,u.identificacion, CONCAT(u.primerNombre, ' ', COALESCE(u.segundoNombre, ''), ' ', u.primerApellido, ' ', COALESCE(u.segundoApellido, '')) AS nombreCompleto, p.ciudad, p.direccion, p.fecha, p.total, p.detalles_pago, e.estado 
+            $sql = "SELECT p.idPedido, u.identificacion, CONCAT(u.primerNombre, ' ', COALESCE(u.segundoNombre, ''), ' ', u.primerApellido, ' ', COALESCE(u.segundoApellido, '')) AS nombreCompleto, p.ciudad, p.direccion, p.fecha, p.total, p.detalles_pago, e.estado 
                     FROM pedidos as p
                     LEFT JOIN usuarios as u ON p.usuario = u.id
                     LEFT JOIN estados as e ON e.codEst = p.estado";
         } else {
-            $sql = "SELECT p.idPedido,u.identificacion, CONCAT(u.primerNombre, ' ', COALESCE(u.segundoNombre, ''), ' ', u.primerApellido, ' ', COALESCE(u.segundoApellido, '')) AS nombreCompleto, p.ciudad, p.direccion, p.fecha, p.total, p.detalles_pago,e.estado 
+            $sql = "SELECT p.idPedido, u.identificacion, CONCAT(u.primerNombre, ' ', COALESCE(u.segundoNombre, ''), ' ', u.primerApellido, ' ', COALESCE(u.segundoApellido, '')) AS nombreCompleto, p.ciudad, p.direccion, p.fecha, p.total, p.detalles_pago, e.estado 
                     FROM pedidos as p 
                     LEFT JOIN usuarios as u ON p.usuario = u.id
                     LEFT JOIN estados as e ON e.codEst = p.estado
-                    WHERE p.idPedido = ?";
+                    WHERE p.idPedido = :idPedido";
         }
     
         $resultados = array();
     
-        if ($stmt = $conexion->prepare($sql)) {
-            if ($id !== null) {
-                $stmt->bind_param("s", $id);
-            }
-            $stmt->execute();
-            $result = $stmt->get_result();
+        try {
+            $stmt = $conexion->prepare($sql);
     
-            while ($fila = $result->fetch_assoc()) {
+            if ($id !== null) {
+                $stmt->bindParam(":idPedido", $id);
+            }
+    
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            foreach ($result as $fila) {
                 $fila['detalles_pago'] = json_decode($fila['detalles_pago']);
-                $sql2 = "SELECT dp.idProducto, p.nombre, dp.cantidad, dp.total FROM detallepedido as dp
-                    INNER JOIN productos as p ON p.idProducto = dp.idProducto
-                    WHERE idPedido = ?";
-                $bin = $conexion->prepare($sql2);
-                $bin->bind_param("s", $fila['idPedido']);
-                $bin->execute();
-                $detalles = $bin->get_result()->fetch_all(MYSQLI_ASSOC);
+                
+                $sql2 = "SELECT dp.idProducto, p.nombre, dp.cantidad, dp.total 
+                         FROM detallepedido as dp
+                         INNER JOIN productos as p ON p.idProducto = dp.idProducto
+                         WHERE dp.idPedido = :idPedido";
+    
+                $stmt2 = $conexion->prepare($sql2);
+                $stmt2->bindParam(":idPedido", $fila['idPedido']);
+                $stmt2->execute();
+                $detalles = $stmt2->fetchAll(PDO::FETCH_ASSOC);
     
                 $fila['details'] = $detalles;
                 $resultados[] = $fila;
             }
     
-            $stmt->close();
+            return $resultados;
+        } catch (PDOException $e) {
+            echo "Error al obtener pedidos: " . $e->getMessage();
+            return []; 
         }
-    
-        // Verifica si no se encontraron resultados
-        if (empty($resultados) && $id === null) {
-            return [];
-        }
-    
-        $jsonResult = $resultados;
-    
-        return $jsonResult;
     }
+    
     
     
     
@@ -154,20 +171,18 @@ class Pedido {
     public function getIdPago($conexion) {
         $idPago = null;
     
-        $SQL = "SELECT detalles_pago FROM pedidos WHERE idPedido = ?";
+        $sql = "SELECT detalles_pago FROM pedidos WHERE idPedido = :idPedido";
         
-        $stmt = $conexion->prepare($SQL);
+        $stmt = $conexion->prepare($sql);
         
-        $stmt->bind_param("s", $this->idPedido);
+        $stmt->bindParam(":idPedido", $this->idPedido);
         
         $stmt->execute();
         
-        $result = $stmt->get_result();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            
-            $detalles_pago_json = $row['detalles_pago'];
+        if ($result !== false) {
+            $detalles_pago_json = $result['detalles_pago'];
             
             $detalles_pago = json_decode($detalles_pago_json, true);
             
@@ -176,10 +191,11 @@ class Pedido {
             }
         }
         
-        $stmt->close();
+        $stmt->closeCursor();
         
         return $idPago;
     }
+    
     
 }
 

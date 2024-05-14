@@ -1,5 +1,9 @@
 <?php
+include '../../database/conexion.php';
+include '../../models/Proveedor.php';
 session_start();
+$database = new Database;
+$conexion = $database->connect();
 if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
@@ -43,14 +47,13 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
     </thead>
     <tbody>
         <?php
-        $conexion = new mysqli("localhost", "root", "", "mymba2", 3306);
-        $conexion->set_charset("utf8");
-
         $sql = "SELECT*FROM proveedores WHERE estado = 'SI'";
-        $result = $conexion->query($sql);
+        $result = $conexion->prepare($sql);
+        $result->execute();
+        $proveedores = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
+        if ($proveedores !== null) {
+            foreach($proveedores as $row) {
                 echo "<tr>";
                 echo "<td>" . $row["idProveedor"] . "</td>";
                 echo "<td>" . $row["nombreP"] . "</td>";
@@ -66,7 +69,6 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
             echo "<tr><td colspan='10'>No se encontraron usuarios.</td></tr>";
         }
 
-        $conexion->close();
         ?>
     </tbody>
 </table>

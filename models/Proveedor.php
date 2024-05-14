@@ -32,50 +32,67 @@ class Proveedor
         $this->telefono = $telefono;
     }
 
-    public function GETproveedores($conexion, $id)
-    {
-        if ($id === null) {
-            $sql = "SELECT * FROM proveedores WHERE estado = 'SI'";
-        } else {
-            $sql = "SELECT * FROM proveedores WHERE estado = 'SI' AND idProveedor = $id";
-        }
-        $proveedores = array();
-        $resultado = $conexion->query($sql);
-
-        if ($resultado) {
-            while ($fila = $resultado->fetch_assoc()) {
-                $proveedores[] = $fila;
-            }
-            $resultado->free();
-        }
-        return $proveedores;
+    public function GETproveedores($conexion, $id = null)
+{
+    if ($id === null) {
+        $sql = "SELECT * FROM proveedores WHERE estado = 'SI'";
+    } else {
+        $sql = "SELECT * FROM proveedores WHERE estado = 'SI' AND idProveedor = :id";
     }
 
-    public function POSTproveedores($conexion)
-    {
-        $idproveedor = rand(1000, 9999);
+    $proveedores = array();
+    $stmt = $conexion->prepare($sql);
 
-        $sql = "INSERT INTO proveedores(idProveedor, nombreP, ciudad, correo, telefono) VALUES (?, ?, ?, ?, ?)";
-
-        $bin = $conexion->prepare($sql);
-        $bin->bind_param("sssss", $this->idProveedor, $this->nombre, $this->ciudad, $this->correo, $this->telefono);
-
-        if ($bin->execute()) {
-            return ["acceso" => true, "mensaje" => "Insertado correctamente"];
-        } else {
-            return ["acceso" => false, "mensaje" => "Error al insertar: $conexion->error"];
-        }
+    if ($id !== null) {
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
     }
 
-    public function PUTprovedores($conexion){
-        $sql = "UPDATE proveedores SET nombreP = ?, ciudad = ?, correo = ?, telefono = ? WHERE idProveedor = ? AND estado = 'SI' ";
-        $bin = $conexion->prepare($sql);
-        $bin->bind_param("sssss",$this->nombre, $this->ciudad, $this->correo, $this->telefono, $this->idProveedor);
-
-        if ($bin->execute()) {
-            return ["acceso" => true, "mensaje" => "Actualizado correctamente"];
-        } else {
-            return ["acceso" => false, "mensaje" => "Error al actualizar: $conexion->error"];
-        }
+    if ($stmt->execute()) {
+        $proveedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        return ["acceso" => false, "mensaje" => "Error al obtener proveedores: " . $stmt->errorInfo()[2]];
     }
+
+    return $proveedores;
+}
+
+
+public function POSTproveedores($conexion)
+{
+    $idproveedor = rand(1000, 9999);
+
+    $sql = "INSERT INTO proveedores(idProveedor, nombreP, ciudad, correo, telefono) VALUES (:idProveedor, :nombre, :ciudad, :correo, :telefono)";
+
+    $stmt = $conexion->prepare($sql);
+    $stmt->bindParam(":idProveedor", $this->idProveedor, PDO::PARAM_INT);
+    $stmt->bindParam(":nombre", $this->nombre, PDO::PARAM_STR);
+    $stmt->bindParam(":ciudad", $this->ciudad, PDO::PARAM_STR);
+    $stmt->bindParam(":correo", $this->correo, PDO::PARAM_STR);
+    $stmt->bindParam(":telefono", $this->telefono, PDO::PARAM_STR);
+
+    if ($stmt->execute()) {
+        return ["acceso" => true, "mensaje" => "Insertado correctamente"];
+    } else {
+        return ["acceso" => false, "mensaje" => "Error al insertar proveedor: " . $stmt->errorInfo()[2]];
+    }
+}
+
+
+public function PUTprovedores($conexion)
+{
+    $sql = "UPDATE proveedores SET nombreP = :nombre, ciudad = :ciudad, correo = :correo, telefono = :telefono WHERE idProveedor = :idProveedor AND estado = 'SI'";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bindParam(":nombre", $this->nombre, PDO::PARAM_STR);
+    $stmt->bindParam(":ciudad", $this->ciudad, PDO::PARAM_STR);
+    $stmt->bindParam(":correo", $this->correo, PDO::PARAM_STR);
+    $stmt->bindParam(":telefono", $this->telefono, PDO::PARAM_STR);
+    $stmt->bindParam(":idProveedor", $this->idProveedor, PDO::PARAM_INT);
+
+    if ($stmt->execute()) {
+        return ["acceso" => true, "mensaje" => "Actualizado correctamente"];
+    } else {
+        return ["acceso" => false, "mensaje" => "Error al actualizar proveedor: " . $stmt->errorInfo()[2]];
+    }
+}
+
 }

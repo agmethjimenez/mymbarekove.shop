@@ -28,16 +28,19 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
 </head>
 <body>
 <div class="contenedor">
-    <form action="update.php" method="post">
+    <form action="" method="post">
     <?php
 
 if($_SERVER["REQUEST_METHOD"] === "GET"){
 $id = $_GET["id"];
-$sql = "SELECT * FROM proveedores WHERE idProveedor = '$id'";
-$result = $conexion->query($sql);
+$sql = "SELECT * FROM proveedores WHERE idProveedor = :id";
+$result = $conexion->prepare($sql);
+$result->bindParam(":id",$id);
+$result->execute();
+
 
 if ($result) {
-    $row = $result->fetch_assoc();
+    $row = $result->fetch(PDO::FETCH_ASSOC);
 }}
 ?>
     <div class="title" ><h1>Actualizar Proveedor</h1></div>
@@ -120,7 +123,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
         header("Location: provedores.php");
         exit;
     } else {
-        echo "Error en la actualización. Código de estado: " . $http_status;
+        echo "<script>alert(Error en la actualización. Código de estado: )</script>" . $http_status;
     }
 
     curl_close($curl);

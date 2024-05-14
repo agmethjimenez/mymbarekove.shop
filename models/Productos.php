@@ -43,91 +43,104 @@ class Producto
         $this->imagen = $imagen;
     }
 
-    public function GetProductos($conexion, $id, $busqueda, $categoria) {
-        if ($id === null) {
-            if ($busqueda !== null) {
-                $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion, p.cantidadDisponible, p.imagen 
-                        FROM productos AS p 
-                        INNER JOIN proveedores AS pr ON p.proveedor = pr.idProveedor
-                        INNER JOIN marcas AS m ON p.marca = m.idMarca
-                        INNER JOIN categorias AS c ON p.categoria = c.categoria
-                        WHERE p.activo = 1 AND p.nombre LIKE '%$busqueda%'";
-            } else if ($categoria !== null) {
-                $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion, p.cantidadDisponible, p.imagen 
-                        FROM productos AS p 
-                        INNER JOIN proveedores AS pr ON p.proveedor = pr.idProveedor
-                        INNER JOIN marcas AS m ON p.marca = m.idMarca
-                        INNER JOIN categorias AS c ON p.categoria = c.categoria
-                        WHERE p.activo = 1 AND p.categoria = $categoria";
-            } else {
-                $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion, p.cantidadDisponible, p.imagen 
-                        FROM productos AS p 
-                        INNER JOIN proveedores AS pr ON p.proveedor = pr.idProveedor
-                        INNER JOIN marcas AS m ON p.marca = m.idMarca
-                        INNER JOIN categorias AS c ON p.categoria = c.categoria
-                        WHERE p.activo = 1";
-            }
+    public function GetProductos($conexion, $id = null, $busqueda = null, $categoria = null) {
+        $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion, p.cantidadDisponible, p.imagen
+                FROM productos AS p
+                INNER JOIN proveedores AS pr ON p.proveedor = pr.idProveedor
+                INNER JOIN marcas AS m ON p.marca = m.idMarca
+                INNER JOIN categorias AS c ON p.categoria = c.categoria
+                WHERE p.activo = 1";
+      
+        $params = [];
+      
+        if ($id !== null) {
+          $sql .= " AND p.idProducto = :id";
+          $params[":id"] = $id;
+        }
+      
+        if ($busqueda !== null) {
+          $sql .= " AND p.nombre LIKE :busqueda";
+          $params[":busqueda"] = "%$busqueda%";
+        }
+      
+        if ($categoria !== null) {
+          $sql .= " AND p.categoria = :categoria";
+          $params[":categoria"] = $categoria;
+        }
+      
+        try {
+          $stmt = $conexion->prepare($sql);
+          $stmt->execute($params);
+          $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+          return $resultado;
+        } catch (PDOException $e) {
+          echo "Error: " . $e->getMessage();
+          return null;
+        }
+      }
+      
+    
+    
+      public function AgregarProducto($conexion){
+        $id = rand(1000, 9999);
+    
+        $sql = "INSERT INTO productos (idProducto, proveedor, nombre, descripcionP, contenido, precio, marca, categoria, cantidadDisponible, imagen, activo) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
+    
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(1, $id);
+        $stmt->bindParam(2, $this->proveedor);
+        $stmt->bindParam(3, $this->nombre);
+        $stmt->bindParam(4, $this->descripcion);
+        $stmt->bindParam(5, $this->contenido);
+        $stmt->bindParam(6, $this->precio);
+        $stmt->bindParam(7, $this->marca);
+        $stmt->bindParam(8, $this->categoria);
+        $stmt->bindParam(9, $this->stock);
+        $stmt->bindParam(10, $this->imagen);
+    
+        if ($stmt->execute()) {
+            return ["accesso" => true, "mensaje" => "Producto Agregado exitosamente"];
         } else {
-            $sql = "SELECT p.idProducto, pr.nombreP, p.nombre, p.descripcionP, p.contenido, p.precio, m.marca, c.descripcion, p.cantidadDisponible, p.imagen 
-                    FROM productos AS p 
-                    INNER JOIN proveedores AS pr ON p.proveedor = pr.idProveedor
-                    INNER JOIN marcas AS m ON p.marca = m.idMarca
-                    INNER JOIN categorias AS c ON p.categoria = c.categoria
-                    WHERE p.activo = 1 AND idProducto = $id";
-        }
-        
-        $resultados = array();
-    
-        if ($resultado = $conexion->query($sql)) {
-            while ($fila = $resultado->fetch_assoc()) {
-                $resultados[] = $fila;
-            }
-            $resultado->free();
-        }
-        return $resultados;
-    }
-    
-    
-    public function AgregarProducto($conexion){
-        $id = rand(1000,9999);
-        $sql = "INSERT INTO productos(idProducto,proveedor, nombre, descripcionP, contenido, precio, marca, categoria, cantidadDisponible, imagen,activo) VALUES (?,?,?,?,?,?,?,?,?,?,1)";
-        $bin = $conexion->prepare($sql);
-        $bin->bind_param("ssssssssss",$this->id_producto,$this->proveedor,$this->nombre,$this->descripcion,$this->contenido,$this->precio, $this->marca, $this->categoria, $this->stock,$this->imagen);
-        if($bin->execute()){
-            return["accesso"=>true,"mensaje"=>"Producto Agregado exitosamente"];
-        }else{
-            return["accesso"=>false,"mensaje"=>"Producto no agregado","error"=>$conexion->error];
+            return ["accesso" => false, "mensaje" => "Producto no agregado", "error" => $stmt->errorInfo()[2]];
         }
     }
+    
     public function ActualizarProducto($conexion){
-        $sql = "UPDATE productos SET nombre = ?, descripcionP = ?, contenido = ?, precio = ?, cantidadDisponible = ?, imagen = ? WHERE idProducto = ?";
-        $bin = $conexion->prepare($sql);
-        $bin->bind_param("sssssss",$this->nombre,$this->descripcion,$this->contenido, $this->precio, $this->stock, $this->imagen,$this->id_producto);
-        if($bin->execute()){
-            return["accesso" => true, "mensaje" => "Producto Actualizado"];
-        }else{
-            return["accesso" => false, "mensaje" => "Producto no Actualizado"];
+        $sql = "UPDATE productos 
+                SET nombre = ?, descripcionP = ?, contenido = ?, precio = ?, cantidadDisponible = ?, imagen = ? 
+                WHERE idProducto = ?";
+    
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(1, $this->nombre);
+        $stmt->bindParam(2, $this->descripcion);
+        $stmt->bindParam(3, $this->contenido);
+        $stmt->bindParam(4, $this->precio);
+        $stmt->bindParam(5, $this->stock);
+        $stmt->bindParam(6, $this->imagen);
+        $stmt->bindParam(7, $this->id_producto);
+    
+        if ($stmt->execute()) {
+            return ["accesso" => true, "mensaje" => "Producto Actualizado"];
+        } else {
+            return ["accesso" => false, "mensaje" => "Producto no Actualizado"];
         }
-        
     }
+    
     public static function BuscarProducto($conexion, $nombreProducto){
-        $query = "SELECT * FROM productos WHERE nombre LIKE ?";
+        $query = "SELECT * FROM productos WHERE nombre LIKE :nombreProducto";
     
         $stmt = $conexion->prepare($query);
         $nombreProducto = "%$nombreProducto%"; 
-        $stmt->bind_param("s", $nombreProducto);
+        $stmt->bindParam(':nombreProducto', $nombreProducto);
         $stmt->execute();
     
-        $result = $stmt->get_result();
-    
-        $productos = array();
-        while ($row = $result->fetch_assoc()) {
-            $productos[] = $row;
-        }
-        $stmt->close();
+        $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
     
         return json_encode($productos);
     }
+    
     
 }
 

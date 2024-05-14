@@ -47,9 +47,12 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
                 $database = new Database();
                 $conexion = $database->connect();
                 $query = "SELECT*FROM administradores WHERE activo = 1";
-                $result = $conexion->query($query);
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
+                $result = $conexion->prepare($query);
+                $result->execute();
+
+                if ($result !== null) {
+                    $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+                    foreach($rows as $row){
                         echo "<tr>";
                         echo "<td>" . $row["id"] . "</td>";
                         echo "<td>" . $row["username"] . "</td>";

@@ -56,14 +56,12 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
     $conexion = $database->connect();
     $id = $_GET['id'];
 
-    $sql = "SELECT*FROM administradores WHERE id = ? AND activo = 1";
+    $sql = "SELECT*FROM administradores WHERE id = :id AND activo = 1";
     $bin = $conexion->prepare($sql);
-    $bin->bind_param("s", $id);
+    $bin->bindParam(":id", $id);
     $result = $bin->execute();
-    $result = $bin->get_result();
-    if ($result) {
-        $row = $result->fetch_assoc();
-    }
+    $row = $result = $bin->fetch(PDO::FETCH_ASSOC);
+    
     ?>
     <div class="contenedor">
         <form action="registro.php" method="post">

@@ -98,47 +98,9 @@ require_once("../../models/administrador.php");
 require_once(__DIR__ . '/../../database/conexion.php');
 $database = new Database();
 $conexion = $database->connect();
+$admin = new Admin;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = isset($_POST['username']) ? $_POST['username'] : null;
-    $email = isset($_POST['email']) ? $_POST['email'] : null;
-    $password = isset($_POST['password']) ? $_POST['password'] : null;
-
-    if (empty($username) || empty($email) || empty($password)) {
-        echo '<div class="message is-danger" id="message">';
-        echo '<p>Por favor, completa todos los campos del formulario.</p>';
-        echo '</div>';
-        exit();
-    }
-
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-    $id_admin = substr(uniqid(), 0, 10);
-    $token = bin2hex(random_bytes(16));
-    $sql = "INSERT INTO administradores VALUES (?,?,?,?,?,1)";
-    $bin = $conexion->prepare($sql);
-
-    if (!$bin) {
-        echo '<div class="message is-danger" id="message">';
-        echo '<p>Error al preparar la consulta: ' . $conexion->error . '</p>';
-        echo '</div>';
-        exit();
-    }
-
-    $bin->bind_param("sssss", $id_admin, $username, $email,$token, $hashedPassword);
-
-    if ($bin->execute()) {
-        echo '<div class="message is-primary" id="message">';
-        echo '<p>Administrador registrado correctamente</p>';
-        echo '</div>';
-    } else {
-        echo '<div class="message is-danger" id="message">';
-        echo '<p>Error al registrar el administrador: ' . $bin->error . '</p>';
-        echo '</div>';
-    }
-
-    $bin->close();
-    $conexion->close();
-}
+ 
 ?>
 
     </form>

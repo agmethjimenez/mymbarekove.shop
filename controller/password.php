@@ -6,6 +6,8 @@ require_once("../models/Usuarios.php");
 require_once('../models/Auth.php');
 require_once("../database/conexion.php");
 header('Content-Type: application/json');
+$database = new Database;
+$conexion = $database->connect();
 $usuario = new Usuario();
 $auth = new Auth;
 $metodo = $_SERVER['REQUEST_METHOD'];
@@ -33,7 +35,7 @@ switch ($metodo) {
                         header('Content-Type: application/json', true, 400);
                         echo json_encode(array('exito' => false, 'mensaje' => 'Las contraseñas no coinciden'));
                     } else {
-                        $result = $usuario->cambiarClave($usuario_id, $claveactual, $clavenueva, $clavenueva2);
+                        $result = $usuario->cambiarClave($conexion,$usuario_id, $claveactual, $clavenueva, $clavenueva2);
                         if ($result['encontrado']) {
                             header('Content-Type: application/json');
                             echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));

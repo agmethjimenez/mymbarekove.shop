@@ -19,7 +19,6 @@ require_once("../../database/conexion.php");
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $id = $_GET['id'];
 
-    // Realizar la solicitud cURL para eliminar el producto en la otra aplicación
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
@@ -40,7 +39,6 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
 
     curl_close($curl);
 
-    // Verificar la respuesta de la solicitud cURL
     $responseData = json_decode($response, true);
     if (isset($responseData['status']) && $responseData['status']) {
         header("location: productos.php?success=true");

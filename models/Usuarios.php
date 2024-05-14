@@ -51,166 +51,228 @@ class Usuario
         $this->email = $email;
     }
 
-    public function GETusuarios($conexion, $id)
-    {
-        $sql = ($id === null) ? "SELECT*FROM usuarios WHERE activo = 1" : "SELECT*FROM usuarios WHERE id = $id AND activo = 1";
-        $usuarios = array();
-        $resultado = $conexion->query($sql);
-
-        if ($resultado) {
-            while ($fila = $resultado->fetch_assoc()) {
-                $usuarios[] = $fila;
+    public function GETusuarios($conexion, $id) {
+        try {
+            if ($id === null) {
+                $sql = "SELECT * FROM usuarios WHERE activo = 1";
+                $stmt = $conexion->prepare($sql);
+            } else {
+                $sql = "SELECT * FROM usuarios WHERE id = :id AND activo = 1";
+                $stmt = $conexion->prepare($sql);
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             }
-            $resultado->free();
+    
+            $stmt->execute();
+    
+            $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            $stmt->closeCursor();
+    
+            return $usuarios;
+        } catch(PDOException $e) {
+            echo "Error al obtener usuarios: " . $e->getMessage();
+            return array(); 
         }
-        return $usuarios;
     }
 
-    public function registrarse($conexion, $clave)
-{
-    $hashedPassword = password_hash($clave, PASSWORD_DEFAULT);
-    $conexion->begin_transaction();
-    $enviado = true;
 
-    if ($enviado) {
-        $sql = "INSERT INTO usuarios (identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email, activo)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
-        $bin = $conexion->prepare($sql);
-        $bin->bind_param("ssssssss", $this->identificacion, $this->tipoId, $this->nombre1, $this->nombre2, $this->apellido1, $this->apellido2, $this->telefono, $this->email);
+    public function registrarse($conexion, $clave) {
+    try {
+        // Hash de la contraseña
+        $hashedPassword = password_hash($clave, PASSWORD_DEFAULT);
 
-        if ($bin->execute()) {
-            $token = bin2hex(random_bytes(16));
-            $id_aut = $conexion->insert_id;
-            $sql2 = "INSERT INTO credenciales (id, email, token, codigo, fecha_cambio, password) VALUES (?, ?, ?, ?, NOW(), ?)";
-            $bin2 = $conexion->prepare($sql2);
-            $codigo = rand(1000, 9999);
-            $bin2->bind_param("sssss", $id_aut, $this->email, $token, $codigo, $hashedPassword);
+        $conexion->beginTransaction();
 
-            if ($bin2->execute()) {
-                $conexion->commit();
-                return ["success" => true, "mensaje" => "Registrado"];
+        $enviado = true;
+
+        if ($enviado) {
+            $sql = "INSERT INTO usuarios (identificacion, tipoId, primerNombre, segundoNombre, primerApellido, segundoApellido, telefono, email, activo)
+                    VALUES (:identificacion, :tipoId, :primerNombre, :segundoNombre, :primerApellido, :segundoApellido, :telefono, :email, 1)";
+            $stmt = $conexion->prepare($sql);
+
+            $stmt->bindParam(':identificacion', $this->identificacion);
+            $stmt->bindParam(':tipoId', $this->tipoId);
+            $stmt->bindParam(':primerNombre', $this->nombre1);
+            $stmt->bindParam(':segundoNombre', $this->nombre2);
+            $stmt->bindParam(':primerApellido', $this->apellido1);
+            $stmt->bindParam(':segundoApellido', $this->apellido2);
+            $stmt->bindParam(':telefono', $this->telefono);
+            $stmt->bindParam(':email', $this->email);
+
+            if ($stmt->execute()) {
+                $token = bin2hex(random_bytes(16));
+                $codigo = rand(1000, 9999);
+
+                $id_aut = $conexion->lastInsertId();
+
+                $sql2 = "INSERT INTO credenciales (id, email, token, codigo, fecha_cambio, password)
+                        VALUES (:id, :email, :token, :codigo, NULL, :password)";
+                $stmt2 = $conexion->prepare($sql2);
+
+                $stmt2->bindParam(':id', $id_aut);
+                $stmt2->bindParam(':email', $this->email);
+                $stmt2->bindParam(':token', $token);
+                $stmt2->bindParam(':codigo', $codigo);
+                $stmt2->bindParam(':password', $hashedPassword);
+
+                if ($stmt2->execute()) {
+                    $conexion->commit();
+                    return ["success" => true, "mensaje" => "Registrado"];
+                } else {
+                    $conexion->rollBack();
+                    return ["success" => false, "mensaje" => "Error al registrar la credencial"];
+                }
             } else {
-                $conexion->rollback();
-                return ["success" => false, "mensaje" => "Error al registrar la credencial: " . $bin2->error];
+                $conexion->rollBack();
+                return ["success" => false, "mensaje" => "Error al registrar el usuario"];
             }
         } else {
-            $conexion->rollback();
-            return ["success" => false, "mensaje" => "Error al registrar el usuario: " . $bin->error];
+            return ["success" => false, "mensaje" => "Error al verificar correo"];
         }
-    } else {
-        return ["success" => false, "mensaje" => "Error al verificar correo"];
+    } catch(PDOException $e) {
+        $conexion->rollBack();
+        return ["success" => false, "mensaje" => "Error en la transacción: " . $e->getMessage()];
     }
 }
 
-    public function Login($conexion, $contraseña)
-    {
+    
+
+
+public function Login($conexion, $contraseña) {
+    try {
         $email = $this->email;
-        $query = "SELECT u.id,u.primerNombre,u.primerApellido,u.email,cr.password FROM usuarios as u
-        LEFT JOIN credenciales as cr ON u.id = cr.id
-        WHERE u.activo = 1 and u.email = '$email'";
-        $result = $conexion->query($query);
 
-        if ($result !== false) {
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $hashedPassword = $row['password'];
+        $sql = "SELECT u.id, u.primerNombre, u.primerApellido, u.email, cr.password 
+                FROM usuarios AS u
+                LEFT JOIN credenciales AS cr ON u.id = cr.id
+                WHERE u.activo = 1 AND u.email = :email";
+        $stmt = $conexion->prepare($sql);
 
-                if (password_verify($contraseña, $hashedPassword)) {
-                    $response = [
-                        "accesso" => true,
-                        "mensaje" => "Verificado correctamente",
-                        "usuario" => [
-                            "id" => $row['id'],
-                            "nombre" => $row['primerNombre'],
-                            "apellido" => $row['primerApellido'],
-                            "email" => $row['email']
-                        ]
-                    ];
-                    return $response;
-                } else {
-                    return ["accesso" => false, "mensaje" => "Contraseña incorrecta: $conexion->error"];
-                }
-            } else {
-                return ["accesso" => false, "mensaje" => "usuario no encontrado: $conexion->error"];
-            }
-        } else {
-            return ["accesso" => false, "mensaje" => 'Error en la cosulta = ' . $conexion->error . ''];
-        }
-    }
+        $stmt->bindParam(':email', $email);
 
-    public function verDatos($conexion, $id)
-    {
-        $sql = "SELECT*FROM usuarios WHERE id = '$id'";
-        $con = $conexion->query($sql);
-        if ($con->num_rows > 0) {
-            $row = $con->fetch_assoc();
-            $_SESSION['iduser'] = $row['id'];
-            $_SESSION['identificacion'] = $row['identificacion'];
-            $_SESSION['tipoid'] = $row['tipoId'];
-            $_SESSION['nombre1'] = $row['primerNombre'];
-            $_SESSION['nombre2'] = $row['segundoNombre'];
-            $_SESSION['apellido1'] = $row['primerApellido'];
-            $_SESSION['apellido2'] = $row['segundoApellido'];
-            $_SESSION['telefono'] = $row['telefono'];
-            $_SESSION['email'] = $row['email'];
-        }
-    }
-
-    public function actualizarDatos($conexion)
-    {
-        $sql = "UPDATE usuarios SET primerNombre = ?,segundoNombre = ?, primerApellido = ?, segundoApellido = ?,telefono = ?, email = ? WHERE identificacion = ?";
-        $bin = $conexion->prepare($sql);
-        $bin->bind_param("sssssss", $this->nombre1, $this->nombre2, $this->apellido1, $this->apellido2, $this->telefono, $this->email, $this->identificacion);
-        $bin->execute();
-    }
-
-    public function cambiarClave($id, $passwordactual, $passwordnueva, $passwordnueva2)
-    {
-        global $conexion;
-        if ($passwordnueva != $passwordnueva2) {
-            return ['encontrado' => false, 'mensaje' => 'Las contraseñas no coinciden'];
-        }
-        $query = "SELECT password FROM credenciales WHERE id = ?";
-        $stmt = $conexion->prepare($query);
-        $stmt->bind_param("s", $id);
         $stmt->execute();
-        $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            $sqlverificar = "SELECT * FROM credenciales WHERE id = ? AND TIMESTAMPDIFF(DAY, fecha_cambio, NOW()) > 30";
-            $binver = $conexion->prepare($sqlverificar);
-            $binver->bind_param("s", $id);
-            $binver->execute();
-            $result2 = $binver->get_result();
-            if ($result2->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $hashedPassword = $row['password'];
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                if (password_verify($passwordactual, $hashedPassword)) {
-                    $token = bin2hex(random_bytes(16));
-                    $hashedNuevaPassword = password_hash($passwordnueva, PASSWORD_BCRYPT);
-                    $sql = "UPDATE credenciales SET password = ?,token = ?, fecha_cambio = NOW() WHERE id = ?";
-                    $stmt = $conexion->prepare($sql);
-                    $stmt->bind_param("sss", $hashedNuevaPassword, $token, $id);
-                    $stmt->execute();
-                    return ['encontrado' => true, 'mensaje' => 'Clave actualizada'];
-                } else {
-                    echo $conexion->error;
-                    return ['encontrado' => false, 'mensaje' => 'La contraseña actual no coincide, asegurate de que sea la correcta'];
-                }
+        if ($row) {
+            $hashedPassword = $row['password'];
+
+            if (password_verify($contraseña, $hashedPassword)) {
+                $response = [
+                    "accesso" => true,
+                    "mensaje" => "Verificado correctamente",
+                    "usuario" => [
+                        "id" => $row['id'],
+                        "nombre" => $row['primerNombre'],
+                        "apellido" => $row['primerApellido'],
+                        "email" => $row['email']
+                    ]
+                ];
+                return $response;
             } else {
-                return ['encontrado' => false, 'mensaje' => 'La contraseña solo se puede cambiar luego de 30 dias del ultimo cambio'];
+                return ["accesso" => false, "mensaje" => "Contraseña incorrecta"];
             }
         } else {
-            echo "Usuario no encontrado";
-            return ['encontrado' => false, 'mensaje' => 'Usuario no encontrado'];
+            return ["accesso" => false, "mensaje" => "Usuario no encontrado"];
         }
-        $stmt->close();
+    } catch(PDOException $e) {
+        return ["accesso" => false, "mensaje" => "Error en la consulta: " . $e->getMessage()];
+    }
+}
+
+
+public function verDatos($conexion, $id)
+{
+    $sql = "SELECT * FROM usuarios WHERE id = :id";
+    $statement = $conexion->prepare($sql);
+    $statement->bindParam(':id', $id, PDO::PARAM_INT); 
+    $statement->execute();
+    $result = $statement->fetch(PDO::FETCH_ASSOC); 
+    if ($result !== false) {
+        $_SESSION['iduser'] = $result['id'];
+        $_SESSION['identificacion'] = $result['identificacion'];
+        $_SESSION['tipoid'] = $result['tipoId'];
+        $_SESSION['nombre1'] = $result['primerNombre'];
+        $_SESSION['nombre2'] = $result['segundoNombre'];
+        $_SESSION['apellido1'] = $result['primerApellido'];
+        $_SESSION['apellido2'] = $result['segundoApellido'];
+        $_SESSION['telefono'] = $result['telefono'];
+        $_SESSION['email'] = $result['email'];
+    }
+}
+
+    public function actualizarDatos($conexion) {
+        try {
+            $sql = "UPDATE usuarios SET primerNombre = :primerNombre, segundoNombre = :segundoNombre, primerApellido = :primerApellido, segundoApellido = :segundoApellido, telefono = :telefono, email = :email WHERE identificacion = :identificacion";
+            $stmt = $conexion->prepare($sql);
+    
+            $stmt->bindParam(':primerNombre', $this->nombre1);
+            $stmt->bindParam(':segundoNombre', $this->nombre2);
+            $stmt->bindParam(':primerApellido', $this->apellido1);
+            $stmt->bindParam(':segundoApellido', $this->apellido2);
+            $stmt->bindParam(':telefono', $this->telefono);
+            $stmt->bindParam(':email', $this->email);
+            $stmt->bindParam(':identificacion', $this->identificacion);
+    
+            $stmt->execute();
+    
+            $stmt->closeCursor();
+        } catch(PDOException $e) {
+            echo "Error al actualizar datos: " . $e->getMessage();
+        }
     }
 
-    public function VerificarExistencia($id)
-    {
+    public function cambiarClave($conexion, $id, $passwordactual, $passwordnueva, $passwordnueva2) {
+        try {
+            if ($passwordnueva != $passwordnueva2) {
+                return ['encontrado' => false, 'mensaje' => 'Las contraseñas no coinciden'];
+            }
+    
+            $sql = "SELECT password FROM credenciales WHERE id = :id";
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+    
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if ($row) {
+                $hashedPassword = $row['password'];
+    
+                if (password_verify($passwordactual, $hashedPassword)) {
+                    $sqlverificar = "SELECT * FROM credenciales WHERE id = :id AND (fecha_cambio IS NULL OR TIMESTAMPDIFF(DAY, fecha_cambio, NOW()) > 30)";
+                    $stmtverificar = $conexion->prepare($sqlverificar);
+                    $stmtverificar->bindParam(':id', $id);
+                    $stmtverificar->execute();
+    
+                    if ($stmtverificar->rowCount() > 0) {
+                        $token = bin2hex(random_bytes(16));
+                        $hashedNuevaPassword = password_hash($passwordnueva, PASSWORD_BCRYPT);
+    
+                        $sqlUpdate = "UPDATE credenciales SET password = :password, token = :token, fecha_cambio = NOW() WHERE id = :id";
+                        $stmtUpdate = $conexion->prepare($sqlUpdate);
+                        $stmtUpdate->bindParam(':password', $hashedNuevaPassword);
+                        $stmtUpdate->bindParam(':token', $token);
+                        $stmtUpdate->bindParam(':id', $id);
+                        $stmtUpdate->execute();
+    
+                        return ['encontrado' => true, 'mensaje' => 'Clave actualizada'];
+                    } else {
+                        return ['encontrado' => false, 'mensaje' => 'La contraseña solo se puede cambiar luego de 30 días del último cambio'];
+                    }
+                } else {
+                    return ['encontrado' => false, 'mensaje' => 'La contraseña actual no coincide, asegúrate de que sea la correcta'];
+                }
+            } else {
+                return ['encontrado' => false, 'mensaje' => 'Usuario no encontrado'];
+            }
+        } catch(PDOException $e) {
+            echo "Error al cambiar la clave: " . $e->getMessage();
+        }
     }
+    
+
+    
+    
     public function verificarToken($conexion, $idusuario, $token_ingresado)
     {
         $token_db = null;
@@ -233,30 +295,100 @@ class Usuario
 
     public function resetPassword($conexion) {
         $email = $this->email;
-        $sql = "SELECT * FROM credenciales WHERE email = ?";
-        $bin = $conexion->prepare($sql);
-        $bin->bind_param("s", $email);
-        $bin->execute();
-        $result = $bin->get_result();
-        $token = bin2hex(random_bytes(16));
+        $sql = "SELECT * FROM credenciales WHERE email = :email";
         
-        if ($result->num_rows > 0) {
-            include 'mailrestart.php';            
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($result) {
+            $token = bin2hex(random_bytes(16));           
+            include 'mailrestart.php';
+            
             if ($enviado) {
-                $sql2 = "UPDATE credenciales SET token = ?, codigo = ?, fecha_cambio = NOW() WHERE email = ?";
-                $bin2 = $conexion->prepare($sql2);
-                $bin2->bind_param("sss", $token, $codigo, $email);
+                $sqlUpdate = "UPDATE credenciales SET token = :token, codigo = :codigo, fecha_cambio = NOW() WHERE email = :email";
+                $stmtUpdate = $conexion->prepare($sqlUpdate);
+                $stmtUpdate->bindParam(':token', $token, PDO::PARAM_STR);
+                $stmtUpdate->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+                $stmtUpdate->bindParam(':email', $email, PDO::PARAM_STR);
                 
-                if ($bin2->execute()) {
-                    return ['status'=>true, "mensaje"=>"Enviado"]; 
+                if ($stmtUpdate->execute()) {
+                    return ['status' => true, 'mensaje' => 'Enviado']; 
                 } else {
-                    return ['status'=>false, "mensaje"=>"No ejecutado"]; 
+                    return ['status' => false, 'mensaje' => 'No ejecutado']; 
                 }
             } else {
-                return ['status'=>false, "mensaje"=>"Correo no enviado"]; 
+                return ['status' => false, 'mensaje' => 'Correo no enviado']; 
             }
         } else {
-            return ['status'=>false, "mensaje"=>"Correo no existe"]; 
+            return ['status' => false, 'mensaje' => 'Correo no existe']; 
+        }
+    }
+    
+
+    public function VerificarExistenciayCaducidad($conexion, $token, $codigo){
+        $email = $this->email;
+        $sql = "SELECT email, token, codigo FROM credenciales WHERE email = :email AND token = :token AND codigo = :codigo";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(":email",$email);
+        $stmt->bindParam(":token",$token);
+        $stmt->bindParam(":codigo",$codigo);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($result !== false){
+            $sql2 = "SELECT * FROM credenciales WHERE email = :email AND token = :token AND codigo = :codigo AND TIMESTAMPDIFF(MINUTE, fecha_cambio, NOW()) < 30";
+            $stmt2 = $conexion->prepare($sql2);
+            $stmt2->bindParam(":email",$email);
+            $stmt2->bindParam(":token",$token);
+            $stmt2->bindParam(":codigo",$codigo);
+            $stmt2->execute();
+
+            $result2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+            if($result2 !== false){
+                return[
+                    "status"=>true
+                ];
+            }else{
+                return[
+                    "status"=>false,
+                    "error"=>"Codigo caducado."
+                ];
+            }
+        }else{
+            return[
+                "status"=>false,
+                "error"=>"Usuario no encontrado."
+            ];
+        }
+    }
+
+    public function actualizarCredenciales($conexion,$password) {
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+    
+        $token = bin2hex(random_bytes(16));
+        $email = $this->email;
+    
+        try {
+            $sql = "UPDATE credenciales SET password = :password, token = :token WHERE email = :email";
+            $stmt = $conexion->prepare($sql);
+    
+            $stmt->bindParam(":password", $hashedPassword);
+            $stmt->bindParam(":token", $token);
+            $stmt->bindParam(":email", $email);
+    
+            $stmt->execute();
+    
+            if ($stmt->rowCount() > 0) {
+                return true; 
+            } else {
+                return false; 
+            }
+        } catch (PDOException $e) {
+           
+            return false; 
         }
     }
     

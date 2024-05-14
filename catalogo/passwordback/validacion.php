@@ -1,5 +1,7 @@
 <?php
 include_once '../../database/conexion.php';
+include_once '../../models/Usuarios.php';
+$usuario = new Usuario;
 $database = new Database();
 $conexion = $database->connect();
 
@@ -7,6 +9,7 @@ if(isset($_POST['password1']) && isset($_POST['password2']) && isset($_POST['ema
     $pass1  = $_POST['password1'];
     $pass2 = $_POST['password2'];
     $email = $_POST['email'];
+    $usuario->setEmail($email);
 
     if ($pass1 != $pass2) {
         echo '<div class="message is-danger" id="message">';
@@ -14,20 +17,14 @@ if(isset($_POST['password1']) && isset($_POST['password2']) && isset($_POST['ema
         echo '</div>';
     }
 
-    $password = password_hash($pass1,PASSWORD_BCRYPT);
-    $token = bin2hex(random_bytes(16));
-
-    $sql = "UPDATE credenciales SET password = ?, token = ? WHERE email = ?";
-    $bin = $conexion->prepare($sql);
-    $bin->bind_param("sss",$password,$token,$email);
-    if ($bin->execute()) {
+    if($usuario->actualizarCredenciales($conexion, $pass1)){
         echo '<div class="message is-primary" id="message">';
         echo '<p>Contraseña reestablecida</p>';
         echo '<a href="../login.php" class="button is-primary">Iniciar Sesion</a>';
         echo '</div>';
     }
-
 }
+
 ?>
 <head>
     <meta charset="UTF-8">

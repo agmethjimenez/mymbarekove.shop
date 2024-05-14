@@ -34,30 +34,30 @@ if (isset($_GET['id'])) {
     $sqlDetalles = "SELECT dp.idProducto, p.nombre, p.precio, dp.cantidad, dp.total 
                     FROM detallepedido as dp
                     INNER JOIN productos as p ON dp.idProducto = p.idProducto
-                    WHERE dp.idPedido = '$idPedido'";
+                    WHERE dp.idPedido = :id";
 
-    
-    $resultDetalles = $conexion->query($sqlDetalles);
+    $stmt1 = $conexion->prepare($sqlDetalles);
+    $stmt1->bindParam(":id",$idPedido);
+    $stmt1->execute();
+    $resultDetalles = $stmt1->fetchAll(PDO::FETCH_ASSOC);
 
     // Consulta para obtener información general del pedido
     $sqlPedido = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha, e.estado as estad FROM pedidos as p 
-    INNER JOIN estados as e ON p.estado = e.codEst WHERE p.idPedido = ? AND p.usuario = ?";
+    INNER JOIN estados as e ON p.estado = e.codEst WHERE p.idPedido = :idpedido AND p.usuario = :idusuario";
 
     $stmtPedido = $conexion->prepare($sqlPedido);
-    $stmtPedido->bind_param("ss", $idPedido, $idUsuario);
+    $stmtPedido->bindParam(":idpedido",$idPedido);
+    $stmtPedido->bindParam(":idusuario",$idUsuario);
     $stmtPedido->execute();
-    $resultPedido = $stmtPedido->get_result();
+    $resultPedido = $stmtPedido->fetchAll(PDO::FETCH_ASSOC);
 
-    // Verificar si el pedido existe y pertenece al usuario actual
-    if ($resultPedido->num_rows > 0) {
-        $pedido = $resultPedido->fetch_assoc();
+    if (count($resultPedido) > 0) {
+        $pedido = $resultPedido[0];
     } else {
-        // Redirigir si el pedido no existe o no pertenece al usuario
         header("Location: tuspedidos.php");
         exit();
     }
 } else {
-    // Redirigir si no se proporciona un ID de pedido válido
     header("Location: tuspedidos.php");
     exit();
 }
@@ -226,8 +226,8 @@ if($pedido['estad'] = "Pendiente" ){
             </thead>
             <tbody>
                 <?php
-                if ($resultDetalles->num_rows > 0) {
-                    while ($detalle = $resultDetalles->fetch_assoc()) {
+                if ($resultDetalles !== null) {
+                    foreach ($resultDetalles as $detalle) {
                         echo '<tr>';
                         echo '<td>' . htmlspecialchars($detalle['idProducto']) . '</td>';
                         echo '<td>' . htmlspecialchars($detalle['nombre']) . '</td>';
@@ -244,17 +244,19 @@ if($pedido['estad'] = "Pendiente" ){
             </tbody>
         </table>
         <?php
-        $tottQuery = "SELECT SUM(dp.total) AS total_pedido FROM detallepedido as dp WHERE dp.idPedido = '$idPedido'";
-        $resultTott = $conexion->query($tottQuery);
+        $tottQuery = "SELECT SUM(dp.total) AS total_pedido FROM detallepedido as dp WHERE dp.idPedido = :id";
+        $resultTott = $conexion->prepare($tottQuery);
+        $resultTott->bindParam(":id",$idPedido);
+        $resultTott->execute();
         
         if ($resultTott) {
-            $totalRow = $resultTott->fetch_assoc();
+            $totalRow = $resultTott->fetch(PDO::FETCH_ASSOC);
         
             $total_pedido = $totalRow['total_pedido'];
         
             echo "<h1><strong>Total:$$total_pedido</strong></h1>";
         } else {
-            echo "Error en la consulta: " . $conexion->error;
+            echo "Error en la consulta: ";
         }
 
         $obpedido->setIdPedido($idPedido);

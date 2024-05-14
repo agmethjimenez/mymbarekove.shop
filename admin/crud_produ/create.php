@@ -32,7 +32,6 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
         <form action="create.php" method="post" enctype="multipart/form-data">
             <?php
             require_once("../../database/conexion.php");
-            $conexion->set_charset("utf8");
 
             ?>
             <div class="title">
@@ -44,22 +43,26 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
                 <div class="con1-2">
                     <label for="" class="label">Proveedor</label>
                     <?php
-                    $sq = "SELECT*FROM proveedores";
-                    $resul = $conexion->query($sq);
+$sql = "SELECT idProveedor, nombreP FROM proveedores";
+$stmt = $conexion->prepare($sql);
+$stmt->execute();
 
-                    ?>
-                    <div class="select is-primary" id="select" name="tipoid">
-                        <select name="proveedor" id="proveedor">
-                            <option value="0">Seleccione un proveedor</option>
-                            <?php
-                            while ($row = $resul->fetch_assoc()) {
-                                $idpro = $row['idProveedor'];
-                                $namepro = $row['nombreP'];
-                                echo "<option value=\"$idpro\">$namepro</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
+$resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<div class="select is-primary" id="select" name="tipoid">
+    <select name="proveedor" id="proveedor">
+        <option value="0">Seleccione un proveedor</option>
+        <?php
+        foreach ($resultados as $row) {
+            $idProveedor = $row['idProveedor'];
+            $nombreProveedor = $row['nombreP'];
+            echo "<option value=\"$idProveedor\">$nombreProveedor</option>";
+        }
+        ?>
+    </select>
+</div>
+
                 </div>
             </div>
 
@@ -94,14 +97,16 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
 
                     <?php
                     $sqe = "SELECT*FROM marcas";
-                    $resul = $conexion->query($sqe);
+                    $resul = $conexion->prepare($sqe);
+                    $resul->execute();
+                    $rows = $resul->fetchAll(PDO::FETCH_ASSOC);
 
                     ?>
                     <div class="select is-primary" id="select" name="marca">
                         <select name="marca" id="marca">
                             <option value="0">Seleccione una marca</option>
                             <?php
-                            while ($row = $resul->fetch_assoc()) {
+                            foreach($rows as $row) {
                                 $idmar = $row['idMarca'];
                                 $namemar = $row['marca'];
                                 echo "<option value=\"$idmar\">$namemar</option>";
@@ -114,13 +119,15 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
                     <label for="" class="label">Categoria</label>
                     <?php
                     $sqe = "SELECT*FROM categorias";
-                    $resul = $conexion->query($sqe);
+                    $resul = $conexion->prepare($sqe);
+                    $resul->execute();
                     ?>
                     <div class="select is-primary" id="select" name="categoria">
                         <select name="categoria" id="categoria">
                             <option value="0">Seleccione una categoria</option>
                             <?php
-                            while ($row = $resul->fetch_assoc()) {
+                            $rows2 = $resul->fetchAll(PDO::FETCH_ASSOC);
+                            foreach($rows2 as $row) {
                                 $idcat = $row['categoria'];
                                 $namecat = $row['descripcion'];
                                 echo "<option value=\"$idcat\">$namecat</option>";

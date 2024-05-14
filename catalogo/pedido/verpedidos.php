@@ -9,8 +9,10 @@ if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])
 }
     $id_users = $_SESSION['id_usuario'];
     $sql = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha, e.estado FROM pedidos as p 
-    INNER JOIN estados as e ON p.estado = e.codEst WHERE p.usuario = '$id_users'";
-    $result = $conexion->query($sql);
+    INNER JOIN estados as e ON p.estado = e.codEst WHERE p.usuario = :id";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bindParam(":id",$id_users);
+    $stmt->execute();
 
 
 ?>
@@ -131,19 +133,21 @@ header img{
 
     <div class="container">
         <?php
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                echo '<div class="order" id="order1">';
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            foreach ($result as $row) {
+                echo '<div class="order" id="order' . $row['idPedido'] . '">';
                 echo '<div class="order-info">';
-                echo '<h2>Pedido #'. $row['idPedido'].'</h2>';
-                echo '<p class="date">Fecha del Pedido:'.$row['fecha'].'</p>';
-                echo '<p class="date">Direccion:'. $row['direccion'].'</p>';
-                echo '<p class="date">Ciudad:'. $row['ciudad'].'</p>';
+                echo '<h2>Pedido #' . $row['idPedido'] . '</h2>';
+                echo '<p class="date">Fecha del Pedido: ' . $row['fecha'] . '</p>';
+                echo '<p class="date">Dirección: ' . $row['direccion'] . '</p>';
+                echo '<p class="date">Ciudad: ' . $row['ciudad'] . '</p>';
                 echo '</div>';
-                echo '<a href="detallepedido.php?id='.$row['idPedido'].'" class="details-link">Ver Detalles</a>';
-                echo '</div>'; 
+                echo '<a href="detallepedido.php?id=' . $row['idPedido'] . '" class="details-link">Ver Detalles</a>';
+                echo '</div>';
             }
-        }else{
+        } else {
             echo '<div class="alert"><h1>No tienes pedidos</h1></div>';
         }
         ?>

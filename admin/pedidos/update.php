@@ -19,34 +19,26 @@ if (isset($_GET['id'])) {
     $sqlDetalles = "SELECT dp.idProducto, p.nombre, p.precio, dp.cantidad, dp.total 
                     FROM detallepedido as dp
                     INNER JOIN productos as p ON dp.idProducto = p.idProducto
-                    WHERE dp.idPedido = '$idPedido'";
+                    WHERE dp.idPedido = :idPedido";
 
-    
-    $resultDetalles = $conexion->query($sqlDetalles);
+    $stmtDetalles = $conexion->prepare($sqlDetalles);
+    $stmtDetalles->bindParam(':idPedido', $idPedido);
+    $stmtDetalles->execute();
+
+    $resultDetalles = $stmtDetalles->fetchAll(PDO::FETCH_ASSOC);
 
     $sqlPedido = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha, e.estado as estad FROM pedidos as p 
-    INNER JOIN estados as e ON p.estado = e.codEst WHERE p.idPedido = ?";
+    INNER JOIN estados as e ON p.estado = e.codEst WHERE p.idPedido = :idpedido";
 
     $stmtPedido = $conexion->prepare($sqlPedido);
-    $stmtPedido->bind_param("s", $idPedido);
+    $stmtPedido->bindParam(":idpedido", $idPedido);
     $stmtPedido->execute();
-    $resultPedido = $stmtPedido->get_result();
+    $resultPedido = $stmtPedido->fetch(PDO::FETCH_ASSOC);
 
-    if ($resultPedido->num_rows > 0) {
-        $pedido = $resultPedido->fetch_assoc();
-    } else {
-
-    }
-} else {
-}
-/*$pruebapedido = false;
-if($pedido['estad'] != "Cancelado" ){
-    $pruebapedido = true;
-}
-$pruebaeditarpedido = false;
-if($pedido['estad'] = "Pendiente" ){
-    $pruebaeditarpedido = true;
-}*/
+    if ($resultPedido !== null) {
+        $pedido = $resultPedido;
+    } 
+} 
 ?>
 
 <!DOCTYPE html>
@@ -171,35 +163,46 @@ if($pedido['estad'] = "Pendiente" ){
                     <div class="select is-warning">
                     <select class="select" name="estado" id="estado">
                         <option value="<?php echo $pedido['estad']; ?>" selected><?php echo $pedido['estad']; ?></option>
-                        <?php $eee = "SELECT*FROM estados";
-                        $resultestados = $conexion->query($eee);
-                        while($estados1 = $resultestados->fetch_assoc()){
-                            $estadoID = $estados1['codEst'];
-                            $estado2 = $estados1['estado'];
-                            echo '<option value="'.$estadoID.'">'.$estado2.'</option>'; 
-                        } ?>
+                        <?php
+                        $sqlEstados = "SELECT codEst, estado FROM estados";
+
+                        $stmtEstados = $conexion->prepare($sqlEstados);
+                        $stmtEstados->execute();
+
+                        $resultEstados = $stmtEstados->fetchAll(PDO::FETCH_ASSOC);
+
+                        foreach ($resultEstados as $estado) {
+                            $estadoID = $estado['codEst'];
+                            $nombreEstado = $estado['estado'];
+                            echo '<option value="' . $estadoID . '">' . $nombreEstado . '</option>';
+                        }
+                        ?>
                     </select>
                     </div>
                     <button class="button is-warning" type="submit">Cambiar</button>
                     <?php
-                if(isset($_POST['estado'])){
-                $estadoaActualizar = $_POST['estado'];
-                $ActualizarEstado = "UPDATE pedidos SET estado = ? WHERE idPedido = ?";
-                $BinAP = $conexion->prepare($ActualizarEstado);
-                $BinAP->bind_param("ss",$estadoaActualizar,$idPedido);
-                if($BinAP->execute()){
-                    echo '<div class="message is-primary" id="message">';
-                    echo '<p>Estado cambiado</p>';
-                    echo '</div>';
-                }else{
-                    echo '<div class="message is-danger" id="message">';
-                    echo '<p>Pedido no cambiado de estado</p>';
-                    echo '</div>';
-                }
+                        if (isset($_POST['estado'])) {
+                            $estadoaActualizar = $_POST['estado'];
+                            
+                            $ActualizarEstado = "UPDATE pedidos SET estado = :estadoNuevo WHERE idPedido = :idPedido";
+                            
+                            $stmt = $conexion->prepare($ActualizarEstado);
+                            
+                            $stmt->bindParam(':estadoNuevo', $estadoaActualizar);
+                            $stmt->bindParam(':idPedido', $idPedido); 
+                            
+                            if ($stmt->execute()) {
+                                echo '<div class="message is-primary" id="message">';
+                                echo '<p>Estado cambiado</p>';
+                                echo '</div>';
+                            } else {
+                                echo '<div class="message is-danger" id="message">';
+                                echo '<p>Pedido no cambiado de estado</p>';
+                                echo '</div>';
+                            }
+                        }
+                        ?>
 
-                }
-                
-                ?>
                 </form>
                 
             </div>
@@ -217,8 +220,8 @@ if($pedido['estad'] = "Pendiente" ){
             </thead>
             <tbody>
                 <?php
-                if ($resultDetalles->num_rows > 0) {
-                    while ($detalle = $resultDetalles->fetch_assoc()) {
+                if ($resultDetalles !== null) {
+                    foreach($resultDetalles as $detalle){
                         echo '<tr>';
                         echo '<td>' . htmlspecialchars($detalle['idProducto']) . '</td>';
                         echo '<td>' . htmlspecialchars($detalle['nombre']) . '</td>';
@@ -227,6 +230,7 @@ if($pedido['estad'] = "Pendiente" ){
                         echo '<td>$' . htmlspecialchars($detalle['total']) . '</td>';
                         echo '<td>';
                         echo '</tr>';
+
                     }
                 } else {
                     echo '<tr><td colspan="5">No hay detalles disponibles</td></tr>';
@@ -235,22 +239,20 @@ if($pedido['estad'] = "Pendiente" ){
             </tbody>
         </table>
         <?php
-        $tottQuery = "SELECT SUM(dp.total) AS total_pedido FROM detallepedido as dp WHERE dp.idPedido = '$idPedido'";
-        $resultTott = $conexion->query($tottQuery);
-        
-        // Verificar si la consulta fue exitosa
-        if ($resultTott) {
-            // Obtener el resultado como un array asociativo
-            $totalRow = $resultTott->fetch_assoc();
-        
-            // Obtener el total
+        $tottQuery = "SELECT SUM(dp.total) AS total_pedido FROM detallepedido as dp WHERE dp.idPedido = :idPedido";
+
+        $stmtTott = $conexion->prepare($tottQuery);
+        $stmtTott->bindParam(':idPedido', $idPedido, PDO::PARAM_INT);
+        $stmtTott->execute();
+    
+        $totalRow = $stmtTott->fetch(PDO::FETCH_ASSOC);
+    
+        if ($totalRow !== false) {
             $total_pedido = $totalRow['total_pedido'];
-        
-            // Imprimir el total
-            echo "<h1><strong>Total:$$total_pedido</strong></h1>";
+    
+            echo "<h1><strong>Total: $$total_pedido</strong></h1>";
         } else {
-            // Manejar el error si la consulta no fue exitosa
-            echo "Error en la consulta: " . $conexion->error;
+            echo "No se encontraron detalles para el pedido con ID: $idPedido";
         }
         ?>
         <h1></h1>
