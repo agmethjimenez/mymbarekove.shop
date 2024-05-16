@@ -43,8 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
 
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row !== false) {
-    } else {
+    if ($row == false) { 
         echo "No se encontró ningún usuario con el ID proporcionado.";
     }
 }

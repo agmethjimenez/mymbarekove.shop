@@ -37,18 +37,17 @@ class Admin{
     }
     
 
-    public function Registro($conexion,$username, $email, $password){
+    public static function Registro($conexion,$username, $email, $password){
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
         $token = bin2hex(random_bytes(16));
         $id_admin = substr(uniqid(), 0, 10);
-        $sql = "INSERT INTO administradores VALUES (:id,:username,:email,:token,:password)";
+        $sql = "INSERT INTO administradores VALUES (:id,:username,:email,:token,:password,1)";
         $bin = $conexion->prepare($sql);
-        $bin->bind_param("ssss",$id_admin,$username,$email,$hashedPassword);
         $bin->bindParam(":id",$id_admin);
         $bin->bindParam(":username",$username);
         $bin->bindParam(":email",$email);
         $bin->bindParam(":token",$token);
-        $bin->bindParam(":password",$password);
+        $bin->bindParam(":password",$hashedPassword);
 
         if($bin->execute()){
             return true;

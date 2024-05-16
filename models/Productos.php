@@ -75,7 +75,7 @@ class Producto
           return $resultado;
         } catch (PDOException $e) {
           echo "Error: " . $e->getMessage();
-          return null;
+          return false;
         }
       }
       

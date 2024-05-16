@@ -54,7 +54,6 @@ session_start();
             setcookie('admin_id', $idAdministrador, time() + 3600, '/');
             setcookie('admin_username', $usernameAdministrador, time() + 3600, '/');
 
-            echo '<span id="admin" class="tag is-link is-light is-medium"><i class="fa-solid fa-screwdriver-wrench"></i><a id="abrir-panel">Panel</a></span>';
             echo '<span id="admin" class="tag is-danger is-medium"><i class="fa-solid fa-circle-user fa-lg"></i><a href="../admin/admin_action/panel.php">' . $usernameAdministrador . '</a></span>';
             echo '<form action="./logout.php" method="post">';
             echo '<button type="submit" class="acceso">Salir</button>';

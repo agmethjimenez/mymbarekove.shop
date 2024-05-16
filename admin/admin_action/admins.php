@@ -1,14 +1,14 @@
 <?php
 include_once '../../database/conexion.php';
 session_start();
-if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
     $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
-    exit; 
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -31,9 +31,12 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
                 <tr>
                     <th>Administradores</h1>
                     </th>
-                    <th><input type="search" class="input"></th>
-                    <th></th>
-                    <th> <a href="registro.php" class="button is-primary">Nuevo administrador</a></th>
+                    <th colspan="2">
+                        <form action="" method="get">
+                        <input type="search" name="idmn" class="input is-primary is-rounded" placeholder="Buscars">
+                        </form>
+                    </th>
+                    <th><a href="registro.php" class="button is-primary">Insertar nuevo</a></th>
                 </tr>
                 <tr>
                     <th>ID</th>
@@ -46,13 +49,24 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
                 <?php
                 $database = new Database();
                 $conexion = $database->connect();
-                $query = "SELECT*FROM administradores WHERE activo = 1";
-                $result = $conexion->prepare($query);
+
+                if (isset($_GET['idmn'])) {
+                    $nameuser = $_GET['idmn'];
+
+                    $query = "SELECT * FROM administradores WHERE activo = 1 AND username LIKE :search";
+                    $result = $conexion->prepare($query);
+                    $likeSearchTerm = '%' . $nameuser . '%'; 
+                    $result->bindParam(':search', $likeSearchTerm);
+                } else {
+                    $query = "SELECT * FROM administradores WHERE activo = 1";
+                    $result = $conexion->prepare($query);
+                }
+
                 $result->execute();
 
                 if ($result !== null) {
                     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($rows as $row){
+                    foreach ($rows as $row) {
                         echo "<tr>";
                         echo "<td>" . $row["id"] . "</td>";
                         echo "<td>" . $row["username"] . "</td>";
@@ -62,6 +76,7 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
                     }
                 }
                 ?>
+
 
             </tbody>
         </table>
