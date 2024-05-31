@@ -2,58 +2,108 @@
 require '../config.php';
 session_start();
 require '../vendor/autoload.php';
-//este es el de la cuenbta
-//MercadoPago\SDK::setAccessToken('TEST-5218474367584835-120418-c149fcd65c1a1a0e0f2b0577e2e9de4a-1556051552');
 
-//este de prueba
-MercadoPago\SDK::setAccessToken("TEST-6693173666765877-031700-87d1da02f11f43d3229da9902972b0ca-1732113818");
+use MercadoPago\MercadoPagoConfig;
+use MercadoPago\Client\Preference\PreferenceClient;
+use MercadoPago\Exceptions\MPApiException;
+
+// Función para autenticar
+function authenticate()
+{
+    // Obteniendo el token de acceso desde una fuente segura (en este caso, directo en el código)
+    $mpAccessToken = 'TEST-6693173666765877-031700-87d1da02f11f43d3229da9902972b0ca-1732113818';
+
+    // Configurando el token en el SDK de MercadoPago
+    MercadoPagoConfig::setAccessToken($mpAccessToken);
+
+    // Opcional: Configurar el entorno de ejecución a LOCAL para pruebas en localhost
+    MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+}
+
+// Autenticar la aplicación
+authenticate();
+
 if (isset($_SESSION['carrito'])) {
     $carrito = $_SESSION['carrito'];
 
-    $preference = new MercadoPago\Preference();
-    $items = array();
+    function createPreferenceRequest($items, $payer): array
+    {
+        $paymentMethods = [
+            "excluded_payment_methods" => [],
+            "installments" => 12,
+            "default_installments" => 1
+        ];
 
-    foreach ($carrito as $producto) {
-        $id_producto = $producto['id'];
-        $nombre = $producto['nombre'];
-        $cantidad = $producto['cantidad'];
-        $precio = $producto['precio'];
+        $backUrls = [
+            "success" => 'http://' . URL . '/catalogo/success.php',
+            "failure" => 'http://' . URL . '/catalogo/fail.php'
+        ];
 
-        $item = new MercadoPago\Item();
-        $item->id = $id_producto;
-        $item->title = $nombre;
-        $item->quantity = $cantidad;
-        $item->unit_price = $precio;
-        $item->currency_id = 'COP';
+        $request = [
+            "items" => $items,
+            "payer" => $payer,
+            "payment_methods" => $paymentMethods,
+            "back_urls" => $backUrls,
+            "statement_descriptor" => "NAME_DISPLAYED_IN_USER_BILLING",
+            "external_reference" => "1234567890",
+            "expires" => false,
+            "auto_return" => 'approved'
+        ];
 
-        $items[] = $item;
+        return $request;
     }
 
-    $preference->items = $items;
+    function createPaymentPreference()
+    {
+        $carrito = $_SESSION['carrito'];
+        $items = [];
 
-    $preference->payment_methods = array(
-        "excluded_payment_types" => array(
-            array("id" => "ticket"),
-            array("id" => "bank_transfer") 
-        )
-    );
+        foreach ($carrito as $producto) {
+            $items[] = [
+                "id" => $producto['id'],
+                "title" => $producto['nombre'],
+                "description" => "Product Description",
+                "currency_id" => 'COP',
+                "quantity" => $producto['cantidad'],
+                "unit_price" => $producto['precio']
+            ];
+        }
 
-    $preference->back_urls = array(
-        "success" => 'http://'.URL.'/catalogo/success.php',
-        "failure" => 'http://'.URL.'/catalogo/fail.php'
-    );
+        // Obtener información del usuario
+        $user = $_SESSION['id_usuario'];
+        $payer = [
+            "name" => "Juan",
+            "surname" => "carlos",
+            "email" => "carlos@gmail.com",
+        ];
 
-    $preference->auto_return = "approved";
-    $preference->binary_mode = true;
+        $request = createPreferenceRequest($items, $payer);
+        $client = new PreferenceClient();
 
-    $preference->save();
+        try {
+            $preference = $client->create($request);
+            return $preference;
+        } catch (MPApiException $error) {
+            return null;
+        }
+    }
+
+    // Crear la preferencia de pago
+    $preference = createPaymentPreference();
+
+    if ($preference) {
+        $init_point = $preference->sandbox_init_point;
+    } else {
+        echo 'Error al crear la preferencia de pago';
+    }
 } else {
     echo 'No hay productos';
-    header("location: pagina_de_pago.php");
+    header("Location: pagina_de_pago.php");
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,6 +114,7 @@ if (isset($_SESSION['carrito'])) {
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -79,57 +130,42 @@ if (isset($_SESSION['carrito'])) {
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-        
     </style>
 </head>
+
 <body>
-<div class="container">
-    <h1 class="tittle">Compra</h1>
-    <table class="table is-fullwidth">
-        <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php 
-            $total = 0;
-            foreach ($carrito as $producto): 
-            $total += $producto['total']; 
-            ?>
-            
-            <tr>
-                <td><?php echo $producto['nombre']; ?></td>
-                <td><?php echo $producto['cantidad']; ?></td>
-                <td>$<?php echo number_format($producto['precio']); ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <p><em>Es importante que después de que el pago se acredite correctamente, dar clic en "Volver al sitio" para que los detalles de la compra se guarden correctamente.</em></p>
-    <p>Total: $<?php echo number_format($total); ?></p>
-    <div class="checkout-btn" onclick="EnviarDatosenvio()"></div>
-</div>
+    <div class="container">
+        <h1 class="tittle">Compra</h1>
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $total = 0;
+                foreach ($carrito as $producto) :
+                    $total += $producto['total'];
+                ?>
+
+                    <tr>
+                        <td><?php echo $producto['nombre']; ?></td>
+                        <td><?php echo $producto['cantidad']; ?></td>
+                        <td>$<?php echo number_format($producto['precio']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <p><em>Es importante que después de que el pago se acredite correctamente, dar clic en "Volver al sitio" para que los detalles de la compra se guarden correctamente.</em></p>
+        <p>Total: $<?php echo number_format($total); ?></p>
+        <div class="checkout-btn" onclick="EnviarDatosenvio()"></div>
+        <a href="<?php echo $init_point ?>" class="button is-link">Pagar</a>
+    </div>
 </body>
 <script src="https://www.mercadopago.com/v2/security.js" view="home"></script>
 <script src="https://sdk.mercadopago.com/js/v2"></script>
-<script>
-    //const mp = new MercadoPago('TEST-4b5231e8-53ce-4ed1-b049-3ae3b78ddbcd'
-    const mp = new MercadoPago('TEST-2936afc4-a352-4909-92eb-b6ea44508d3b', {
-        locale: 'es_CO'
-    });
-    mp.checkout({
-        preference: {
-            id: '<?php echo $preference->id ?>'
-        },
-        render: {
-            container: '.checkout-btn',
-            type: 'wallet',
-            label: 'Pagar Pedido'
-        }
-    })
-</script>
+
 </html>
