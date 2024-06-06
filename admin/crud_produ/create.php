@@ -1,4 +1,6 @@
 <?php
+include '../../config.php';
+include '../../models/Http.php';
 require '../../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../'); // Corregido el directorio donde se encuentra el archivo .env
 $dotenv->load();
@@ -170,34 +172,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "marca" => $marca,
         "categoria" => $categoria,
         "stock" => $stock,
-        "imagen" => $direccionimg
+        "imagen" => $direccionimg,
+        'idadmin'=> $id_admin
     );
+    echo json_encode($producto_data);
 
-    $curl = curl_init();
-
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://localhost/mymbarekove.shop/controller/producto',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => json_encode($producto_data),
-        CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json',
-            'token: Bearer '.$_ENV['POST_PRODUCT'].' ',
-        ),
-    ));
-
-    $response = curl_exec($curl);
-
-    curl_close($curl);
-
-    $responseData = json_decode($response, true);
-
-    if (isset($responseData['exito']) && $responseData['exito']) {
+    $response = HttpRequest::post(URL.'/controller/producto',$producto_data,[
+        'Content-Type: application/json',
+        'token: Bearer '.$_ENV['POST_PRODUCT'].' ',
+    ]);
+    $response = json_decode($response,true);
+    
+    if ($response['status']) {
         echo '<div class="notification is-success">';
         echo '<button class="delete"></button>';
         echo '¡Producto insertado correctamente!';

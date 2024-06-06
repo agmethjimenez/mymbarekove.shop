@@ -70,7 +70,7 @@ class Admin{
                 $hashedPassword = $row['clave'];
                 if (password_verify($contraseña, $hashedPassword)) {
                     return [
-                        "accesso" => true,
+                        "status" => true,
                         "mensaje" => "Verificado correctamente",
                         'usuario' => [
                             "id_admin" => $row['id'],
@@ -80,13 +80,13 @@ class Admin{
                         ]
                     ];
                 } else {
-                    return ["accesso" => false, "mensaje" => "Contraseña incorrecta"];
+                    return ["status" => false, "mensaje" => "Contraseña incorrecta"];
                 }
             } else {
-                return ["accesso" => false, "mensaje" => "Usuario no encontrado"];
+                return ["status" => false, "mensaje" => "Usuario no encontrado"];
             }
         } else {
-            return ["accesso" => false, "mensaje" => 'Error en la consulta: ' . $conexion->error];
+            return ["status" => false, "mensaje" => 'Error en la consulta: ' . $conexion->error];
         }
     }
     
@@ -122,10 +122,19 @@ class Admin{
     }  
     
 
-    static public function DesactivarProducto($conexion, $id) {
+    static public function DesactivarProducto($conexion, $id,$token) {
         if ($id === null) {
             return ["status" => false, "message" => "Información no proporcionada"];
         }
+        if ($token === null){
+            return ["status" => false, "message" => "Información no proporcionada"];
+        }
+        $sqlVerifyToken = "SELECT*FROM administradores WHERE token = :token";
+        $stmtVerifyToken = $conexion->prepare($sqlVerifyToken);
+        $stmtVerifyToken->bindParam(":token",$token);
+        if($stmtVerifyToken == null){
+            return ["status" => false, "message" => "Token incorrecto"];
+        }    
     
         $sql = "UPDATE productos SET activo = 0 WHERE idProducto = :id";
         $stmt = $conexion->prepare($sql);

@@ -1,15 +1,14 @@
 <?php
 require '../config.php';
 require '../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 session_start();
+require_once '../models/Http.php';
 require_once("../models/Usuarios.php");
 require_once("../database/conexion.php");
 require_once("../models/Administrador.php");
-if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && isset($_SESSION['usuario_apellido'])) ||
-  (isset($_COOKIE['id_usuario']) && isset($_COOKIE['usuario_nombre']) && isset($_COOKIE['usuario_apellido']))
-) {
+if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && isset($_SESSION['usuario_apellido']))) {
   echo '<script>alert("Ya has iniciado sesión."); window.location.href = "catalogo.php";</script>';
   exit();
 }
@@ -83,20 +82,14 @@ if (!empty($_POST["submit"])) {
                 "email" => $correo,
                 "password" => $contraseña
             );
-            $url = 'http://'.URL.'/controller/login.php';
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($datos));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','token:' . $_ENV['login']));
 
-            $response = curl_exec($ch);
-
-            curl_close($ch);
-
+            
+            $url = URL.'/controller/login.php';
+            $response = HttpRequest::post($url,$datos,array('Content-Type: application/json','token:' . $_ENV['login']));
+      
             $response = json_decode($response, true);
 
-            if ($response['acceso']) {
+            if ($response['status']) {
                 if ($response['tipo'] === 'admin') {
                     $_SESSION['id_admin'] = $response['data']['id_admin'];
                     $_SESSION['username'] = $response['data']['username'];

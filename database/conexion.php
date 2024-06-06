@@ -1,10 +1,10 @@
 <?php
 class Database{
     private $servername = "localhost";
-    private $database = "mymba2";
+    private $database = "mymba";
     private $username = "root";
-    private $password = "1234";
-    private $port = 3307;
+    private $password = "";
+    private $port = 3306;
     private $charset = "utf8mb4"; 
     private $conn;
 

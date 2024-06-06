@@ -5,7 +5,7 @@ session_start();
 $pedidoID = $_SESSION['num_pedido'];
 
 // URL de la API local
-$url_api = 'http://'.URL.'/controller/pedido/'.$pedidoID.'';
+$url_api = URL.'/controller/pedido/'.$pedidoID.'';
 
 // Inicializar cURL
 $ch = curl_init();

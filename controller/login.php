@@ -31,17 +31,17 @@ switch ($metodo) {
             $usuario->setEmail($data['email']);
             $resultUsuario = $usuario->Login($conexion, $data['password']);
 
-            if ($resultUsuario["accesso"]) {
-                echo json_encode(array('acceso' => true, 'tipo' => "user", 'mensaje' => 'Inicio de sesión exitoso como usuario', "data" => $resultUsuario['usuario']));
+            if ($resultUsuario["status"]) {
+                echo json_encode(array('status' => true, 'tipo' => "user", 'mensaje' => 'Inicio de sesión exitoso como usuario', "data" => $resultUsuario['usuario']));
             } else {
                 $resultAdmin = $admin->LogIn($data['email'], $data['password']);
 
-                if ($resultAdmin['accesso']) {
+                if ($resultAdmin['status']) {
                     http_response_code(200);
-                    echo json_encode(array('acceso' => true, 'tipo' => "admin", 'mensaje' => 'Inicio de sesión exitoso como administrador', "data" => $resultAdmin['usuario']));
+                    echo json_encode(array('status' => true, 'tipo' => "admin", 'mensaje' => 'Inicio de sesión exitoso como administrador', "data" => $resultAdmin['usuario']));
                 } else {
                     http_response_code(400);
-                    echo json_encode(array('acceso' => false, 'mensaje' => $resultUsuario['mensaje']));
+                    echo json_encode(array('status' => false, 'mensaje' => $resultUsuario['mensaje']));
                 }
             }
         } else {

@@ -1,4 +1,5 @@
 <?php
+require '../models/Http.php';
 require '../config.php';
 require '../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
@@ -31,7 +32,7 @@ $conexion = $database->connect();
     session_start();
     $usuario = new Usuario();
 
-    $id = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : $_COOKIE['id_usuario'];
+    $id = $_SESSION['id_usuario'];
     $usuario->verDatos($conexion, $id);
     ?>
     <div class="wrapper">
@@ -114,30 +115,12 @@ $conexion = $database->connect();
                         "telefono" => $_POST['telefono'],
                         "email" => $_POST['email']
                     );
-
-                    $payload = json_encode($data);
-
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'http://'.URL.'/controller/users',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'PUT',
-                        CURLOPT_POSTFIELDS => $payload,
-                        CURLOPT_HTTPHEADER => array(
-                            'token: ' . $_ENV['API_POST_USER'],
-                            'Content-Type: application/json'
-                        ),
-                    ));
-
-                    $response = curl_exec($curl);
-
-                    curl_close($curl);
+                    $response = HttpRequest::put(URL.'/controller/users', $data,[
+                        'token: ' . $_ENV['API_POST_USER'],
+                        'Content-Type: application/json'
+                    ]);
                     $responseData = json_decode($response, true);
-                    if (isset($responseData['exito']) && $responseData['exito']) {
+                    if ($responseData['status']) {
                         echo '<div class="message is-primary" id="message">';
                         echo '<p>Datos Actualizados</p>';
                         echo '</div>';

@@ -1,19 +1,17 @@
 <?php
+require '../models/Http.php';
 require '../config.php';
 require '../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); 
 $dotenv->load();
 session_start();
-if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && isset($_SESSION['usuario_apellido'])) ||
-  (isset($_COOKIE['id_usuario']) && isset($_COOKIE['usuario_nombre']) && isset($_COOKIE['usuario_apellido']))
-) {
+if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && isset($_SESSION['usuario_apellido']))) {
   header("Location: catalogo.php");
   exit();
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -175,13 +173,12 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
             $contrasena = $_POST['password'];
             $contraseña2 = $_POST['password2'];
     
-            // Validar que las contraseñas sean iguales
             if ($contrasena !== $contraseña2) {
                 echo '<div class="message is-danger" id="message">';
                 echo '<p>Las contraseñas no coinciden</p>';
                 echo '</div>';
                 echo '<script>event.preventDefault()</script>';
-                exit; // Terminar la ejecución del script si las contraseñas no coinciden
+                exit; 
             }
     
             $data = array(
@@ -195,19 +192,14 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
                 'telefono' => $telefono,
                 'password' => $contrasena,
             );
+            $response = HttpRequest::post( URL.'/controller/users.php', $data,[
+              'Content-Type: application/json', 
+              'token: Bearer ' . $_ENV['API_POST_USER']
+            ]);
+            
+            $response = json_decode($response,true);
     
-            $ch = curl_init();
-    
-            curl_setopt($ch, CURLOPT_URL, 'http://' . URL . '/controller/users.php');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'token: Bearer ' . $_ENV['API_POST_USER']));
-            $response = curl_exec($ch);
-    
-            curl_close($ch);
-            $responseData = json_decode($response, true);
-            if (isset($responseData['exito']) && $responseData['exito']) {
+            if (isset($response['status']) && $response['status']) {
                 echo '<div class="message is-primary" id="message">';
                 echo '<p>Registro exitoso <a href="login.php">Inicie Sesión</a></p>';
                 echo '</div>';
@@ -225,9 +217,6 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
         }
     }
     ?>
-    
-
-
       <p class="error" id="error"></p>
     </form>
   </div>

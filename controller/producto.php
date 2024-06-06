@@ -34,6 +34,7 @@ $idPRODUCTO = ($path !== '/') ? end($Bidproducto) : null;
 
 $busqueda = $_GET['busqueda'] ?? null;
 $categoria = $_GET['categoria'] ?? null;
+$tokenadmin = $_GET['tk'] ?? null;
 
 switch ($metodo) {
     case 'GET':
@@ -66,11 +67,13 @@ switch ($metodo) {
             $producto->setStock($producto_data['stock']);
             $producto->setImagen($producto_data['imagen']);
 
-            $result = $producto->AgregarProducto($conexion);
-        if ($result["accesso"]) {
-            echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));
+            $idadmin = $producto_data['idadmin'];
+
+            $result = $producto->AgregarProducto($conexion,$idadmin);
+        if ($result["status"]) {
+            echo json_encode(array('status' => true, 'mensaje' => $result['mensaje']));
         } else {
-            echo json_encode(array('exito' => false, 'mensaje' => $result['mensaje'], 'error'=>$result['error']));
+            echo json_encode(array('status' => false, 'mensaje' => $result['mensaje'], 'error'=>$result['error']));
         }
         }else{
             header('HTTP/1.0 401 Unauthorized');
@@ -108,7 +111,7 @@ switch ($metodo) {
     case 'DELETE':
         $auth->setToken($_ENV['dku']);
         if ($auth->verificarToken($authorizationHeader)) {
-            $result = Admin::DesactivarProducto($conexion, $idPRODUCTO);
+            $result = Admin::DesactivarProducto($conexion, $idPRODUCTO,$tokenadmin);
             if($result['status']){
                 echo json_encode(["status"=>true,"mensaje"=>$result['message']]);
             }else{

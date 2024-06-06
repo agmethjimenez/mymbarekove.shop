@@ -7,7 +7,6 @@ use MercadoPago\MercadoPagoConfig;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\Exceptions\MPApiException;
 
-// Función para autenticar
 function authenticate()
 {
     // Obteniendo el token de acceso desde una fuente segura (en este caso, directo en el código)
@@ -35,8 +34,8 @@ if (isset($_SESSION['carrito'])) {
         ];
 
         $backUrls = [
-            "success" => 'http://' . URL . '/catalogo/success.php',
-            "failure" => 'http://' . URL . '/catalogo/fail.php'
+            "success" => URL . '/catalogo/success.php',
+            "failure" => URL . '/catalogo/fail.php'
         ];
 
         $request = [

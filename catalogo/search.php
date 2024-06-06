@@ -14,7 +14,6 @@ if(isset($_GET['producto'])){
     $resultado = json_decode($resultado, true);
 }
 
-$conexion->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">

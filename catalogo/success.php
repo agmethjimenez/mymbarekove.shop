@@ -4,12 +4,6 @@ $payment = $_GET['payment_id'];
 $status = $_GET['status'];
 $payment_type = $_GET['payment_type'];
 $order_id = $_GET['merchant_order_id'];
-
-echo '<h3>Pago exitoso</h3>';
-echo $payment, '<br>';
-echo $status, '<br>';
-echo $payment_type, '<br>';
-echo $order_id, '<br>';
 session_start();
 $datospago = array(
     'payment_id' => $payment,
@@ -48,7 +42,7 @@ foreach ($detallesproducto as $producto) {
       detalles: <?php echo isset($_SESSION['carrito']) ? json_encode($_SESSION['carrito']) : '[]'; ?>,
       totalp: <?php echo $sumaTotal; ?>
     };
-    fetch(`http://<?php echo URL ?>/controller/pedido.php`, {
+    fetch(`<?php echo URL ?>/controller/pedido.php`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

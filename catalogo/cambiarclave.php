@@ -5,12 +5,11 @@ $dotenv->load();
 session_start();
 
 if (
-    !isset($_SESSION['id_usuario']) || 
-    !isset($_SESSION['usuario_nombre']) || 
+    !isset($_SESSION['id_usuario']) ||
+    !isset($_SESSION['usuario_nombre']) ||
     !isset($_SESSION['usuario_apellido'])
 ) {
-    // Si no hay variables de sesión, verifica la existencia de cookies
-    if (!isset($_COOKIE['id_usuario'])) {
+  // Si no hay variables de sesión, verifica la existencia de cookies
         // Redirige a la página de inicio de sesión
         header("Location: login.php");
         exit();
@@ -22,7 +21,7 @@ if (
         $_SESSION['usuario_nombre'] = $_COOKIE['usuario_nombre'] ?? null;
         $_SESSION['usuario_apellido'] = $_COOKIE['usuario_apellido'] ?? null;
     }
-}
+
 
 ?>
 <!DOCTYPE html>
@@ -41,134 +40,147 @@ if (
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
 
         * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-    font-family: 'Oxygen', sans-serif;
-    background-color: #f2e4bb;
-    margin: 0;
-}
+        body {
+            font-family: 'Oxygen', sans-serif;
+            background-color: #f2e4bb;
+            margin: 0;
+        }
 
-.wrapper {
-    display: flex;
-    min-height: 100vh;
-    align-items: center;
-    justify-content: center;
-    overflow-y: auto;
-}
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
 
-.titulo {
-    font-weight: bold;
-    font-size: 34px;
-    text-align: center;
-}
+        .titulo {
+            font-weight: bold;
+            font-size: 34px;
+            text-align: center;
+        }
 
-.cambiarclaved {
-    width: 100%;
-    flex-grow: 2;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 5%;
-    justify-content: center;
-    align-items: center;
-}
+        .cambiarclaved {
+            width: 100%;
+            flex-grow: 2;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 5%;
+            justify-content: center;
+            align-items: center;
+        }
 
-.cambiarclaved form {
-    padding: 30px;
-    border: black solid 1px;
-    background-color: white;
-    border-radius: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    width: 50%;
-    gap: 20px;
-    flex-direction: column;
-    justify-content: center;
-    margin: auto;
-}
+        .cambiarclaved form {
+            padding: 30px;
+            border: black solid 1px;
+            background-color: white;
+            border-radius: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            width: 50%;
+            gap: 20px;
+            flex-direction: column;
+            justify-content: center;
+            margin: auto;
+        }
 
-.cambiarclaved form .con1{
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-.cambiarclaved form .con2 {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-.con3{
-    display: flex;
-    justify-content: center;
-}
-input[type="password"] {
-    width: 257px;
-    max-width: 300px;
-}
+        .cambiarclaved form .con1 {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
 
-#message {
-    padding: 20px;
-}
-.g-recaptcha {
-      display: flex;
-      justify-content: center; /* Ajusta el origen de la transformación para mantener la posición */
-    }
-.boton2{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-.boton2 input{
-    width: 200px;
-}
-/* Ajustes para pantallas más pequeñas */
-@media screen and (max-width: 768px) {
-    .wrapper{
-        overflow-y: auto;
-        display: flex;
-        align-items: flex-start;
-    }
-    .titulo {
-    font-weight: bold;
-    font-size: 28px;
-    text-align: center;
-}
-.cambiarclaved{
-    width: auto;
-}
-    .cambiarclaved form {
-        width: 90%;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        flex-wrap: wrap;
-        width: auto;
-    }
+        .cambiarclaved form .con2 {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
-    input[type="password"] {
-        max-width: none; /* Elimina el ancho máximo en pantallas más pequeñas */
-        width: 220px;
-    }
-    .g-recaptcha {
-        transform: scale(0.80); /* Reduzca el tamaño del reCAPTCHA en pantallas más pequeñas según sea necesario */
-        /*transform-origin: 0 0; /* Ajusta el origen de la transformación para mantener la posición */
-        display: flex;
-        justify-content: center;
-    }
-    #message {
-    padding: 20px;
-    font-size: 13px;
-}
-}
+        .con3 {
+            display: flex;
+            justify-content: center;
+        }
 
+        input[type="password"] {
+            width: 257px;
+            max-width: 300px;
+        }
 
+        #message {
+            padding: 20px;
+        }
+
+        .g-recaptcha {
+            display: flex;
+            justify-content: center;
+            /* Ajusta el origen de la transformación para mantener la posición */
+        }
+
+        .boton2 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .boton2 input {
+            width: 200px;
+        }
+
+        /* Ajustes para pantallas más pequeñas */
+        @media screen and (max-width: 768px) {
+            .wrapper {
+                overflow-y: auto;
+                display: flex;
+                align-items: flex-start;
+            }
+
+            .titulo {
+                font-weight: bold;
+                font-size: 28px;
+                text-align: center;
+            }
+
+            .cambiarclaved {
+                width: auto;
+            }
+
+            .cambiarclaved form {
+                width: 90%;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                flex-wrap: wrap;
+                width: auto;
+            }
+
+            input[type="password"] {
+                max-width: none;
+                /* Elimina el ancho máximo en pantallas más pequeñas */
+                width: 220px;
+            }
+
+            .g-recaptcha {
+                transform: scale(0.80);
+                /* Reduzca el tamaño del reCAPTCHA en pantallas más pequeñas según sea necesario */
+                /*transform-origin: 0 0; /* Ajusta el origen de la transformación para mantener la posición */
+                display: flex;
+                justify-content: center;
+            }
+
+            #message {
+                padding: 20px;
+                font-size: 13px;
+            }
+        }
     </style>
     <title>Actualizar Contraseña</title>
 </head>
@@ -257,96 +269,90 @@ input[type="password"] {
                         exit();
                     }
                 }*/
-?>
-
-
+                ?>
             </form>
         </div>
     </div>
     <script>
-        
         function cambioClave(event) {
-    event.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+            event.preventDefault(); // Evita que el formulario se envíe de forma tradicional
 
-    let recaptchaResponse = grecaptcha.getResponse();
+            let recaptchaResponse = grecaptcha.getResponse();
 
-    if (!recaptchaResponse) {
-        mesage("Por favor, complete el reCAPTCHA", "is-danger");
-        return;
-    }
+            if (!recaptchaResponse) {
+                mesage("Por favor, complete el reCAPTCHA", "is-danger");
+                return;
+            }
 
-    let id = <?php echo $_SESSION['id_usuario']; ?>;
-    let claveactual = document.getElementById("passwordactual").value;
-    let clavenueva = document.getElementById("passwordnueva").value;
-    let clavenueva2 = document.getElementById("passwordnueva2").value;
+            let id = <?php echo $_SESSION['id_usuario']; ?>;
+            let claveactual = document.getElementById("passwordactual").value;
+            let clavenueva = document.getElementById("passwordnueva").value;
+            let clavenueva2 = document.getElementById("passwordnueva2").value;
 
-    // Validar que los campos no estén vacíos
-    if (!id || !claveactual || !clavenueva || !clavenueva2) {
-        mesage("Por favor, complete todos los campos", "is-danger");
-        return;
-    }
-    if (claveactual == clavenueva) {
-        mesage("Contraseña actual es igual a la nueva, cambiela", "is-danger");
-        return;
-    }
-    if (clavenueva != clavenueva2) {
-        mesage("La contraseñas nuevas deben ser iguales", "is-danger");
-        return;
-        
-    }
+            // Validar que los campos no estén vacíos
+            if (!id || !claveactual || !clavenueva || !clavenueva2) {
+                mesage("Por favor, complete todos los campos", "is-danger");
+                return;
+            }
+            if (claveactual == clavenueva) {
+                mesage("Contraseña actual es igual a la nueva, cambiela", "is-danger");
+                return;
+            }
+            if (clavenueva != clavenueva2) {
+                mesage("La contraseñas nuevas deben ser iguales", "is-danger");
+                return;
 
-    const jsonData = {
-        "identificacion": id,
-        "claveactual": claveactual,
-        "clavenueva": clavenueva,
-        "clavenueva2": clavenueva2, 
-    };
+            }
 
-    fetch('http://localhost/mymbarekove.shop/controller/password.php', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer <?php echo $_ENV['PASSWORD_TOKEN'] ?>' ,
-            
-        },
-        body: JSON.stringify(jsonData),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.noexito) {
-            mesage(data.mensaje, "is-primary");
+            const jsonData = {
+                "identificacion": id,
+                "claveactual": claveactual,
+                "clavenueva": clavenueva,
+                "clavenueva2": clavenueva2,
+            };
+
+            fetch('http://localhost/mymbarekove.shop/controller/password.php', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer <?php echo $_ENV['PASSWORD_TOKEN'] ?>',
+
+                    },
+                    body: JSON.stringify(jsonData),
+                })
+                .then(response => response.json())
+                .then(data => {
+
+                    if (data.status) {
+                        alert(data.mensaje);
+                        mesage(data.mensaje, "is-primary");
+                        window.location.href = "logout.php";
+                    } else {
+                        alert(data.mensaje);
+                        mesage(data.mensaje, "is-danger");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    mesage("Error en la solicitud", "is-danger");
+                });
         }
-        if (data.exito) {
-            alert(data.mensaje);
-            mesage(data.mensaje, "is-primary");
-            window.location.href = "logout.php";
-        } else {
-            alert(data.mensaje);
-            mesage(data.mensaje, "is-danger");
+
+
+        function mesage(m, e) {
+            let bot = document.querySelector(".boton2");
+
+            let mensajeAnterior = document.getElementById("message");
+            if (mensajeAnterior) {
+                mensajeAnterior.remove();
+            }
+
+            let div = document.createElement("div");
+            div.className = `message ${e}`;
+            div.id = "message";
+            div.innerHTML = `<p>${m}</p>`;
+            bot.appendChild(div);
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        mesage("Error en la solicitud", "is-danger");
-    });
-}
-
-
-function mesage(m, e) {
-    let bot = document.querySelector(".boton2");
-
-    let mensajeAnterior = document.getElementById("message");
-    if (mensajeAnterior) {
-        mensajeAnterior.remove();
-    }
-
-    let div = document.createElement("div");
-    div.className = `message ${e}`;
-    div.id = "message";
-    div.innerHTML = `<p>${m}</p>`;
-    bot.appendChild(div);
-}
-       
     </script>
 </body>
 

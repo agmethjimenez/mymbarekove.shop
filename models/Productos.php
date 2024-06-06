@@ -81,7 +81,7 @@ class Producto
       
     
     
-      public function AgregarProducto($conexion){
+      public function AgregarProducto($conexion,$idadmin){
         $id = rand(1000, 9999);
     
         $sql = "INSERT INTO productos (idProducto, proveedor, nombre, descripcionP, contenido, precio, marca, categoria, cantidadDisponible, imagen, activo) 
@@ -100,9 +100,15 @@ class Producto
         $stmt->bindParam(10, $this->imagen);
     
         if ($stmt->execute()) {
-            return ["accesso" => true, "mensaje" => "Producto Agregado exitosamente"];
+            $sqladmin = "INSERT INTO productosagregados (administrador, producto) VALUES (:admin , :product)";
+            $stmtAdmin= $conexion->prepare($sqladmin);
+            $stmtAdmin->bindParam(":admin",$idadmin);
+            $stmtAdmin->bindParam(":product",$id);
+            if($stmtAdmin->execute()){
+                return ["status" => true, "mensaje" => "Producto Agregado exitosamente"];
+            }
         } else {
-            return ["accesso" => false, "mensaje" => "Producto no agregado", "error" => $stmt->errorInfo()[2]];
+            return ["status" => false, "mensaje" => "Producto no agregado", "error" => $stmt->errorInfo()[2]];
         }
     }
     

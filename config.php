@@ -1,6 +1,6 @@
 <?php
 
-define("URL","localhost/mymbarekove.shop");
+define("URL","http://localhost/mymbarekove.shop");
 define("URL2","192.168.20.47/mymbarekove.shop");
 define("URL3","https://wet-hoops-hang.loca.lt/mymbarekove.shop");
 //define("URL","localhost:8000");

@@ -123,7 +123,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://'.$_ENV['URL'].'/controller/users',
+        CURLOPT_URL => URL.'/controller/users',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,

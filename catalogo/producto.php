@@ -1,6 +1,7 @@
 <?php
 require '../config.php';
 require '../vendor/autoload.php';
+include '../models/Http.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); 
 $dotenv->load();
 include_once("../models/Productos.php");
@@ -8,19 +9,16 @@ if(isset($_GET['producto'])){
     $id = $_GET['producto'];
 
     
-    $apiUrl = 'http://'.URL.'/controller/producto/'.$id.'';
-    $ch = curl_init($apiUrl);
+    $apiUrl = URL.'/controller/producto/'.$id;
     $token = $_ENV['KEY_PRODUCTS'];
     $headers = array(
         'token: Bearer ' . $token
-    );
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    curl_close($ch);
-    if ($response !== false) {
+    ); 
+    $response = HttpRequest::get($apiUrl,$headers);
+    $response = json_decode($response,true);
+    if (!empty($response)){
         
-        $producto = json_decode($response, true);
+        $producto = $response;
         $producto = $producto[0];
 
         $nombreProducto = isset($producto['nombre']) ? $producto['nombre'] : '';
