@@ -1,17 +1,22 @@
 <?php
-include '../../database/conexion.php';
-include '../../models/Proveedor.php';
+include '../../models/Http.php';
+include '../../config.php';
+include '../../config/notification.php';
+require '../../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../'); 
+$dotenv->load();
 session_start();
-$database = new Database;
-$conexion = $database->connect();
-if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
     $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
-    exit; 
+    exit;
+}
+if (isset($_GET['success']) && $_GET['success']) {
+    mostrarNotificacion("Desactivado correctamente","success");
 }
 ?>
 <!DOCTYPE html>
@@ -25,54 +30,79 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
     <link rel="stylesheet" href="./estilos.css/crud.css">
     <title>CRUD</title>
 </head>
+
 <body>
-    <div class="title" style="padding: 20px; display: flex; justify-content: space-between; color:white;" >
-    <h1>Proveedores</h1>
-    <a href="create.php" class="button is-primary">Nuevo proveedor</a>
-    <a class="button is-warning" href="../admin_action/panel.php">Volver al panel</a>
+    <div class="title" style="padding: 20px; display: flex; justify-content: space-between; color:white;">
+        <h1>Proveedores</h1>
 
-</div>
-<div class="tata">
-<table class="table is-bordered">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Ciudad</th>
-            <th>Correo</th>
-            <th>Telefono</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        $sql = "SELECT*FROM proveedores WHERE estado = 'SI'";
-        $result = $conexion->prepare($sql);
-        $result->execute();
-        $proveedores = $result->fetchAll(PDO::FETCH_ASSOC);
+    </div>
+    <div class="tata">
+        <table class="table is-bordered">
+            <thead>
+                <tr>
+                    <th><a class="button is-warning" href="../admin_action/panel.php">Volver</a>
+                    </th>
+                    <th colspan="4">
+                        <form action="" method="get">
+                            <input class="input is-link is-rounded" name="nm" type="search" placeholder="Buscar un proveeedor">
+                        </form>
+                    </th>
+                    <th>
+                    <a href="create.php" class="button is-primary">+</a>
 
-        if ($proveedores !== null) {
-            foreach($proveedores as $row) {
-                echo "<tr>";
-                echo "<td>" . $row["idProveedor"] . "</td>";
-                echo "<td>" . $row["nombreP"] . "</td>";
-                echo "<td>" . $row["ciudad"] . "</td>";
-                echo "<td>" . $row["correo"] . "</td>";
-                echo "<td>" . $row["telefono"] . "</td>";
-                echo "<td>" . $row["estado"] . "</td>";
-                echo '<td><a href="update.php?id='. $row["idProveedor"] .'" class="button is-link">Editar</a> <a href="delete.php?id='. $row["idProveedor"] .'" class="button is-danger">Desactivar</a></td>';
+                    </th>
+                </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Ciudad</th>
+                    <th>Correo</th>
+                    <th>Telefono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+               $url = URL.'/controller/proveedor';
+               if(isset($_GET['nm'])){
+                $url .= "?nm=" . $_GET['nm'];
 
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='10'>No se encontraron usuarios.</td></tr>";
-        }
+               }
+               $proveedores = HttpRequest::get($url,[
+                'token: Bearer '.$_ENV['PROVEDOR_GET'].''
+               ]);
+               $proveedores = json_decode($proveedores,true);
 
-        ?>
-    </tbody>
-</table>
-</div>
-  
+                if (!empty($proveedores)){
+                    foreach ($proveedores as $row) {
+                        echo "<tr>";
+                        echo "<td>" . $row["idProveedor"] . "</td>";
+                        echo "<td>" . $row["nombreP"] . "</td>";
+                        echo "<td>" . $row["ciudad"] . "</td>";
+                        echo "<td>" . $row["correo"] . "</td>";
+                        echo "<td>" . $row["telefono"] . "</td>";
+                        echo '<td><a href="update.php?id=' . $row["idProveedor"] . '" class="button is-link">Editar</a> <a href="delete.php?id=' . $row["idProveedor"] . '" class="button is-danger">Desactivar</a></td>';
+
+                        echo "</tr>";
+                    }
+                } else {
+                    ?>
+                    <tr><td colspan="10">
+                        No se encontraron proveedores.
+                        <br>
+                        <a href="./provedores.php">Reestablecer</a>
+
+                    </td></tr>
+                    <?php
+                    //echo "<tr><td colspan='10'>No se encontraron proveedores.<br>
+                    //<a href=''>Refresar</a></td></tr>";
+                }
+
+                ?>
+            </tbody>
+        </table>
+    </div>
+
 </body>
+
 </html>

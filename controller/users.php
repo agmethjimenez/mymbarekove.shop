@@ -117,16 +117,16 @@ switch ($metodo) {
         $auth->setToken($_ENV['dku']);
         if ($auth->verificarToken($authorizationHeader)){
         $result = $admin->DesactivarUsuario($conexion,$idusuario);
-        if ($result['acceso']) {
+        if ($result['status']) {
             http_response_code(200);
-            echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));
+            echo json_encode(array('status' => true, 'mensaje' => $result['mensaje']));
         } else {
             http_response_code(400);
-            echo json_encode(array('exito' => false, 'mensaje' => $result['mensaje']));
+            echo json_encode(array('status' => false, 'mensaje' => $result['mensaje']));
         }
     }else{
         http_response_code(401);
-        echo json_encode(array('exito'=>false,'mensaje' => 'Acceso no autorizado'));
+        echo json_encode(array('status'=>false,'mensaje' => 'Acceso no autorizado'));
         exit;
     }
         break;

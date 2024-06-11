@@ -99,7 +99,7 @@ class Admin{
     }
     public function DesactivarUsuario($conexion, $id) {
         if ($id === null) {
-            return ["acceso" => false, "mensaje" => "No se proporcionó un ID"];
+            return ["status" => false, "mensaje" => "No se proporcionó un ID"];
         } 
     
         $desactivacion1 = "UPDATE usuarios SET activo = 0 WHERE id = :id";
@@ -107,7 +107,7 @@ class Admin{
         $stmt1->bindParam(":id", $id, PDO::PARAM_INT);
         
         if (!$stmt1->execute()) {
-            return ["acceso" => false, "mensaje" => "Error al ejecutar la consulta para desactivar usuario en la tabla 'usuarios': " . $stmt1->errorInfo()[2]];
+            return ["status" => false, "mensaje" => "Error al ejecutar la consulta para desactivar usuario en la tabla 'usuarios': " . $stmt1->errorInfo()[2]];
         }  
     
         $desactivacion2 = "UPDATE credenciales SET activo = 0 WHERE id = :id";
@@ -115,10 +115,10 @@ class Admin{
         $stmt2->bindParam(":id", $id, PDO::PARAM_INT);
         
         if (!$stmt2->execute()) {
-            return ["acceso" => false, "mensaje" => "Error al ejecutar la consulta para desactivar credenciales en la tabla 'credenciales': " . $stmt2->errorInfo()[2]];
+            return ["status" => false, "mensaje" => "Error al ejecutar la consulta para desactivar credenciales en la tabla 'credenciales': " . $stmt2->errorInfo()[2]];
         }   
     
-        return ["acceso" => true, "mensaje" => "Desactivado correctamente"];
+        return ["status" => true, "mensaje" => "Desactivado correctamente"];
     }  
     
 
@@ -150,9 +150,9 @@ class Admin{
         if ($id === null) {
             return ["status" => false, "message" => "Información no proporcionada"];
         } else {
-            $sql = "UPDATE proveedores SET estado = 'NO' WHERE idProveedor = :id";
+            $sql = "UPDATE proveedores SET estado = false WHERE idProveedor = :id";
             $stmt = $conexion->prepare($sql);
-            $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+            $stmt->bindParam(":id", $id);
     
             if ($stmt->execute()) {
                 return ["status" => true, "message" => "Desactivado correctamente"];

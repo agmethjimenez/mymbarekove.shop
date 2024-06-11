@@ -1,4 +1,5 @@
 <?php
+include '../../config/notification.php';
 include '../../config.php';
 include '../../models/Http.php';
 require '../../vendor/autoload.php';
@@ -36,6 +37,7 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
             require_once("../../database/conexion.php");
 
             ?>
+            <a href="./productos.php"><strong>Volver</strong></a>
             <div class="title">
                 <h1>Agregar Producto</h1>
             </div>
@@ -184,16 +186,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $response = json_decode($response,true);
     
     if ($response['status']) {
-        echo '<div class="notification is-success">';
-        echo '<button class="delete"></button>';
-        echo '¡Producto insertado correctamente!';
-        echo '<a href="./productos.php">Volver</a>';
-        echo '</div>';
+        mostrarNotificacion("Creado exitosamente","success");
     }else{
-        echo '<div class="notification is-danger">';
-        echo '<button class="delete"></button>';
-        echo '¡Error! ' . $responseData['error'];
-        echo '</div>';
+        mostrarNotificacion($responseData['error'],"danger");
     }
 }
 ?>

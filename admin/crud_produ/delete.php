@@ -20,7 +20,7 @@ require_once("../../database/conexion.php");
 
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $id = $_GET['id'];
-    $response = HttpRequest::delete('http://localhost/mymbarekove.shop/controller/producto/' . $id.'?tk='.$token,
+    $response = HttpRequest::delete(URL.'/controller/producto/' . $id.'?tk='.$token,
     ['token: Bearer '.$_ENV['dku'].'']);
     
     $responseData = json_decode($response, true);

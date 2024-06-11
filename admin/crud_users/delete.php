@@ -1,5 +1,6 @@
 <?php
 require '../../config.php';
+require '../../models/Http.php';
 require '../../database/conexion.php';
 require '../../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
@@ -16,28 +17,11 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
 }
 if($_SERVER["REQUEST_METHOD"] === "GET"){
     $id = $_GET['id'];
-    $curl = curl_init();
-
-    curl_setopt_array($curl, array(
-      CURLOPT_URL => 'http://'.URL.'/controller/users/'.$id.'',
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_ENCODING => '',
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 0,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => 'DELETE',
-      CURLOPT_HTTPHEADER => array(
-        'token: Bearer '.$_ENV['dku'].''
-      ),
-    ));
-
-    $response = curl_exec($curl);
-    curl_close($curl);
+    $response = HttpRequest::delete(URL.'/controller/users/'.$id,['token: Bearer '.$_ENV['dku'].'']);
     
     $responsee = json_decode($response, true); 
 
-    if ($responsee && $responsee['exito']) {
+    if ($responsee && $responsee['status']) {
         header("Location: crud.php?success=true");
     } else {
         header("Location: crud.php");
@@ -55,6 +39,5 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
     <title>DELETE</title>
 </head>
 <body>
-    
 </body>
 </html>

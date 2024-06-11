@@ -15,17 +15,19 @@ $admin = new Admin;
 $metodo = $_SERVER['REQUEST_METHOD'];
 
 $headers = getallheaders();
-$authorizationHeader = $headers['Authorization'] ?? null;
+$authorizationHeader = $headers['token'] ?? null;
 
 $path = isset($_SERVER['PATH_INFO'])? $_SERVER['PATH_INFO'] : '/';
 $Bidproveedor = explode('/', $path);
 $idproveedor = ($path !== '/') ? end($Bidproveedor) : null;
+$busqueda = $_GET['nm'] ?? null;
+
 
 switch ($metodo) {
     case 'GET':
         $auth->setToken($_ENV['PROVEDOR_GET']);
         if($auth->verificarToken($authorizationHeader)){
-        $result = $proveedor->GETproveedores($conexion, $idproveedor);
+        $result = $proveedor->GETproveedores($conexion, $idproveedor,$busqueda);
         http_response_code(200);
         echo json_encode($result);
         }else{
@@ -46,11 +48,11 @@ switch ($metodo) {
 
         $result = $proveedor->POSTproveedores($conexion);
 
-        if ($result['acceso']) {
+        if ($result['status']) {
             http_response_code(201);
-            echo json_encode(array("acceso" => true, "mensaje" => $result['mensaje']));
+            echo json_encode(array("status" => true, "mensaje" => $result['mensaje']));
         } else {
-            echo json_encode(array("acceso" => false, "mensaje" => $result['mensaje']));
+            echo json_encode(array("status" => false, "mensaje" => $result['mensaje']));
         }
     }else{
         header('HTTP/1.0 401 Unauthorized');
@@ -69,7 +71,7 @@ switch ($metodo) {
         $proveedor->setIdProveedor($data['idProveedor']);
 
         $result = $proveedor->PUTprovedores($conexion);
-        if($result['acceso']){
+        if($result['status']){
             http_response_code(200);
             echo json_encode(['status'=>true,'mensaje'=>$result['mensaje']]);
         }else{
@@ -78,7 +80,7 @@ switch ($metodo) {
         }
     }else{
         header('HTTP/1.0 401 Unauthorized');
-            echo json_encode(array('exito'=>false,'message' => 'Acceso no autorizado'));
+            echo json_encode(array('status'=>false,'message' => 'Acceso no autorizado'));
             exit;
     }
         break;
@@ -95,7 +97,7 @@ switch ($metodo) {
         }
         }else{
             header('HTTP/1.0 401 Unauthorized');
-            echo json_encode(array('exito'=>false,'message' => 'Acceso no autorizado'));
+            echo json_encode(array('status'=>false,'message' => 'Acceso no autorizado'));
             exit;
         }
         break;

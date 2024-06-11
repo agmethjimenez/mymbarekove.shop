@@ -96,7 +96,7 @@ switch ($metodo) {
             $producto->setImagen($producto_data['imagen']);
 
             $result = $producto->ActualizarProducto($conexion);
-        if ($result["accesso"]){
+        if ($result["status"]){
             echo json_encode(["status"=> true,"mensaje" => $result['mensaje']]);
         }else{
             echo json_encode(["status"=> false,"mensaje" => $result['mensaje']]);

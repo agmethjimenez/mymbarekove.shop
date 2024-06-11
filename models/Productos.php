@@ -127,9 +127,9 @@ class Producto
         $stmt->bindParam(7, $this->id_producto);
     
         if ($stmt->execute()) {
-            return ["accesso" => true, "mensaje" => "Producto Actualizado"];
+            return ["status" => true, "mensaje" => "Producto Actualizado"];
         } else {
-            return ["accesso" => false, "mensaje" => "Producto no Actualizado"];
+            return ["status" => false, "mensaje" => "Producto no Actualizado"];
         }
     }
     
@@ -149,7 +149,4 @@ class Producto
     
     
 }
-
-    
-
 ?>

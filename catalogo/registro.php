@@ -1,4 +1,6 @@
 <?php
+ob_start();
+require '../config/notification.php';
 require '../models/Http.php';
 require '../config.php';
 require '../vendor/autoload.php';
@@ -143,6 +145,7 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
       <div class="boton">
         <input type="submit" id="submit" value="Registrarse" />
       </div>
+      <div>¿Quiere inciar sesion?<a href="login.php">!Click AHORA!</a></div>
       <?php
       require_once("../models/Usuarios.php");
       include_once("../database/conexion.php");
@@ -200,22 +203,17 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
             $response = json_decode($response,true);
     
             if (isset($response['status']) && $response['status']) {
-                echo '<div class="message is-primary" id="message">';
-                echo '<p>Registro exitoso <a href="login.php">Inicie Sesión</a></p>';
-                echo '</div>';
+                mostrarNotificacion("Registro exitoso","success");
             } else {
-                echo '<div class="message is-danger" id="message">';
-                echo '<p>Usuario no registrado</p>';
-                echo '</div>';
+                mostrarNotificacion("Usuario no registrado","danger");
             }
         } else {
-            echo '<div class="message is-danger" id="message">';
-            echo '<p>Por favor, marque el reCAPTCHA</p>';
-            echo '</div>';
-            echo '<script>event.preventDefault()</script>';
+          mostrarNotificacion("Marque el recaptcha","danger");
+
 
         }
     }
+    ob_end_flush();
     ?>
       <p class="error" id="error"></p>
     </form>

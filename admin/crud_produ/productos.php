@@ -1,6 +1,7 @@
 <?php
 require_once '../../models/Categoria.php';
 require_once '../../models/Proveedor.php';
+require_once '../../config/notification.php';
 require_once("../../database/conexion.php");
 $database = new Database;
 $conexion = $database->connect();
@@ -16,14 +17,12 @@ if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SE
 }
 if (isset($_GET['success'])) {
     if ($_GET['success'] === 'true') {
-        echo '<script>alert("Desactivado exitosamente");</script>';
+        mostrarNotificacion("Desactivado exitosamente","success");
     } else {
-        echo '<script>alert("No desactivado");</script>';
+        mostrarNotificacion("No desactivado","danger");
     }
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 

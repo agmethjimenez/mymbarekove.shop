@@ -1,6 +1,7 @@
 <?php
+require '../../config/notification.php';
 if (isset($_GET['success']) && $_GET['success']) {
-    echo '<script>alert("Desactivado correctamente")</script>';
+    mostrarNotificacion("Desactivado correctamente","success");
 }
 session_start();
 if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {

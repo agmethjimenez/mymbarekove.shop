@@ -1,4 +1,5 @@
 <?php 
+include '../../config/notification.php';
 require '../../config.php'; 
 require '../../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../'); // Corregido el directorio donde se encuentra el archivo .env
@@ -28,8 +29,7 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
 <body>
 <div class="contenedor">
     <form action="create.php" method="post">
-    <?php
-?>
+    <a href="./crud.php"><strong>Volver</strong></a>
     <div class="title" ><h1>Agregar Usuario</h1></div>
         <div class="con1">
             <div class="con1-1">
@@ -141,16 +141,10 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
     $response = curl_exec($curl);
     $responsecode = json_decode($response, true);
 
-    if ($responsecode && $responsecode['exito']) {
-        echo '<div class="notification is-success">';
-        echo '<button class="delete"></button>';
-        echo '¡Usuario insertado correctamente!';
-        echo '</div>';
+    if ($responsecode && $responsecode['status']) {
+        mostrarNotificacion("¡Usuario insertado correctamente!","success");
     } else {
-        echo '<div class="notification is-danger">';
-        echo '<button class="delete"></button>';
-        echo '¡Error! ' . ($responsecode['mensaje'] ?? 'No se pudo completar la solicitud');
-        echo '</div>';
+        mostrarNotificacion($responsecode['mensaje'],"danger");
     }
 
     curl_close($curl);

@@ -1,4 +1,7 @@
 <?php
+require '../../config.php';
+require '../../config/notification.php';
+require '../../models/Http.php';
 session_start();
 if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
@@ -29,6 +32,7 @@ $dotenv->load();
 <body>
     <div class="contenedor">
         <form action="update.php" method="post" enctype="multipart/form-data">
+            <a href="./productos.php"><strong>Volver</strong></a>
             <?php
             require_once("../../database/conexion.php");
             if ($_SERVER["REQUEST_METHOD"] === "GET") {
@@ -208,58 +212,26 @@ $dotenv->load();
                 $stock = $_POST['stock'];
                 $imagen = $_POST['direccion'];
 
-                // Realizar la solicitud cURL para actualizar el producto en la otra aplicación
-                $curl = curl_init();
+                $response = HttpRequest::put(URL . '/controller/producto',[
+                    'idProducto' => $ida,
+                    'nombre' => $nombre,
+                    'descripcionP' => $descripcion,
+                    'contenido' => $contenido,
+                    'precio' => $precio,
+                    'descripcion' => $marca,
+                    'cantidadDisponible' => $stock,
+                    'imagen' => $imagen
+                ],[
+                    'token: Bearer ' . $_ENV['PUT_PRODUCT'] . '',
+                    'Content-Type: application/json'
+                ]);
 
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'http://localhost/mymbarekove.shop/controller/producto',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'PUT',
-                    CURLOPT_POSTFIELDS => '{
-            "idProducto": ' . $ida . ',
-            "nombre": "' . $nombre . '",
-            "descripcionP": "' . $descripcion . '",
-            "contenido": "' . $contenido . '",
-            "precio": "' . $precio . '",
-            "descripcion": "' . $marca . '",
-            "cantidadDisponible": ' . $stock . ',
-            "imagen": "' . $imagen . '"
-        }',
-                    CURLOPT_HTTPHEADER => array(
-                        'token: Bearer ' . $_ENV['PUT_PRODUCT'] . '',
-                        'Content-Type: application/json'
-                    ),
-                ));
-
-                $response = curl_exec($curl);
-
-                curl_close($curl);
-
-                // Verificar la respuesta de la solicitud cURL
-                if ($response !== false) {
-                    $responseData = json_decode($response, true);
-                    if (isset($responseData['status']) && $responseData['status'] === true) {
-                        echo '<div class="notification is-success">';
-                        echo '<button class="delete"></button>';
-                        echo '¡Producto actualizado correctamente';
-                        echo '<br><a href="./productos.php">Volver</a>';
-                        echo '</div>';
-                    } else {
-                        echo '<div class="notification is-danger">';
-                        echo '<button class="delete"></button>';
-                        echo 'Error al actualizar el producto en la otra aplicación: ' . $responseData['mensaje'];
-                        echo '</div>';
-                    }
+                $responseData = json_decode($response, true);
+                if (isset($responseData['status']) && $responseData['status'] === true) {
+                    mostrarNotificacion("Producto actualizado","success");
                 } else {
-                    echo '<div class="notification is-danger">';
-                    echo '<button class="delete"></button>';
-                    echo 'Error al realizar la solicitud cURL para actualizar el producto en la otra aplicación';
-                    echo '</div>';
+                    mostrarNotificacion("Error al actualizar producto","danger");
+
                 }
             }
             ?>

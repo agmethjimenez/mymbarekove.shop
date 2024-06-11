@@ -1,4 +1,6 @@
 <?php
+ob_start();
+include_once '../config/notification.php';
 require '../config.php';
 require '../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
@@ -65,6 +67,8 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
         ¿Olvidaste tu contraseña?<a href="./passwordback/solicitar.php">Click aqui!</a>
       </div>
       <?php
+      
+
 if (!empty($_POST["submit"])) {
     if (!isset($_POST['check']) || $_POST['check'] != 'on') {
         echo '<script>event.preventDefault()</script>';
@@ -96,74 +100,34 @@ if (!empty($_POST["submit"])) {
                     $_SESSION['email'] = $response['data']['email'];
                     $_SESSION['token'] = $response['data']['token'];
 
-                    echo "Inicio de sesión exitoso como administrador";
+                    //mostrarNotificacion("Inicio de sesión exitoso","success");
                     header("location: catalogo.php");
                 } else if ($response['tipo'] === 'user') {
                     $_SESSION['id_usuario'] = $response['data']['id'];
                     $_SESSION['usuario_nombre'] = $response['data']['nombre'];
                     $_SESSION['usuario_apellido'] = $response['data']['apellido'];
                     $_SESSION['usuario_email'] = $response['data']['email'];
-
-                    echo "Inicio de sesión exitoso como usuario";
+                    //mostrarNotificacion("Inicio de sesión exitoso","success");
                     header("location: catalogo.php");
+                    
                 } else {
-                    echo '<script>event.preventDefault()</script>';
-                    echo '<div class="message is-danger" id="message">';
-                    echo '<p>Usuario desconocido</p>';
-                    echo '</div>';
+                  mostrarNotificacion("Error al iniciar sesion","danger");
+      
                 }
             } else {
-                echo '<script>event.preventDefault()</script>';
-                echo '<div class="message is-danger" id="message">';
-                echo '<p>Error al iniciar Sesión</p>';
-                echo '</div>';
+              mostrarNotificacion("Error al iniciar sesion","danger");
+
             }
         }
     }
 }
+ob_end_flush();
 ?>
 
 
 
     </form>
   </div>
-  <script>
-    /*function Loguear(){
-        let correo = document.getElementById("email").value;
-        let password = document.getElementById("password").value;
-
-        let datos = {
-          "email" : correo,
-          "password": password
-        }
-        fetch('http://localhost/mymbarekove.shop/controller/login.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(datos)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.acceso) {
-                console.log(data.mensaje);
-                alert("Iniciando....");
-                <?php
-                ?>
-                window.location.href = 'catalogo.php';
-            } else {
-                console.error(data.mensaje);
-                alert("Error al loguear usuario: " + data.mensaje);
-                event.preventDefault();
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("errorrr");
-        });
-        event.preventDefault();
-    }  */
-  </script>
 </body>
 
 </html>

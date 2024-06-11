@@ -1,4 +1,7 @@
 <?php
+require '../../config.php';
+require '../../config/notification.php';
+require '../../models/Http.php';
 require '../../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
 $dotenv->load();
@@ -48,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     }
 }
 ?>
+<a href="./crud.php"><strong>Volver</strong></a>
     <div class="title" ><h1>Actualizar Datos</h1></div>
         <div class="con1">
             <div class="con1-1">
@@ -112,48 +116,28 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST['email'];
     $telefono = $_POST['telefono'];
 
-    $curl = curl_init();
+    $response = HttpRequest::put(URL.'/controller/users',[
+        "id" => $ida,
+        "identificacion" => $id_usuario,
+        "primerNombre" => $primernombre,
+        "segundoNombre" => $segundonombre,
+        "primerApellido" => $primerapellido,
+        "segundoApellido" => $segundoapellido,
+        "telefono" => $telefono,
+        "email" => $email
+    ],[
+        'token: Bearer '.$_ENV['API_POST_USER'].'',
+        'Content-Type: application/json'
+    ]);
 
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://localhost/mymbarekove.shop/controller/users',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'PUT',
-        CURLOPT_POSTFIELDS => json_encode(array(
-            "id" => $ida,
-            "identificacion" => $id_usuario,
-            "primerNombre" => $primernombre,
-            "segundoNombre" => $segundonombre,
-            "primerApellido" => $primerapellido,
-            "segundoApellido" => $segundoapellido,
-            "telefono" => $telefono,
-            "email" => $email
-        )),
-        CURLOPT_HTTPHEADER => array(
-            'token: Bearer '.$_ENV['API_POST_USER'].'',
-            'Content-Type: application/json'
-        ),
-    ));
-
-    $response = curl_exec($curl);
     $response_data = json_decode($response, true);
 
-    if ($response_data && $response_data['exito']) {
-        echo '<div class="message is-success" id="message">';
-        echo '<p>' . $response_data['message'] . '</p>';
-        echo '<a href="./crud.php">Volver</a>';
-        echo '</div>';
+    if ($response_data && $response_data['status']) {
+        mostrarNotificacion($response_data['message'],"success");
     } else {
-        echo '<div class="message is-danger" id="message">';
-        echo '<p>Error en la actualización: ' . ($response_data['message'] ?? 'No se pudo completar la solicitud') . '</p>';
-        echo '</div>';
+        mostrarNotificacion($response_data['message'],"danger");
     }
 
-    curl_close($curl);
 }
 
     ?>

@@ -57,7 +57,7 @@ foreach ($detallesproducto as $producto) {
           unset($_SESSION['carrito']);
           ?>
           localStorage.removeItem("carritoProductos");
-          window.location.href = `http://<?php echo URL ?>/catalogo/pedido/verpedidos.php`;
+          window.location.href = `<?php echo URL ?>/catalogo/pedido/verpedidos.php`;
         } else {
           alert('ERROR EN EL PEDIDO: ' + data.mensaje);
         }
