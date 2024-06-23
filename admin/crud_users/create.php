@@ -137,10 +137,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
         echo '¡Usuario insertado correctamente!';
         echo '</div>';
     } else {
-        echo '<div class="notification is-danger">';
-        echo '<button class="delete"></button>';
-        echo '¡Error! ' . ($responsecode['mensaje'] ?? 'No se pudo completar la solicitud');
-        echo '</div>';
+        mostrarNotificacion($responsecode['mensaje'],"danger");
     }
 }
 ?>

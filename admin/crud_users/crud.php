@@ -3,7 +3,7 @@ session_start();
 include '../../config.php';
 include '../../models/Http.php';
 if (isset($_GET['success']) && $_GET['success']) {
-    echo '<script>alert("Desactivado correctamente")</script>';
+    mostrarNotificacion("Desactivado correctamente","success");
 }
 if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];

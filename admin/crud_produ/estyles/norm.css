@@ -8,7 +8,6 @@ body{
     overflow-y: auto;
 }
 .contenedor{
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;

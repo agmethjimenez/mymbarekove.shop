@@ -30,31 +30,31 @@ switch ($metodo) {
                 try {
                     if (empty($usuario_id) || empty($claveactual) || empty($clavenueva) || empty($clavenueva2)) {
                         header('Content-Type: application/json', true, 400);
-                        echo json_encode(array('exito' => false, 'mensaje' => 'Por favor, complete todos los campos'));
+                        echo json_encode(array('status' => false, 'mensaje' => 'Por favor, complete todos los campos'));
                     } elseif ($clavenueva != $clavenueva2) {
                         header('Content-Type: application/json', true, 400);
-                        echo json_encode(array('exito' => false, 'mensaje' => 'Las contraseñas no coinciden'));
+                        echo json_encode(array('status' => false, 'mensaje' => 'Las contraseñas no coinciden'));
                     } else {
                         $result = $usuario->cambiarClave($conexion,$usuario_id, $claveactual, $clavenueva, $clavenueva2);
                         if ($result['encontrado']) {
                             header('Content-Type: application/json');
-                            echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));
+                            echo json_encode(array('status' => true, 'mensaje' => $result['mensaje']));
                         } else {
                             header('Content-Type: application/json', true, 400);
-                            echo json_encode(array('noexito' => true, 'mensaje' => $result['mensaje']));
+                            echo json_encode(array('status' => true, 'mensaje' => $result['mensaje']));
                         }
                     }
                 } catch (Exception $e) {
                     header('Content-Type: application/json', true, 400);
-                    echo json_encode(array('exito' => false, 'mensaje' => $e->getMessage()));
+                    echo json_encode(array('status' => false, 'mensaje' => $e->getMessage()));
                 }
             } else {
                 header('Content-Type: application/json', true, 400);
-                echo json_encode(array('exito' => false, 'mensaje' => 'Datos incorrectos'));
+                echo json_encode(array('status' => false, 'mensaje' => 'Datos incorrectos'));
             }
         } else {
             header('HTTP/1.0 401 Unauthorized');
-            echo json_encode(['error' => 'Acceso no autorizado']);
+            echo json_encode(['status' => 'Acceso no autorizado']);
             exit;
         }
         break;

@@ -70,7 +70,7 @@ class Admin{
                 $hashedPassword = $row['clave'];
                 if (password_verify($contraseña, $hashedPassword)) {
                     return [
-                        "accesso" => true,
+                        "status" => true,
                         "mensaje" => "Verificado correctamente",
                         'usuario' => [
                             "id_admin" => $row['id'],
@@ -80,13 +80,13 @@ class Admin{
                         ]
                     ];
                 } else {
-                    return ["accesso" => false, "mensaje" => "Contraseña incorrecta"];
+                    return ["status" => false, "mensaje" => "Contraseña incorrecta"];
                 }
             } else {
-                return ["accesso" => false, "mensaje" => "Usuario no encontrado"];
+                return ["status" => false, "mensaje" => "Usuario no encontrado"];
             }
         } else {
-            return ["accesso" => false, "mensaje" => 'Error en la consulta: ' . $conexion->error];
+            return ["status" => false, "mensaje" => 'Error en la consulta: ' . $conexion->error];
         }
     }
     
@@ -99,7 +99,7 @@ class Admin{
     }
     public function DesactivarUsuario($conexion, $id) {
         if ($id === null) {
-            return ["acceso" => false, "mensaje" => "No se proporcionó un ID"];
+            return ["status" => false, "mensaje" => "No se proporcionó un ID"];
         } 
     
         $desactivacion1 = "UPDATE usuarios SET activo = 0 WHERE id = :id";
@@ -107,7 +107,7 @@ class Admin{
         $stmt1->bindParam(":id", $id, PDO::PARAM_INT);
         
         if (!$stmt1->execute()) {
-            return ["acceso" => false, "mensaje" => "Error al ejecutar la consulta para desactivar usuario en la tabla 'usuarios': " . $stmt1->errorInfo()[2]];
+            return ["status" => false, "mensaje" => "Error al ejecutar la consulta para desactivar usuario en la tabla 'usuarios': " . $stmt1->errorInfo()[2]];
         }  
     
         $desactivacion2 = "UPDATE credenciales SET activo = 0 WHERE id = :id";
@@ -115,17 +115,26 @@ class Admin{
         $stmt2->bindParam(":id", $id, PDO::PARAM_INT);
         
         if (!$stmt2->execute()) {
-            return ["acceso" => false, "mensaje" => "Error al ejecutar la consulta para desactivar credenciales en la tabla 'credenciales': " . $stmt2->errorInfo()[2]];
+            return ["status" => false, "mensaje" => "Error al ejecutar la consulta para desactivar credenciales en la tabla 'credenciales': " . $stmt2->errorInfo()[2]];
         }   
     
-        return ["acceso" => true, "mensaje" => "Desactivado correctamente"];
+        return ["status" => true, "mensaje" => "Desactivado correctamente"];
     }  
     
 
-    static public function DesactivarProducto($conexion, $id) {
+    static public function DesactivarProducto($conexion, $id,$token) {
         if ($id === null) {
             return ["status" => false, "message" => "Información no proporcionada"];
         }
+        if ($token === null){
+            return ["status" => false, "message" => "Información no proporcionada"];
+        }
+        $sqlVerifyToken = "SELECT*FROM administradores WHERE token = :token";
+        $stmtVerifyToken = $conexion->prepare($sqlVerifyToken);
+        $stmtVerifyToken->bindParam(":token",$token);
+        if($stmtVerifyToken == null){
+            return ["status" => false, "message" => "Token incorrecto"];
+        }    
     
         $sql = "UPDATE productos SET activo = 0 WHERE idProducto = :id";
         $stmt = $conexion->prepare($sql);
@@ -141,9 +150,9 @@ class Admin{
         if ($id === null) {
             return ["status" => false, "message" => "Información no proporcionada"];
         } else {
-            $sql = "UPDATE proveedores SET estado = 'NO' WHERE idProveedor = :id";
+            $sql = "UPDATE proveedores SET estado = false WHERE idProveedor = :id";
             $stmt = $conexion->prepare($sql);
-            $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+            $stmt->bindParam(":id", $id);
     
             if ($stmt->execute()) {
                 return ["status" => true, "message" => "Desactivado correctamente"];

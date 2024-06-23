@@ -59,11 +59,11 @@ switch ($metodo) {
             $usuario->setTelefono($data['telefono']);
             $usuario->setEmail($data['email']);
             $result = $usuario->registrarse($conexion,$data['password']);
-            if ($result["success"]) {
+            if ($result["status"]) {
                 http_response_code(201);
-                echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));
+                echo json_encode(array('status' => true, 'mensaje' => $result['mensaje']));
             } else {
-                echo json_encode(array('exito' => false, 'mensaje' => $result['mensaje']));
+                echo json_encode(array('status' => false, 'mensaje' => $result['mensaje']));
             }
         }else{
             http_response_code(401);
@@ -101,15 +101,15 @@ switch ($metodo) {
 
             header('Content-Type: application/json');
             http_response_code(200);
-            echo json_encode(['exito'=>true,'message' => 'Datos actualizados con exito']);
+            echo json_encode(['status'=>true,'message' => 'Datos actualizados con exito']);
         } else {
             header('Content-Type: application/json', true, 400);
             http_response_code(400);
-            echo json_encode(['error' => 'JSON no válido']);
+            echo json_encode(['status' => 'JSON no válido']);
         }
     }else{
         http_response_code(401);
-        echo json_encode(array('exito'=>false,'mensaje' => 'Acceso no autorizado'));
+        echo json_encode(array('status'=>false,'mensaje' => 'Acceso no autorizado'));
         exit;
     }
         break;
@@ -117,16 +117,16 @@ switch ($metodo) {
         $auth->setToken($_ENV['dku']);
         if ($auth->verificarToken($authorizationHeader)){
         $result = $admin->DesactivarUsuario($conexion,$idusuario);
-        if ($result['acceso']) {
+        if ($result['status']) {
             http_response_code(200);
-            echo json_encode(array('exito' => true, 'mensaje' => $result['mensaje']));
+            echo json_encode(array('status' => true, 'mensaje' => $result['mensaje']));
         } else {
             http_response_code(400);
-            echo json_encode(array('exito' => false, 'mensaje' => $result['mensaje']));
+            echo json_encode(array('status' => false, 'mensaje' => $result['mensaje']));
         }
     }else{
         http_response_code(401);
-        echo json_encode(array('exito'=>false,'mensaje' => 'Acceso no autorizado'));
+        echo json_encode(array('status'=>false,'mensaje' => 'Acceso no autorizado'));
         exit;
     }
         break;

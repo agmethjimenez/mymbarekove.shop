@@ -12,7 +12,6 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
 }
 
 $id = $_GET['id'];
-$curl = curl_init();
 
 HttpClient::setUrl(URL.'/proveedores/delete/'.$id.'/'.$token);
 $response = HttpClient::delete();

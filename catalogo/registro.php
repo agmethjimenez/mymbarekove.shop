@@ -10,7 +10,6 @@ if (isset($_SESSION['id_usuario']) || isset($_SESSION['id_admin']) ) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -136,6 +135,7 @@ if (isset($_SESSION['id_usuario']) || isset($_SESSION['id_admin']) ) {
       <div class="boton">
         <input type="submit" id="submit" value="Registrarse" />
       </div>
+      <div>¿Quiere inciar sesion?<a href="login.php">!Click AHORA!</a></div>
       <?php
       if (isset(
         $_POST['identificacion'],
@@ -163,13 +163,12 @@ if (isset($_SESSION['id_usuario']) || isset($_SESSION['id_admin']) ) {
             $contrasena = $_POST['password'];
             $contraseña2 = $_POST['password2'];
     
-            // Validar que las contraseñas sean iguales
             if ($contrasena !== $contraseña2) {
                 echo '<div class="message is-danger" id="message">';
                 echo '<p>Las contraseñas no coinciden</p>';
                 echo '</div>';
                 echo '<script>event.preventDefault()</script>';
-                exit; // Terminar la ejecución del script si las contraseñas no coinciden
+                exit; 
             }
     
             /*$data = array(
@@ -203,18 +202,15 @@ if (isset($_SESSION['id_usuario']) || isset($_SESSION['id_admin']) ) {
                 echo '<p>Registro exitoso <a href="login.php">Inicie Sesión</a></p>';
                 echo '</div>';
             } else {
-                echo '<div class="message is-danger" id="message">';
-                echo '<p>Usuario no registrado</p>';
-                echo '</div>';
+                mostrarNotificacion("Usuario no registrado","danger");
             }
         } else {
-            echo '<div class="message is-danger" id="message">';
-            echo '<p>Por favor, marque el reCAPTCHA</p>';
-            echo '</div>';
-            echo '<script>event.preventDefault()</script>';
+          mostrarNotificacion("Marque el recaptcha","danger");
+
 
         }
     }
+    ob_end_flush();
     ?>
       <p class="error" id="error"></p>
     </form>

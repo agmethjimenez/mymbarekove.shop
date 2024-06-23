@@ -12,9 +12,9 @@ if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
 }
 if (isset($_GET['success'])) {
     if ($_GET['success'] === 'true') {
-        echo '<script>alert("Desactivado exitosamente");</script>';
+        mostrarNotificacion("Desactivado exitosamente","success");
     } else {
-        echo '<script>alert("No desactivado");</script>';
+        mostrarNotificacion("No desactivado","danger");
     }
 }
 ?>

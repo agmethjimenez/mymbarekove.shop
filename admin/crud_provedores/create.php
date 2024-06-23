@@ -6,7 +6,6 @@ if (!isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     header("Location: ../../catalogo/login.php");
     exit;
 }
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nombrePorve = $_POST['nombre'];
     $ciudadPorve = $_POST['ciudad'];
@@ -46,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
 <div class="contenedor">
     <form action="create.php" method="post">
+        <a href="./provedores.php"><strong>Volver</strong></a>
         <div class="title"><h1>Agregar Proveedor</h1></div>
         <div class="con1">
             <div class="con1-2">

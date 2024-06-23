@@ -27,6 +27,7 @@ if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
 <body>
     <div class="contenedor">
         <form action="update.php" method="post" enctype="multipart/form-data">
+            <a href="./productos.php"><strong>Volver</strong></a>
             <?php
             if ($_SERVER["REQUEST_METHOD"] === "GET") {
                 $id = $_GET["id"];

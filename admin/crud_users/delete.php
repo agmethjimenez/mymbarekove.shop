@@ -34,6 +34,5 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
     <title>DELETE</title>
 </head>
 <body>
-    
 </body>
 </html>

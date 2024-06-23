@@ -9,11 +9,12 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
-    exit; 
+    exit;
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,9 +24,8 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     <link rel="stylesheet" href="./estilos.css/update.css">
     <title>Actualizar Proveedor</title>
 </head>
+
 <body>
-<div class="contenedor">
-    <form action="" method="post">
     <?php
     $id = $_GET["id"];
     HttpClient::setUrl(URL.'/proveedores/'.$id);
@@ -101,4 +101,5 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 </body>
+
 </html>

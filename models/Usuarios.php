@@ -117,21 +117,21 @@ class Usuario
 
                 if ($stmt2->execute()) {
                     $conexion->commit();
-                    return ["success" => true, "mensaje" => "Registrado"];
+                    return ["status" => true, "mensaje" => "Registrado"];
                 } else {
                     $conexion->rollBack();
-                    return ["success" => false, "mensaje" => "Error al registrar la credencial"];
+                    return ["status" => false, "mensaje" => "Error al registrar la credencial"];
                 }
             } else {
                 $conexion->rollBack();
-                return ["success" => false, "mensaje" => "Error al registrar el usuario"];
+                return ["status" => false, "mensaje" => "Error al registrar el usuario"];
             }
         } else {
-            return ["success" => false, "mensaje" => "Error al verificar correo"];
+            return ["status" => false, "mensaje" => "Error al verificar correo"];
         }
     } catch(PDOException $e) {
         $conexion->rollBack();
-        return ["success" => false, "mensaje" => "Error en la transacción: " . $e->getMessage()];
+        return ["status" => false, "mensaje" => "Error en la transacción: " . $e->getMessage()];
     }
 }
 
@@ -159,7 +159,7 @@ public function Login($conexion, $contraseña) {
 
             if (password_verify($contraseña, $hashedPassword)) {
                 $response = [
-                    "accesso" => true,
+                    "status" => true,
                     "mensaje" => "Verificado correctamente",
                     "usuario" => [
                         "id" => $row['id'],
@@ -170,13 +170,13 @@ public function Login($conexion, $contraseña) {
                 ];
                 return $response;
             } else {
-                return ["accesso" => false, "mensaje" => "Contraseña incorrecta"];
+                return ["status" => false, "mensaje" => "Contraseña incorrecta"];
             }
         } else {
-            return ["accesso" => false, "mensaje" => "Usuario no encontrado"];
+            return ["status" => false, "mensaje" => "Usuario no encontrado"];
         }
     } catch(PDOException $e) {
-        return ["accesso" => false, "mensaje" => "Error en la consulta: " . $e->getMessage()];
+        return ["status" => false, "mensaje" => "Error en la consulta: " . $e->getMessage()];
     }
 }
 
@@ -203,7 +203,7 @@ public function verDatos($conexion, $id)
 
     public function actualizarDatos($conexion) {
         try {
-            $sql = "UPDATE usuarios SET primerNombre = :primerNombre, segundoNombre = :segundoNombre, primerApellido = :primerApellido, segundoApellido = :segundoApellido, telefono = :telefono, email = :email WHERE identificacion = :identificacion";
+            $sql = "UPDATE usuarios SET primerNombre = :primerNombre, segundoNombre = :segundoNombre, primerApellido = :primerApellido, segundoApellido = :segundoApellido, telefono = :telefono, email = :email WHERE identificacion = :identificacion AND ACTIVO = true";
             $stmt = $conexion->prepare($sql);
     
             $stmt->bindParam(':primerNombre', $this->nombre1);
@@ -239,12 +239,6 @@ public function verDatos($conexion, $id)
                 $hashedPassword = $row['password'];
     
                 if (password_verify($passwordactual, $hashedPassword)) {
-                    $sqlverificar = "SELECT * FROM credenciales WHERE id = :id AND (fecha_cambio IS NULL OR TIMESTAMPDIFF(DAY, fecha_cambio, NOW()) > 30)";
-                    $stmtverificar = $conexion->prepare($sqlverificar);
-                    $stmtverificar->bindParam(':id', $id);
-                    $stmtverificar->execute();
-    
-                    if ($stmtverificar->rowCount() > 0) {
                         $token = bin2hex(random_bytes(16));
                         $hashedNuevaPassword = password_hash($passwordnueva, PASSWORD_BCRYPT);
     
@@ -254,11 +248,8 @@ public function verDatos($conexion, $id)
                         $stmtUpdate->bindParam(':token', $token);
                         $stmtUpdate->bindParam(':id', $id);
                         $stmtUpdate->execute();
-    
                         return ['encontrado' => true, 'mensaje' => 'Clave actualizada'];
-                    } else {
-                        return ['encontrado' => false, 'mensaje' => 'La contraseña solo se puede cambiar luego de 30 días del último cambio'];
-                    }
+            
                 } else {
                     return ['encontrado' => false, 'mensaje' => 'La contraseña actual no coincide, asegúrate de que sea la correcta'];
                 }

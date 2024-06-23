@@ -9,7 +9,10 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
-    exit; 
+    exit;
+}
+if (isset($_GET['success']) && $_GET['success']) {
+    mostrarNotificacion("Desactivado correctamente","success");
 }
 ?>
 <!DOCTYPE html>
@@ -23,11 +26,10 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     <link rel="stylesheet" href="./estilos.css/crud.css">
     <title>CRUD</title>
 </head>
+
 <body>
-    <div class="title" style="padding: 20px; display: flex; justify-content: space-between; color:white;" >
-    <h1>Proveedores</h1>
-    <a href="create.php" class="button is-primary">Nuevo proveedor</a>
-    <a class="button is-warning" href="../admin_action/panel.php">Volver al panel</a>
+    <div class="title" style="padding: 20px; display: flex; justify-content: space-between; color:white;">
+        <h1>Proveedores</h1>
 
 </div>
 <div class="tata">
@@ -60,16 +62,42 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
                 echo "<td>" . $row["estado"] . "</td>";
                 echo '<td><a href="update.php?id='. $row["idProveedor"] .'" class="button is-link">Editar</a> <a href="delete.php?id='. $row["idProveedor"] .'" class="button is-danger">Desactivar</a></td>';
 
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='10'>No se encontraron usuarios.</td></tr>";
-        }
+               }
+               $proveedores = HttpRequest::get($url,[
+                'token: Bearer '.$_ENV['PROVEDOR_GET'].''
+               ]);
+               $proveedores = json_decode($proveedores,true);
 
-        ?>
-    </tbody>
-</table>
-</div>
-  
+                if (!empty($proveedores)){
+                    foreach ($proveedores as $row) {
+                        echo "<tr>";
+                        echo "<td>" . $row["idProveedor"] . "</td>";
+                        echo "<td>" . $row["nombreP"] . "</td>";
+                        echo "<td>" . $row["ciudad"] . "</td>";
+                        echo "<td>" . $row["correo"] . "</td>";
+                        echo "<td>" . $row["telefono"] . "</td>";
+                        echo '<td><a href="update.php?id=' . $row["idProveedor"] . '" class="button is-link">Editar</a> <a href="delete.php?id=' . $row["idProveedor"] . '" class="button is-danger">Desactivar</a></td>';
+
+                        echo "</tr>";
+                    }
+                } else {
+                    ?>
+                    <tr><td colspan="10">
+                        No se encontraron proveedores.
+                        <br>
+                        <a href="./provedores.php">Reestablecer</a>
+
+                    </td></tr>
+                    <?php
+                    //echo "<tr><td colspan='10'>No se encontraron proveedores.<br>
+                    //<a href=''>Refresar</a></td></tr>";
+                }
+
+                ?>
+            </tbody>
+        </table>
+    </div>
+
 </body>
+
 </html>
