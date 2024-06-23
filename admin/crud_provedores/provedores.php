@@ -63,25 +63,7 @@ if (isset($_GET['success']) && $_GET['success']) {
                 echo '<td><a href="update.php?id='. $row["idProveedor"] .'" class="button is-link">Editar</a> <a href="delete.php?id='. $row["idProveedor"] .'" class="button is-danger">Desactivar</a></td>';
 
                }
-               $proveedores = HttpRequest::get($url,[
-                'token: Bearer '.$_ENV['PROVEDOR_GET'].''
-               ]);
-               $proveedores = json_decode($proveedores,true);
-
-                if (!empty($proveedores)){
-                    foreach ($proveedores as $row) {
-                        echo "<tr>";
-                        echo "<td>" . $row["idProveedor"] . "</td>";
-                        echo "<td>" . $row["nombreP"] . "</td>";
-                        echo "<td>" . $row["ciudad"] . "</td>";
-                        echo "<td>" . $row["correo"] . "</td>";
-                        echo "<td>" . $row["telefono"] . "</td>";
-                        echo '<td><a href="update.php?id=' . $row["idProveedor"] . '" class="button is-link">Editar</a> <a href="delete.php?id=' . $row["idProveedor"] . '" class="button is-danger">Desactivar</a></td>';
-
-                        echo "</tr>";
-                    }
-                } else {
-                    ?>
+               ?>
                     <tr><td colspan="10">
                         No se encontraron proveedores.
                         <br>
