@@ -2,6 +2,7 @@
 session_start();
 include '../../config.php';
 include '../../models/Http.php';
+
 if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
@@ -10,17 +11,10 @@ if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     header("Location: ../../catalogo/login.php");
     exit;
 }
-if (isset($_GET['success'])) {
-    if ($_GET['success'] === 'true') {
-        mostrarNotificacion("Desactivado exitosamente","success");
-    } else {
-        mostrarNotificacion("No desactivado","danger");
-    }
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,6 +22,7 @@ if (isset($_GET['success'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="./estyles/cri.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>CRUD</title>
 </head>
 
@@ -52,7 +47,7 @@ if (isset($_GET['success'])) {
                                 <select name="category" id="">
                                     <option value="0" selected>Selecciona categoria</option>
                                     <?php
-                                    HttpClient::setUrl(URL.'/categorias');
+                                    HttpClient::setUrl(URL . '/categorias');
                                     $categorias = HttpClient::get();
                                     foreach ($categorias as $categoria) {
                                     ?>
@@ -89,24 +84,24 @@ if (isset($_GET['success'])) {
             </thead>
             <tbody>
                 <?php
-                HttpClient::setUrl(URL.'/productos/read');
+                HttpClient::setUrl(URL . '/productos/read');
                 $attributes = [];
-                
+
                 if (isset($_GET['name']) && !empty($_GET['name'])) {
                     $nombre = $_GET['name'];
                     $attributes['nm'] = $nombre;
                 }
-                
+
                 if (isset($_GET['category']) && !empty($_GET['category'])) {
                     $categoria = $_GET['category'];
                     $attributes['ct'] = $categoria;
                 }
-                
+
                 if (isset($_GET['id']) && !empty($_GET['id'])) {
                     $id_producto = $_GET['id'];
                     $attributes['id'] = $id_producto;
                 }
-                
+
                 HttpClient::setBody($attributes);
                 $productos = HttpClient::get();
 
@@ -138,6 +133,27 @@ if (isset($_GET['success'])) {
         </table>
     </div>
 
+    <?php
+    if (isset($_GET['success'])) {
+        if ($_GET['success'] === 'true') {
+            echo "<script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: 'Desactivado exitosamente'
+                });
+              </script>";
+        } else {
+            echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No desactivado'
+                });
+              </script>";
+        }
+    }
+    ?>
 </body>
 
 </html>

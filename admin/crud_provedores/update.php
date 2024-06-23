@@ -26,12 +26,16 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
 </head>
 
 <body>
+    <div class="contenedor">
     <?php
     $id = $_GET["id"];
     HttpClient::setUrl(URL.'/proveedores/'.$id);
     $row = HttpClient::get();
 ?>
-    <div class="title" ><h1>Actualizar Proveedor</h1></div>
+<form action="">
+    <a href="./provedores.php">Volver</a>
+    <div class="title" ><h1>Actualizar Proveedor</h1>
+</div>
         <div class="con1">
             <div class="con1-1">
         <label for="" class="label">ID</label>

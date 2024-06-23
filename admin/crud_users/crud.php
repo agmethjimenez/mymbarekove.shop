@@ -1,5 +1,6 @@
 <?php
 session_start();
+include '../../config/notification.php';
 include '../../config.php';
 include '../../models/Http.php';
 if (isset($_GET['success']) && $_GET['success']) {

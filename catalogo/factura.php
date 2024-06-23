@@ -10,7 +10,8 @@ $pedido = HttpClient::get();
 
 $subtotal = $pedido['total'] / 1.19;
 
-require_once __DIR__ . '../../vendor/autoload.php';
+require '../vendor/autoload.php';
+//require_once __DIR__ . '/../../vendor/autoload.php';
 
 $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 

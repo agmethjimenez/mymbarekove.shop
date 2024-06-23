@@ -13,7 +13,7 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'],$_SESSION['token'])) {
 }
 if($_SERVER["REQUEST_METHOD"] === "GET"){
     $id = $_GET['id'];
-    HttpClient::setUrl(URL.'/api/usuarios/'.$id.'/'.$SESSION['token']);
+    HttpClient::setUrl(URL.'/usuarios/'.$id.'/'.$token);
     $responsee = HttpClient::delete();
     
     if ($responsee['status']) {

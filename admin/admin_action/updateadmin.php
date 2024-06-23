@@ -63,18 +63,18 @@ if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
 
 
     HttpClient::setUrl(URL . '/admin/read');
-    HttpClient::setBody(['tk' => $_SESSION['token']]);
+    HttpClient::setBody(['tk' => $id]);
     $row = HttpClient::get();
     ?>
     <div class="contenedor">
         <form action="" method="post">
             <?php
             if (isset($_POST['submit'])) {
-                $username = $_POST['username'];
-                $email = $_POST['email'];
-
-                HttpClient::setUrl(URL . '/admin/update');
-                HttpClient::setBody(['token' => $id, 'username' => $username, 'email' => $email]);
+                $usernam_admin = $_POST['username'];
+                $email_admin = $_POST['email'];
+                $url = URL . '/admin/update' ;
+                HttpClient::setUrl($url);
+                HttpClient::setBody(['token' => $id, 'username' => $usernam_admin, 'email' => $email_admin]);
                 $restult = HttpClient::put();
 
                 if ($restult['status']) {

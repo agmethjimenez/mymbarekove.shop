@@ -1,18 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
-body{
+
+body {
     background-color: black;
     font-family: 'Oxygen', sans-serif;
     padding: 0;
     margin: 0;
 }
-.contenedor{
+
+.contenedor {
     height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-form{
+
+.contenedor form{
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -21,30 +24,38 @@ form{
     padding: 40px;
     border-radius: 20px;
 }
-.con1, .con2, .con3, .con4, .con5{
-    display: flex;
-    gap: 15px;
 
-
-}
-.butcon{
+.field {
     display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
+    flex-direction: column;
 }
-input[type="text"],input[type="email"],input[type="password"],#tipoid{
-    width: 370px;
-    border-radius: 15px;
+
+.label {
+    margin-bottom: 5px;
 }
-button[type="submit"]{
+
+.input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.button {
     width: 140px;
     border-radius: 15px;
+    margin-top: 10px;
 }
-#message{
-    display: flex;
-    height: 80px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 20px 10px;
+
+.title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width: 600px) {
+    .form {
+        width: 100%;
+        padding: 20px;
+    }
 }
