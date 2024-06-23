@@ -1,20 +1,17 @@
-<!DOCTYPE html>
 <?php
 session_start();
-if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+include('../../config.php');
+include('../../models/Http.php');
+if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
-    $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
     exit;
 }
-require_once '../../database/conexion.php';
-require_once("../../models/administrador.php");
-$database = new Database();
-$conexion = $database->connect();
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -24,7 +21,7 @@ $conexion = $database->connect();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="">
-    <title>Document</title>
+    <title>Registro de Administrador</title>
 </head>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
@@ -64,7 +61,6 @@ $conexion = $database->connect();
 
 <body>
     <div class="contenedor">
-
         <form action="registro.php" method="post">
             <div class="title">
                 <h1>Registro de administrador</h1>
@@ -93,13 +89,16 @@ $conexion = $database->connect();
                 }
 
                 if (empty($errors)) {
-                    $registrar = Admin::Registro($conexion, $username, $email, $password);
+                    HttpClient::setUrl(URL.'/admin/create');
+                    HttpClient::setBody(['username' => $username, 'email' => $email, 'password' => $password]);
+                    $registrar = HttpClient::post();
 
-                    if ($registrar) {
+                    if ($registrar['status']) {
             ?>
                         <div class="notification is-primary is-light">
                             <button class="delete"></button>
-                            Administrador registrado exitosamente
+                            Administrador registrado exitosamente <br>
+                            <a href="./panel.php">Volver</a>
                         </div>
                     <?php
                     } else {
@@ -163,12 +162,10 @@ $conexion = $database->connect();
     document.addEventListener('DOMContentLoaded', () => {
         (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
             const $notification = $delete.parentNode;
-
             $delete.addEventListener('click', () => {
                 $notification.parentNode.removeChild($notification);
             });
         });
     });
 </script>
-
 </html>

@@ -34,8 +34,6 @@ function EnviarDatosCarrito() {
 
 EnviarDatosCarrito();
 numerito();
-
-
 function agregarAlCarrito(nombre, precio, id, cantidad = 1, imagen, stock) {
   const productoExistente = carritoProductos.find((producto) => producto.nombre === nombre);
 

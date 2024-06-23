@@ -1,14 +1,10 @@
 <?php
-require_once '../../models/Categoria.php';
-require_once '../../models/Proveedor.php';
-require_once("../../database/conexion.php");
-$database = new Database;
-$conexion = $database->connect();
 session_start();
-if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+include '../../config.php';
+include '../../models/Http.php';
+if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
-    $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
@@ -21,9 +17,7 @@ if (isset($_GET['success'])) {
         echo '<script>alert("No desactivado");</script>';
     }
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -58,7 +52,8 @@ if (isset($_GET['success'])) {
                                 <select name="category" id="">
                                     <option value="0" selected>Selecciona categoria</option>
                                     <?php
-                                    $categorias = Categoria::getCategorias($conexion);
+                                    HttpClient::setUrl(URL.'/categorias');
+                                    $categorias = HttpClient::get();
                                     foreach ($categorias as $categoria) {
                                     ?>
                                         <option value="<?php echo $categoria['categoria'] ?>"><?php echo $categoria['descripcion'] ?></option>
@@ -94,36 +89,37 @@ if (isset($_GET['success'])) {
             </thead>
             <tbody>
                 <?php
-                require_once '../../models/Productos.php';
-
-                $producto = new Producto;
-                $productos = $producto->GetProductos($conexion);
-
+                HttpClient::setUrl(URL.'/productos/read');
+                $attributes = [];
+                
                 if (isset($_GET['name']) && !empty($_GET['name'])) {
                     $nombre = $_GET['name'];
-                    $productos = $producto->GetProductos($conexion, null, $nombre);
+                    $attributes['nm'] = $nombre;
                 }
-
+                
                 if (isset($_GET['category']) && !empty($_GET['category'])) {
                     $categoria = $_GET['category'];
-                    $productos = $producto->GetProductos($conexion, null, null, $categoria);
+                    $attributes['ct'] = $categoria;
                 }
-
+                
                 if (isset($_GET['id']) && !empty($_GET['id'])) {
                     $id_producto = $_GET['id'];
-                    $productos = $producto->GetProductos($conexion, $id_producto);
+                    $attributes['id'] = $id_producto;
                 }
+                
+                HttpClient::setBody($attributes);
+                $productos = HttpClient::get();
 
                 foreach ($productos as $row) {
                     echo "<tr>";
                     echo "<td>" . $row["idProducto"] . "</td>";
-                    echo "<td>" . $row["nombreP"] . "</td>";
+                    echo "<td>" . $row['proveedor']["nombreP"] . "</td>";
                     echo "<td>" . $row["nombre"] . "</td>";
                     echo "<td>" . $row["descripcionP"] . "</td>";
                     echo "<td>" . $row["contenido"] . "</td>";
                     echo "<td> $" . $row["precio"] . "</td>";
-                    echo "<td>" . $row["marca"] . "</td>";
-                    echo "<td>" . $row["descripcion"] . "</td>";
+                    echo "<td>" . $row['marca']["marca"] . "</td>";
+                    echo "<td>" . $row['categoria']["descripcion"] . "</td>";
                     echo "<td>" . $row["cantidadDisponible"] . "</td>";
 
                     $imagenBLOB = $row["imagen"];

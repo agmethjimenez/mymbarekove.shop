@@ -1,29 +1,9 @@
 <?php
-require '../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
-$dotenv->load();
 session_start();
 
-if (
-    !isset($_SESSION['id_usuario']) || 
-    !isset($_SESSION['usuario_nombre']) || 
-    !isset($_SESSION['usuario_apellido'])
-) {
-    // Si no hay variables de sesión, verifica la existencia de cookies
-    if (!isset($_COOKIE['id_usuario'])) {
-        // Redirige a la página de inicio de sesión
-        header("Location: login.php");
-        exit();
-    } else {
-        // Asigna el valor de la cookie a $_SESSION['id_usuario'] si no está definido
-        $_SESSION['id_usuario'] = $_SESSION['id_usuario'] ?? $_COOKIE['id_usuario'] ?? null;
-
-        // Asigna los valores de las cookies a las variables de sesión
-        $_SESSION['usuario_nombre'] = $_COOKIE['usuario_nombre'] ?? null;
-        $_SESSION['usuario_apellido'] = $_COOKIE['usuario_apellido'] ?? null;
-    }
+if (!isset($_SESSION['id_usuario'])) {
+    header("location: login.php"); 
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -296,27 +276,22 @@ input[type="password"] {
     }
 
     const jsonData = {
-        "identificacion": id,
+        "id": id,
         "claveactual": claveactual,
         "clavenueva": clavenueva,
         "clavenueva2": clavenueva2, 
     };
 
-    fetch('http://localhost/mymbarekove.shop/controller/password.php', {
-        method: 'PUT',
+    fetch('http://127.0.0.1:8000/api/credencial/cambioclave', {
+        method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer <?php echo $_ENV['PASSWORD_TOKEN'] ?>' ,
-            
+            'Content-Type': 'application/json',            
         },
         body: JSON.stringify(jsonData),
     })
     .then(response => response.json())
     .then(data => {
-        if (data.noexito) {
-            mesage(data.mensaje, "is-primary");
-        }
-        if (data.exito) {
+        if (data.status) {
             alert(data.mensaje);
             mesage(data.mensaje, "is-primary");
             window.location.href = "logout.php";

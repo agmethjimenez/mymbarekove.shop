@@ -1,19 +1,15 @@
 <?php
-include_once '../../database/conexion.php';
-$database = new Database();
-$conexion = $database->connect();
 session_start();
-if (!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido'])) {
-    header("Location: login.php");
+include '../../config.php';
+include '../../models/Http.php';
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['token'])) {
+    header("Location: ../login.php");
     exit();
 }
     $id_users = $_SESSION['id_usuario'];
-    $sql = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha, e.estado FROM pedidos as p 
-    INNER JOIN estados as e ON p.estado = e.codEst WHERE p.usuario = :id";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bindParam(":id",$id_users);
-    $stmt->execute();
 
+    HttpClient::setUrl(URL.'/usuario/pedido/'.$id_users);
+    $result = HttpClient::get();
 
 ?>
 <!DOCTYPE html>
@@ -133,9 +129,7 @@ header img{
 
     <div class="container">
         <?php
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if ($result) {
+        if (!empty($result)) {
             foreach ($result as $row) {
                 echo '<div class="order" id="order' . $row['idPedido'] . '">';
                 echo '<div class="order-info">';
@@ -143,6 +137,7 @@ header img{
                 echo '<p class="date">Fecha del Pedido: ' . $row['fecha'] . '</p>';
                 echo '<p class="date">Dirección: ' . $row['direccion'] . '</p>';
                 echo '<p class="date">Ciudad: ' . $row['ciudad'] . '</p>';
+                echo '<p class="date">Estado: ' . $row['estado']['estado'] . '</p>';
                 echo '</div>';
                 echo '<a href="detallepedido.php?id=' . $row['idPedido'] . '" class="details-link">Ver Detalles</a>';
                 echo '</div>';

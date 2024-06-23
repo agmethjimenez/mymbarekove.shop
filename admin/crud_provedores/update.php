@@ -1,14 +1,11 @@
 <?php
-require '../../config.php';
-require '../../database/conexion.php';
-
-$database = new Database;
-$conexion = $database->connect();
 session_start();
-if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+require '../../config.php';
+require '../../models/Http.php';
+
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
-    $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
@@ -24,24 +21,15 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="./estilos.css/update.css">
-    <title>Document</title>
+    <title>Actualizar Proveedor</title>
 </head>
 <body>
 <div class="contenedor">
     <form action="" method="post">
     <?php
-
-if($_SERVER["REQUEST_METHOD"] === "GET"){
-$id = $_GET["id"];
-$sql = "SELECT * FROM proveedores WHERE idProveedor = :id";
-$result = $conexion->prepare($sql);
-$result->bindParam(":id",$id);
-$result->execute();
-
-
-if ($result) {
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-}}
+    $id = $_GET["id"];
+    HttpClient::setUrl(URL.'/proveedores/'.$id);
+    $row = HttpClient::get();
 ?>
     <div class="title" ><h1>Actualizar Proveedor</h1></div>
         <div class="con1">
@@ -80,7 +68,6 @@ if ($result) {
     </div>
     </form>
     </div>
-
 <?php
 if($_SERVER["REQUEST_METHOD"] === "POST") {
     $ida = $_POST['id'];
@@ -90,43 +77,27 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
     $telefono = $_POST['telefono'];
     $estado = $_POST['estado'];
 
-    $curl = curl_init();
-
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://'.URL.'/controller/proveedor',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'PUT',
-        CURLOPT_POSTFIELDS =>'{
-            "idProveedor": '.$ida.',
-            "nombreP": "'.$nombreProveedor.'",
-            "ciudad": "'.$ciudad.'",
-            "correo": "'.$correo.'",
-            "telefono": "'.$telefono.'"
-        }',
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer glNXMgjPLVbBPf5zUUfeI1nFOCjhwa4TDdYXWWyvGMHdSbtUtBY6M6Ow6uaoXVs9S1TBrdhysLnUgea0z1Tds32oM65mrXCT7d7FoSDBVjcXtd1kDat',
-            'Content-Type: application/json',
-            'Cookie: PHPSESSID=u8715ej4gmj7teu6hegneotmcr'
-        ),
-    ));
-
-    $response = curl_exec($curl);
-    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-    if($http_status == 200){
-        echo '<script>alert(Actualizado con exito!)</script>';
-        header("Location: provedores.php");
+    $data = [
+        "id" => $ida,
+        "nombre" => $nombreProveedor,
+        "ciudad" => $ciudad,
+        "correo" => $correo,
+        "telefono" => $telefono,
+        "estado" => $estado
+    ];
+    HttpClient::setUrl(URL.'/proveedores');
+    HttpClient::setBody($data);
+    $response = HttpClient::put();
+    if($response['status']){
+        echo '<script>
+                alert("Actualizado con éxito!");
+                window.location.href = "provedores.php";
+              </script>';
         exit;
     } else {
-        echo "<script>alert(Error en la actualización. Código de estado: )</script>" . $http_status;
+        echo '<script>alert("Error en la actualización")</script>';
     }
-
-    curl_close($curl);
+    
 }
 ?>
 </body>

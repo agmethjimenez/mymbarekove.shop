@@ -1,10 +1,11 @@
 <?php
-include_once '../../database/conexion.php';
 session_start();
-if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+include '../../config.php';
+include '../../models/Http.php';
+
+if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
-    $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
@@ -13,7 +14,6 @@ if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SE
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +23,6 @@ if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SE
     <link rel="stylesheet" href="../crud_produ/estyles/cri.css">
     <title>Administradores</title>
 </head>
-
 <body>
     <div class="tata">
         <table class="table">
@@ -47,40 +46,20 @@ if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SE
             </thead>
             <tbody>
                 <?php
-                $database = new Database();
-                $conexion = $database->connect();
-
-                if (isset($_GET['idmn'])) {
-                    $nameuser = $_GET['idmn'];
-
-                    $query = "SELECT * FROM administradores WHERE activo = 1 AND username LIKE :search";
-                    $result = $conexion->prepare($query);
-                    $likeSearchTerm = '%' . $nameuser . '%'; 
-                    $result->bindParam(':search', $likeSearchTerm);
-                } else {
-                    $query = "SELECT * FROM administradores WHERE activo = 1";
-                    $result = $conexion->prepare($query);
-                }
-
-                $result->execute();
-
-                if ($result !== null) {
-                    $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+                HttpClient::setUrl(URL.'/admin/all');
+                $rows = HttpClient::get();
+                
                     foreach ($rows as $row) {
                         echo "<tr>";
                         echo "<td>" . $row["id"] . "</td>";
                         echo "<td>" . $row["username"] . "</td>";
                         echo "<td>" . $row["email"] . "</td>";
-                        echo '<td><a href="updateadmin.php?id=' . $row["id"] . '" class="button is-link">Editar</a> <a href="deleteadmin.php?id=' . $row["id"] . '" class="button is-danger">Desactivar</a></td>';
+                        echo '<td><a href="updateadmin.php?id=' . $row["token"] . '" class="button is-link">Editar</a> <a href="deleteadmin.php?id=' . $row["id"] . '" class="button is-danger">Desactivar</a></td>';
                         echo "</tr>";
-                    }
-                }
+                    }        
                 ?>
-
-
             </tbody>
         </table>
     </div>
 </body>
-
 </html>

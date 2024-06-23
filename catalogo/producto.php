@@ -1,34 +1,20 @@
 <?php
 require '../config.php';
-require '../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); 
-$dotenv->load();
-include_once("../models/Productos.php");
+require '../models/Http.php';
 if(isset($_GET['producto'])){
     $id = $_GET['producto'];
 
+    HttpClient::setUrl(URL.'/productos/read/'.$id);
     
-    $apiUrl = 'http://'.URL.'/controller/producto/'.$id.'';
-    $ch = curl_init($apiUrl);
-    $token = $_ENV['KEY_PRODUCTS'];
-    $headers = array(
-        'token: Bearer ' . $token
-    );
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    curl_close($ch);
-    if ($response !== false) {
+   $producto = HttpClient::get();
+    if (!empty($producto)){
         
-        $producto = json_decode($response, true);
-        $producto = $producto[0];
-
         $nombreProducto = isset($producto['nombre']) ? $producto['nombre'] : '';
-        $descripcion = isset($producto['descripcion']) ? $producto['descripcion'] : '';
+        $descripcion = isset($producto['categoria']['descripcion']) ? $producto['categoria']['descripcion'] : '';
         $precio = isset($producto['precio']) ? $producto['precio'] : 0;
         $descripcionP = isset($producto['descripcionP']) ? $producto['descripcionP'] : '';
         $contenido = isset($producto['contenido']) ? $producto['contenido'] : '';
-        $marca = isset($producto['marca']) ? $producto['marca'] : '';
+        $marca = isset($producto['marca']['marca']) ? $producto['marca']['marca'] : '';
         $cantidadDisponible = isset($producto['cantidadDisponible']) ? $producto['cantidadDisponible'] : 0;
         $imagen = isset($producto['imagen']) ? $producto['imagen'] : '';
 

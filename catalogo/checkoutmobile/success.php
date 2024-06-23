@@ -41,7 +41,7 @@ session_start();
             'totalp' => $sumaTotal
         );
 
-        $url_pedido = '' . URL3 . '/controller/pedido.php';
+        $url_pedido = URL3 . '/controller/pedido.php';
 
         // Realizar la solicitud HTTP utilizando cURL
         $ch = curl_init($url_pedido);

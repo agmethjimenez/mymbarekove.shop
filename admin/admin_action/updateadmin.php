@@ -1,17 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
 <?php
 session_start();
-if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+include '../../config.php';
+include '../../models/Http.php';
+if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
-    $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
-    exit; 
+    exit;
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,20 +23,23 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
 </head>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
-    body{
+
+    body {
         background-color: black;
         font-family: 'Oxygen', sans-serif;
         padding: 0;
         margin: 0;
         height: 100vh;
     }
-    .contenedor{
+
+    .contenedor {
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
     }
-    form{
+
+    form {
         background-color: #fff;
         display: flex;
         flex-direction: column;
@@ -43,28 +47,54 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
         padding: 30px;
         width: 25%;
         border-radius: 20px;
-        
+
     }
-    input[type="text"],input[type="email"],input[type="password"]{
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
         border-radius: 15px;
     }
 </style>
+
 <body>
     <?php
-    include '../../database/conexion.php';
-    $database = new Database();
-    $conexion = $database->connect();
     $id = $_GET['id'];
 
-    $sql = "SELECT*FROM administradores WHERE id = :id AND activo = 1";
-    $bin = $conexion->prepare($sql);
-    $bin->bindParam(":id", $id);
-    $result = $bin->execute();
-    $row = $result = $bin->fetch(PDO::FETCH_ASSOC);
-    
+
+    HttpClient::setUrl(URL . '/admin/read');
+    HttpClient::setBody(['tk' => $_SESSION['token']]);
+    $row = HttpClient::get();
     ?>
     <div class="contenedor">
-        <form action="registro.php" method="post">
+        <form action="" method="post">
+            <?php
+            if (isset($_POST['submit'])) {
+                $username = $_POST['username'];
+                $email = $_POST['email'];
+
+                HttpClient::setUrl(URL . '/admin/update');
+                HttpClient::setBody(['token' => $id, 'username' => $username, 'email' => $email]);
+                $restult = HttpClient::put();
+
+                if ($restult['status']) {
+            ?>
+                    <div class="notification is-primary is-light">
+                        <button class="delete"></button>
+                        Administrador actualizado exitosamente <br>
+                        <a href="./admins.php">Volver</a>
+                    </div>
+                <?php
+                } else {
+                ?>
+                    <div class="notification is-danger is-light">
+                        <button class="delete"></button>
+                        Error al actualizar administrador
+                    </div>
+            <?php
+                }
+            }
+            ?>
             <div class="title">
                 <h1>Actualizar administrador</h1>
             </div>
@@ -91,10 +121,21 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
             </div>
             <!--Boton-->
             <div class="butto">
-                <button type="submit" class="button is-success">Registrar</button>
+                <button type="submit" name="submit" class="button is-success">Registrar</button>
             </div>
         </form>
     </div>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+            const $notification = $delete.parentNode;
+
+            $delete.addEventListener('click', () => {
+                $notification.parentNode.removeChild($notification);
+            });
+        });
+    });
+</script>
 
 </html>

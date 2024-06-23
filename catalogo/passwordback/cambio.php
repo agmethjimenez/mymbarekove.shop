@@ -1,11 +1,6 @@
 <?php
-include_once '../../database/conexion.php';
-include_once '../../models/Usuarios.php';
-$database = new Database();
-$conexion = $database->connect();
-$usuario = new Usuario;
-
-
+include '../../models/Http.php';
+include '../../config.php';
 
 $correcto = false;
 
@@ -14,8 +9,9 @@ if(isset($_POST['codigo']) && isset($_POST['token']) && isset($_POST['email'])){
     $email = $_POST['email'];
     $token = $_POST['token'];
     
-    $usuario->setEmail($email);
-    $correcto = $usuario->VerificarExistenciayCaducidad($conexion, $token, $codigo);
+    HttpClient::setUrl(URL.'/clave/validar');
+    HttpClient::setBody(['email'=>$email,'token'=>$token,'codigo'=>$codigo]);
+    $correcto = HttpClient::post();
 }      
 ?>
 
@@ -59,6 +55,7 @@ if(isset($_POST['codigo']) && isset($_POST['token']) && isset($_POST['email'])){
           </p>
         </div>
         <input type="hidden" name="email" value="<?php echo $email;?>">
+        <input type="hidden" name="token" value="<?php echo $token;?>">
         <div class="field">
           <p class="control">
             <input type="submit" name="submit" value="Cambiar" />
@@ -71,11 +68,9 @@ if(isset($_POST['codigo']) && isset($_POST['token']) && isset($_POST['email'])){
     <?php
     }else{
       echo '<div class="message is-danger" id="message">';
-      echo "<p>$error</p>";
+      echo "<p>".$correcto['mensaje']."</p>";
       echo '<a href="solicitar.php" class="button is-danger">Vuelve a intentarlo</a>';
       echo '</div>';
-        
-
     }?>
 </body>
 </html>

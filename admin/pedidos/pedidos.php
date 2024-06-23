@@ -1,9 +1,10 @@
 <?php
 session_start();
-if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+include '../../models/Http.php';
+include '../../config.php';
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
-    $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
@@ -47,23 +48,24 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
         </table>
     </div>
 
-    <script src="../../config.js"></script>
+<script src="../../config.js"></script>
 <script>
-    fetch(`http://${URLS}/controller/pedido.php`)
+    fetch(`<?php echo URL ?>/pedidos`)
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('pedidoTableBody');
 
             data.map(pedido => {
                 const row = document.createElement('tr');
+                let nombreCompleto = `${pedido.usuario.primerNombre} ${pedido.usuario.segundoNombre} ${pedido.usuario.primerApellido} ${pedido.usuario.segundoApellido} `;
                 row.innerHTML = `
                     <td>${pedido.idPedido}</td>
-                    <td>${pedido.nombreCompleto}</td>
+                    <td>${nombreCompleto}</td>
                     <td>${pedido.ciudad}</td>
                     <td>${pedido.direccion}</td>
                     <td>${pedido.fecha}</td>
                     <td>$${pedido.total}</td>
-                    <td>${pedido.estado}</td>
+                    <td>${pedido.estado.estado}</td>
                     <td><a href="update.php?id=${pedido.idPedido}" class="button is-link">Ver/Editar</a></td>
                 `;
                 tableBody.appendChild(row);

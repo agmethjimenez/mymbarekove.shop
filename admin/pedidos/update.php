@@ -1,74 +1,53 @@
 <?php
-include_once '../../database/conexion.php';
 session_start();
-if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+include '../../models/Http.php';
+include '../../config.php';
+if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
-    $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
-    exit; 
+    exit;
 }
-$database = new Database();
-$conexion = $database->connect();
-
 if (isset($_GET['id'])) {
     $idPedido = $_GET['id'];
 
-    $sqlDetalles = "SELECT dp.idProducto, p.nombre, p.precio, dp.cantidad, dp.total 
-                    FROM detallepedido as dp
-                    INNER JOIN productos as p ON dp.idProducto = p.idProducto
-                    WHERE dp.idPedido = :idPedido";
-
-    $stmtDetalles = $conexion->prepare($sqlDetalles);
-    $stmtDetalles->bindParam(':idPedido', $idPedido);
-    $stmtDetalles->execute();
-
-    $resultDetalles = $stmtDetalles->fetchAll(PDO::FETCH_ASSOC);
-
-    $sqlPedido = "SELECT p.idPedido, p.usuario, p.ciudad, p.direccion, p.fecha, e.estado as estad FROM pedidos as p 
-    INNER JOIN estados as e ON p.estado = e.codEst WHERE p.idPedido = :idpedido";
-
-    $stmtPedido = $conexion->prepare($sqlPedido);
-    $stmtPedido->bindParam(":idpedido", $idPedido);
-    $stmtPedido->execute();
-    $resultPedido = $stmtPedido->fetch(PDO::FETCH_ASSOC);
-
-    if ($resultPedido !== null) {
-        $pedido = $resultPedido;
-    } 
-} 
+    HttpClient::setUrl(URL . '/pedidos/' . $idPedido);
+    $pedido = HttpClient::get();
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Detalle del Pedido</title>
-    <style>
-        /* Estilos CSS similares a los usados anteriormente */
-    </style>
 </head>
 <style>
-     body {
+    body {
         font-family: Arial, sans-serif;
         margin: 0;
-        padding: 0;            
-        background-color: black;;
+        padding: 0;
+        background-color: black;
+        ;
         height: 100vh;
         overflow-y: auto;
     }
+
     header {
         background-color: black;
         color: #fff;
         text-align: center;
         padding: 10px;
     }
+
     .container {
         max-width: 800px;
         margin: 20px auto;
@@ -78,6 +57,7 @@ if (isset($_GET['id'])) {
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+
     .order {
         border-bottom: 1px solid #ccc;
         padding: 10px;
@@ -86,69 +66,73 @@ if (isset($_GET['id'])) {
         justify-content: space-between;
         align-items: center;
     }
+
     .order-info {
         flex: 1;
     }
 
-        .order h2 {
-            margin-bottom: 5px;
-        }
+    .order h2 {
+        margin-bottom: 5px;
+    }
 
-        .order .date {
-            color: #777;
-        }
+    .order .date {
+        color: #777;
+    }
 
-        .order .status {
-            font-weight: bold;
-            color: green; /* Puedes cambiar el color según el estado (cancelado, finalizado, etc.) */
-        }
+    .order .status {
+        font-weight: bold;
+        color: green;
+        /* Puedes cambiar el color según el estado (cancelado, finalizado, etc.) */
+    }
 
-        .details-link {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-        }
-        .alert {
-            background-color: #ffcccc;
-            color: #cc0000;
-            text-align: center;
-            padding: 10px;
-            border-radius: 8px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
+    .details-link {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+    }
 
-        .modal-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 400px;
-            margin: 0 auto;
-            text-align: center;
-        }
+    .alert {
+        background-color: #ffcccc;
+        color: #cc0000;
+        text-align: center;
+        padding: 10px;
+        border-radius: 8px;
+    }
 
-        .button-container {
-            margin-top: 20px;
-        }
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
 
-        .button {
-            margin: 0 10px;
-        }
+    .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 400px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .button-container {
+        margin-top: 20px;
+    }
+
+    .button {
+        margin: 0 10px;
+    }
 </style>
+
 <body>
     <header>
         <h1>Detalle del Pedido</h1>
     </header>
-
     <div class="container">
         <div class="order">
             <div class="order-info">
@@ -156,58 +140,67 @@ if (isset($_GET['id'])) {
                 <p class="date">Fecha del Pedido: <?php echo $pedido['fecha']; ?></p>
                 <p class="date">Direccion: <?php echo $pedido['direccion']; ?></p>
                 <p class="date">Ciudad: <?php echo $pedido['ciudad']; ?></p>
-                <p class="status" data-estado=<?php echo $pedido['estad'] ?>>Estado: <?php echo $pedido['estad']; ?></p>
+                <p class="status" data-estado=<?php echo $pedido['estado']['estado'] ?>>Estado: <?php echo $pedido['estado']['estado']; ?></p>
             </div>
             <div class="edit">
                 <form action="" method="post">
                     <div class="select is-warning">
-                    <select class="select" name="estado" id="estado">
-                        <option value="<?php echo $pedido['estad']; ?>" selected><?php echo $pedido['estad']; ?></option>
-                        <?php
-                        $sqlEstados = "SELECT codEst, estado FROM estados";
+                        <select class="select" name="estado" id="estado">
+                            <option value="<?php echo htmlspecialchars($pedido['estado']['estado'], ENT_QUOTES, 'UTF-8'); ?>" selected>
+                                <?php echo htmlspecialchars($pedido['estado']['estado'], ENT_QUOTES, 'UTF-8'); ?>
+                            </option>
+                            <?php
+                            // Asegúrate de manejar cualquier posible excepción al llamar a la API.
+                            try {
+                                HttpClient::setUrl(URL . '/estados');
+                                $estados = HttpClient::get();
 
-                        $stmtEstados = $conexion->prepare($sqlEstados);
-                        $stmtEstados->execute();
+                                foreach ($estados as $estado) {
+                                    $estadoID = htmlspecialchars($estado['codEst'], ENT_QUOTES, 'UTF-8');
+                                    $nombreEstado = htmlspecialchars($estado['estado'], ENT_QUOTES, 'UTF-8');
+                                    echo '<option value="' . $estadoID . '">' . $nombreEstado . '</option>';
+                                }
+                            } catch (Exception $e) {
+                                echo '<option value="">Error al cargar los estados</option>';
+                            }
+                            ?>
+                        </select>
 
-                        $resultEstados = $stmtEstados->fetchAll(PDO::FETCH_ASSOC);
-
-                        foreach ($resultEstados as $estado) {
-                            $estadoID = $estado['codEst'];
-                            $nombreEstado = $estado['estado'];
-                            echo '<option value="' . $estadoID . '">' . $nombreEstado . '</option>';
-                        }
-                        ?>
-                    </select>
                     </div>
                     <button class="button is-warning" type="submit">Cambiar</button>
                     <?php
-                        if (isset($_POST['estado'])) {
-                            $estadoaActualizar = $_POST['estado'];
-                            
-                            $ActualizarEstado = "UPDATE pedidos SET estado = :estadoNuevo WHERE idPedido = :idPedido";
-                            
-                            $stmt = $conexion->prepare($ActualizarEstado);
-                            
-                            $stmt->bindParam(':estadoNuevo', $estadoaActualizar);
-                            $stmt->bindParam(':idPedido', $idPedido); 
-                            
-                            if ($stmt->execute()) {
-                                echo '<div class="message is-primary" id="message">';
-                                echo '<p>Estado cambiado</p>';
-                                echo '</div>';
-                            } else {
-                                echo '<div class="message is-danger" id="message">';
-                                echo '<p>Pedido no cambiado de estado</p>';
-                                echo '</div>';
-                            }
-                        }
-                        ?>
+                    if (isset($_POST['estado'])) {
+
+                        $estadoaActualizar = $_POST['estado'];
+                        $urkl = URL . '/pedidos/update/' . $idPedido . '/' . $estadoaActualizar . '/' . $token;
+                        HttpClient::setUrl($urkl);
+                        $response = HttpClient::put();
+
+                        if ($response['status']) {
+                            echo '<script type="text/javascript">';
+                            echo 'Swal.fire({';
+                            echo 'icon: "success",';
+                            echo 'title: "Éxito",';
+                            echo 'text: "' . addslashes($response['mensaje']) . '"';
+                            echo '});';
+                            echo '</script>';
+                        } else {
+                            echo '<script type="text/javascript">';
+                            echo 'Swal.fire({';
+                            echo 'icon: "error",';
+                            echo 'title: "Error",';
+                            echo 'text: "' . addslashes($response['mensaje']) . '"';
+                            echo '});';
+                            echo '</script>';
+                        }                        
+                    }
+                    ?>
 
                 </form>
-                
+
             </div>
         </div>
-        <table  class="table" id="order-details">
+        <table class="table" id="order-details">
             <thead>
                 <tr>
                     <th>ID Producto</th>
@@ -215,22 +208,21 @@ if (isset($_GET['id'])) {
                     <th>Precio</th>
                     <th>Cantidad</th>
                     <th>Total</th>
-                    
+
                 </tr>
             </thead>
             <tbody>
                 <?php
-                if ($resultDetalles !== null) {
-                    foreach($resultDetalles as $detalle){
+                if (!empty($pedido['detallespedido'])) {
+                    foreach ($pedido['detallespedido'] as $detalle) {
                         echo '<tr>';
                         echo '<td>' . htmlspecialchars($detalle['idProducto']) . '</td>';
-                        echo '<td>' . htmlspecialchars($detalle['nombre']) . '</td>';
-                        echo '<td>$' . htmlspecialchars($detalle['precio']) . '</td>';
+                        echo '<td>' . htmlspecialchars($detalle['producto']['nombre']) . '</td>';
+                        echo '<td>$' . htmlspecialchars($detalle['producto']['precio']) . '</td>';
                         echo '<td>' . htmlspecialchars($detalle['cantidad']) . '</td>';
                         echo '<td>$' . htmlspecialchars($detalle['total']) . '</td>';
                         echo '<td>';
                         echo '</tr>';
-
                     }
                 } else {
                     echo '<tr><td colspan="5">No hay detalles disponibles</td></tr>';
@@ -239,49 +231,28 @@ if (isset($_GET['id'])) {
             </tbody>
         </table>
         <?php
-        $tottQuery = "SELECT SUM(dp.total) AS total_pedido FROM detallepedido as dp WHERE dp.idPedido = :idPedido";
-
-        $stmtTott = $conexion->prepare($tottQuery);
-        $stmtTott->bindParam(':idPedido', $idPedido, PDO::PARAM_INT);
-        $stmtTott->execute();
-    
-        $totalRow = $stmtTott->fetch(PDO::FETCH_ASSOC);
-    
-        if ($totalRow !== false) {
-            $total_pedido = $totalRow['total_pedido'];
-    
-            echo "<h1><strong>Total: $$total_pedido</strong></h1>";
-        } else {
-            echo "No se encontraron detalles para el pedido con ID: $idPedido";
-        }
+        echo "<h1><strong>Total: $" . $pedido['total'] . "</strong></h1>";
         ?>
         <h1></h1>
         <a class="button is-warning" href="pedidos.php" class="details-link">Volver</a>
+        <a href="factura.php?id=<?php echo $pedido['idPedido']; ?>" class="button is-danger">Factura</a>
         <div class="modal" id="myModal">
-    <div class="modal-content">
-        <p>¿Estás seguro de cancelar el pedido? Ten en cuenta que no podras deshacer esta accion.</p>
-        <div class="button-container">  
-            <form action="" method="get">
-            <a class="button is-link" href="#" onclick="closeModal()">Cancelar</a>
-            <a class="button is-danger" href="cancelar_pedido.php?id=<?php echo $idPedido ?>">Confirmar</a>
-            </form>
         </div>
-    </div>
-</div>
     </div>
 
     <script>
-    let modal = document.getElementById("myModal");
-    let btn = document.getElementById("btncancelarpedido");
+        let modal = document.getElementById("myModal");
+        let btn = document.getElementById("btncancelarpedido");
 
-    function openModal() {
-        modal.style.display = "flex";
-    }
+        function openModal() {
+            modal.style.display = "flex";
+        }
 
-    function closeModal() {
-        modal.style.display = "none";
-    }
-    function asignarColorEstado(estado, elemento) {
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        function asignarColorEstado(estado, elemento) {
             switch (estado.toLowerCase()) {
                 case 'finalizado':
                     elemento.style.color = 'green';
@@ -302,11 +273,11 @@ if (isset($_GET['id'])) {
 
         var estados = document.querySelectorAll('.status');
 
-
         estados.forEach(function(estado) {
             var estadoTexto = estado.textContent.trim().split(':')[1].trim();
             asignarColorEstado(estadoTexto, estado);
         });
     </script>
 </body>
+
 </html>

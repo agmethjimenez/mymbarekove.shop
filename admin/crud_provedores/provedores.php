@@ -1,13 +1,11 @@
 <?php
-include '../../database/conexion.php';
-include '../../models/Proveedor.php';
 session_start();
-$database = new Database;
-$conexion = $database->connect();
-if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+include '../../config.php';
+include '../../models/Http.php';
+
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
-    $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
@@ -47,12 +45,11 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
     </thead>
     <tbody>
         <?php
-        $sql = "SELECT*FROM proveedores WHERE estado = 'SI'";
-        $result = $conexion->prepare($sql);
-        $result->execute();
-        $proveedores = $result->fetchAll(PDO::FETCH_ASSOC);
+        HttpClient::setUrl(URL.'/proveedores');
+        $proveedores = HttpClient::get();
+        $proveedores = $proveedores['proveedores'];
 
-        if ($proveedores !== null) {
+        if (!empty($proveedores) ) {
             foreach($proveedores as $row) {
                 echo "<tr>";
                 echo "<td>" . $row["idProveedor"] . "</td>";

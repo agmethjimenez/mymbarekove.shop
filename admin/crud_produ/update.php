@@ -1,17 +1,15 @@
 <?php
 session_start();
-if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+include '../../config.php';
+include '../../models/Http.php';
+if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
-    $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
     exit;
 }
-require '../../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../'); // Corregido el directorio donde se encuentra el archivo .env
-$dotenv->load();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,15 +28,10 @@ $dotenv->load();
     <div class="contenedor">
         <form action="update.php" method="post" enctype="multipart/form-data">
             <?php
-            require_once("../../database/conexion.php");
             if ($_SERVER["REQUEST_METHOD"] === "GET") {
                 $id = $_GET["id"];
-                $sql = "SELECT*FROM productos WHERE idProducto = :id ";
-                $result = $conexion->prepare($sql);
-                $result->bindParam(":id", $id);
-                $result->execute();
-
-                $roe = $result->fetch(PDO::FETCH_ASSOC);
+                HttpClient::setUrl(URL.'/productos/read/'.$id);
+                $roe = HttpClient::get();
             }
             ?>
             <div class="title">
@@ -54,27 +47,15 @@ $dotenv->load();
                     <div class="select is-primary">
                         <select name="proveedor" id="proveedor">
                             <?php
-                            $marcaQuery = "SELECT p.idProducto, pr.idProveedor AS idProveedor, pr.nombreP 
-               FROM productos AS p 
-               INNER JOIN proveedores AS pr ON p.proveedor = pr.idProveedor 
-               WHERE p.idProducto = :idProducto";
+                            
+                            echo "<option value=".$roe['proveedor']['idProveedor'].">".$roe['proveedor']['nombreP']."</option>";
+                            
 
-                            $stmtMarca = $conexion->prepare($marcaQuery);
-                            $stmtMarca->bindParam(':idProducto', $id);
-                            $stmtMarca->execute();
+                            HttpClient::setUrl(URL.'/proveedores');
+                            $proveedores = HttpClient::get();
+                            $proveedores = $proveedores['proveedores'];
 
-                            while ($row = $stmtMarca->fetch(PDO::FETCH_ASSOC)) {
-                                $idProveedor = $row['idProveedor'];
-                                $nombreProveedor = $row['nombreP'];
-                                echo "<option value=\"$idProveedor\">$nombreProveedor</option>";
-                            }
-
-                            $sqlProveedores = "SELECT idProveedor, nombreP FROM proveedores";
-
-                            $stmtProveedores = $conexion->prepare($sqlProveedores);
-                            $stmtProveedores->execute();
-
-                            while ($row = $stmtProveedores->fetch(PDO::FETCH_ASSOC)) {
+                            foreach($proveedores as $provedor){
                                 $idProveedor = $row['idProveedor'];
                                 $nombreProveedor = $row['nombreP'];
                                 echo "<option value=\"$idProveedor\">$nombreProveedor</option>";
@@ -114,31 +95,13 @@ $dotenv->load();
                     <label for="" class="label">Marca</label>
                     <div class="select is-primary">
                         <select name="marca" id="marca">
+                            <option value="<?php echo isset($roe['marca']['idMarca']) ? $roe['marca']['idMarca'] : ''; ?>"><?php echo isset($roe['marca']['marca']) ? $roe['marca']['marca'] : ''; ?></option>
                             <?php
-                            $marcaQuery = "SELECT p.idProducto, m.idMarca, m.marca 
-               FROM productos AS p 
-               INNER JOIN marcas AS m ON p.marca = m.idMarca 
-               WHERE p.idProducto = :idProducto";
+                            HttpClient::setUrl(URL.'/marcas');
+                            $marcas = HttpClient::get();
 
-                            $stmtMarca = $conexion->prepare($marcaQuery);
-                            $stmtMarca->bindParam(':idProducto', $id);
-                            $stmtMarca->execute();
-
-                            while ($row = $stmtMarca->fetch(PDO::FETCH_ASSOC)) {
-                                $idMarca = $row['idMarca'];
-                                $nombreMarca = $row['marca'];
-                                echo "<option value=\"$idMarca\">$nombreMarca</option>";
-                            }
-
-                            $sqlMarcas = "SELECT idMarca, marca FROM marcas";
-
-                            $stmtMarcas = $conexion->prepare($sqlMarcas);
-                            $stmtMarcas->execute();
-
-                            while ($row = $stmtMarcas->fetch(PDO::FETCH_ASSOC)) {
-                                $idMarca = $row['idMarca'];
-                                $nombreMarca = $row['marca'];
-                                echo "<option value=\"$idMarca\">$nombreMarca</option>";
+                            foreach($marcas as $marca){
+                                echo "<option value=".$marca['idMarca'].">".$marca['marca']."</option>";
                             }
                             ?>
 
@@ -151,33 +114,15 @@ $dotenv->load();
                     <div class="select is-primary">
                         <select name="categoria" id="categoria">
                             <?php
-                            $categoriaQuery = "SELECT p.idProducto, c.categoria AS idcategoria, c.descripcion AS categoria 
-                   FROM productos AS p 
-                   INNER JOIN categorias AS c ON p.categoria = c.categoria 
-                   WHERE p.idProducto = :idProducto";
+                    
+                             echo "<option value=".$roe['categoria']['categoria'].">".$roe['categoria']['descripcion']."</option>";
+                                HttpClient::setUrl(URL.'/categorias');
+                                $categorias = HttpClient::get();
 
-                            $stmtCategoria = $conexion->prepare($categoriaQuery);
-                            $stmtCategoria->bindParam(':idProducto', $id, PDO::PARAM_INT);
-                            $stmtCategoria->execute();
-
-                            while ($row = $stmtCategoria->fetch(PDO::FETCH_ASSOC)) {
-                                $idCategoria = $row['idcategoria'];
-                                $nombreCategoria = $row['categoria'];
-                                echo "<option value=\"$idCategoria\">$nombreCategoria</option>";
-                            }
-
-                            $sqlCategorias = "SELECT categoria, descripcion FROM categorias";
-
-                            $stmtCategorias = $conexion->prepare($sqlCategorias);
-                            $stmtCategorias->execute();
-
-                            while ($row = $stmtCategorias->fetch(PDO::FETCH_ASSOC)) {
-                                $idCategoria = $row['categoria'];
-                                $nombreCategoria = $row['descripcion'];
-                                echo "<option value=\"$idCategoria\">$nombreCategoria</option>";
-                            }
-                            ?>
-                            s
+                                foreach($categorias as $categoria){
+                                    echo "<option value=".$categoria['categoria'].">".$categoria['descripcion']."</option>";
+                                }
+                               ?>
                         </select>
                     </div>
                 </div>
@@ -208,42 +153,35 @@ $dotenv->load();
                 $stock = $_POST['stock'];
                 $imagen = $_POST['direccion'];
 
-                // Realizar la solicitud cURL para actualizar el producto en la otra aplicación
-                $curl = curl_init();
-
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'http://localhost/mymbarekove.shop/controller/producto',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'PUT',
-                    CURLOPT_POSTFIELDS => '{
-            "idProducto": ' . $ida . ',
-            "nombre": "' . $nombre . '",
-            "descripcionP": "' . $descripcion . '",
-            "contenido": "' . $contenido . '",
-            "precio": "' . $precio . '",
-            "descripcion": "' . $marca . '",
-            "cantidadDisponible": ' . $stock . ',
-            "imagen": "' . $imagen . '"
-        }',
-                    CURLOPT_HTTPHEADER => array(
-                        'token: Bearer ' . $_ENV['PUT_PRODUCT'] . '',
-                        'Content-Type: application/json'
-                    ),
-                ));
-
-                $response = curl_exec($curl);
-
-                curl_close($curl);
-
-                // Verificar la respuesta de la solicitud cURL
-                if ($response !== false) {
-                    $responseData = json_decode($response, true);
-                    if (isset($responseData['status']) && $responseData['status'] === true) {
+                $data = [
+                    'id'=>$ida,
+                    'proveedor' => $proveedor,
+                    'nombre' => $nombre,
+                    'descripcion' => $descripcion,
+                    'contenido' => $contenido,
+                    'precio' => $precio,
+                    'marca' => $marca,
+                    'categoria'=>$categoria,
+                    'stock'=>$stock,
+                    'imagen' => $imagen
+                ];
+            
+                /*{
+                    "id": "1",
+                    "proveedor":101,
+                    "nombre": "Purgante Canisan",
+                    "descripcion": "Purgante para gato 100 EFECTIVOI",
+                    "contenido": "2.5 ML",
+                    "precio": "200000",
+                    "marca": 1,
+                    "categoria":6,
+                    "stock": 58,
+                    "imagen": "https://i.postimg.cc/tTP2SzDz/156397-800-auto.jpg"
+                  }*/
+                HttpClient::setUrl(URL.'/productos/update');
+                HttpClient::setBody($data);
+                $responseData = HttpClient::post();
+                    if ($responseData['status']) {
                         echo '<div class="notification is-success">';
                         echo '<button class="delete"></button>';
                         echo '¡Producto actualizado correctamente';
@@ -252,15 +190,9 @@ $dotenv->load();
                     } else {
                         echo '<div class="notification is-danger">';
                         echo '<button class="delete"></button>';
-                        echo 'Error al actualizar el producto en la otra aplicación: ' . $responseData['mensaje'];
                         echo '</div>';
                     }
-                } else {
-                    echo '<div class="notification is-danger">';
-                    echo '<button class="delete"></button>';
-                    echo 'Error al realizar la solicitud cURL para actualizar el producto en la otra aplicación';
-                    echo '</div>';
-                }
+                
             }
             ?>
 

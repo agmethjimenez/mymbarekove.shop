@@ -1,24 +1,18 @@
 <?php
-require '../../database/conexion.php';
-require '../../models/Administrador.php';
-$admin = new Admin();
-$database = new Database();
-
-$conexion = $database->connect();
-
 session_start();
-if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+include '../../config.php';
+include '../../models/Http.php';
+if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
-    $email = $_SESSION['email'];
-    $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
-    exit; 
+    exit;
 }
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,7 +63,8 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
             margin-bottom: 20px;
             color: #333;
         }
-        aside nav{
+
+        aside nav {
             height: 80%;
             display: flex;
             flex-direction: column;
@@ -107,6 +102,7 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
         }
     </style>
 </head>
+
 <body>
 
     <header>
@@ -125,24 +121,20 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
             </nav>
         </aside>
         <?php
-$admin->setId($id_admin);
-$admin->setToken($token);
-$data = $admin->getAdmin($conexion);
-$data = json_decode($data, true);
-if ($data) { // Verificar si se obtuvieron datos
-?>
-<section class="user-info">
-    <h2>Información del Administrador</h2>
-    <p>Correo: <?php echo $data['email']; ?></p>
-    <p>Nombre: <?php echo $data['username']; ?></p>
-    <p>ID:  <?php echo $data['id']; ?></p>
-</section>
-<?php
-} else {
-    echo "No se encontraron datos de administrador.";
-}
-?>
+        HttpClient::setUrl(URL.'/admin/read');
+        HttpClient::setBody(['tk'=>$_SESSION['token']]);
+        $data = HttpClient::get();
+        ?>
+
+        <section class="user-info">
+            <h2>Información del Administrador</h2>
+            <p>Correo: <?php echo $data['email']; ?></p>
+            <p>Nombre: <?php echo $data['username']; ?></p>
+            <p>ID: <?php echo $data['id']; ?></p>
+        </section>
+
     </main>
 
 </body>
+
 </html>

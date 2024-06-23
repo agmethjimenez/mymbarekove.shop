@@ -1,17 +1,14 @@
 <?php
-require '../../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../'); // Corregido el directorio donde se encuentra el archivo .env
-$dotenv->load();
-
 session_start();
-if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+include '../../config.php';
+include '../../models/Http.php';
+if (isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
-    $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
-    exit; 
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -30,10 +27,6 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
 <body>
     <div class="contenedor">
         <form action="create.php" method="post" enctype="multipart/form-data">
-            <?php
-            require_once("../../database/conexion.php");
-
-            ?>
             <div class="title">
                 <h1>Agregar Producto</h1>
             </div>
@@ -43,25 +36,23 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
                 <div class="con1-2">
                     <label for="" class="label">Proveedor</label>
                     <?php
-$sql = "SELECT idProveedor, nombreP FROM proveedores";
-$stmt = $conexion->prepare($sql);
-$stmt->execute();
+                    HttpClient::setUrl(URL . '/proveedores');
+                    $resultados = HttpClient::get();
+                    $resultados = $resultados['proveedores'];
+                    ?>
 
-$resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<div class="select is-primary" id="select" name="tipoid">
-    <select name="proveedor" id="proveedor">
-        <option value="0">Seleccione un proveedor</option>
-        <?php
-        foreach ($resultados as $row) {
-            $idProveedor = $row['idProveedor'];
-            $nombreProveedor = $row['nombreP'];
-            echo "<option value=\"$idProveedor\">$nombreProveedor</option>";
-        }
-        ?>
-    </select>
-</div>
+                    <div class="select is-primary" id="select" name="tipoid">
+                        <select name="proveedor" id="proveedor">
+                            <option value="0">Seleccione un proveedor</option>
+                            <?php
+                            foreach ($resultados as $row) {
+                                $idProveedor = $row['idProveedor'];
+                                $nombreProveedor = $row['nombreP'];
+                                echo "<option value=\"$idProveedor\">$nombreProveedor</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
 
                 </div>
             </div>
@@ -96,17 +87,14 @@ $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <label class="label" for="">Marca</label>
 
                     <?php
-                    $sqe = "SELECT*FROM marcas";
-                    $resul = $conexion->prepare($sqe);
-                    $resul->execute();
-                    $rows = $resul->fetchAll(PDO::FETCH_ASSOC);
-
+                    HttpClient::setUrl(URL . '/marcas');
+                    $rows = HttpClient::get();
                     ?>
                     <div class="select is-primary" id="select" name="marca">
                         <select name="marca" id="marca">
                             <option value="0">Seleccione una marca</option>
                             <?php
-                            foreach($rows as $row) {
+                            foreach ($rows as $row) {
                                 $idmar = $row['idMarca'];
                                 $namemar = $row['marca'];
                                 echo "<option value=\"$idmar\">$namemar</option>";
@@ -118,16 +106,14 @@ $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="con4-2">
                     <label for="" class="label">Categoria</label>
                     <?php
-                    $sqe = "SELECT*FROM categorias";
-                    $resul = $conexion->prepare($sqe);
-                    $resul->execute();
+                    HttpClient::setUrl(URL . '/categorias');
                     ?>
                     <div class="select is-primary" id="select" name="categoria">
                         <select name="categoria" id="categoria">
                             <option value="0">Seleccione una categoria</option>
                             <?php
-                            $rows2 = $resul->fetchAll(PDO::FETCH_ASSOC);
-                            foreach($rows2 as $row) {
+                            $rows2 = HttpClient::get();
+                            foreach ($rows2 as $row) {
                                 $idcat = $row['categoria'];
                                 $namecat = $row['descripcion'];
                                 echo "<option value=\"$idcat\">$namecat</option>";
@@ -139,9 +125,9 @@ $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="con5">
                 <div class="con5-1">
-               
+
                     <label for="" class="label">Imagen del producto</label>
-                    <input class="input is-primary" type="text" name="direccion">
+                    <input class="input is-primary" type="text" name="imagen">
                 </div>
             </div>
             <div class="butcon">
@@ -149,68 +135,71 @@ $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
 
-<?php
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $proveedor = $_POST['proveedor'];
-    $nombreproducto = $_POST['nombre'];
-    $descripcion = $_POST['descripcion'];
-    $contenido = $_POST['contenido'];
-    $precio = $_POST['precio'];
-    $marca = $_POST['marca'];
-    $categoria = $_POST['categoria'];
-    $stock = $_POST['stock'];
-    $direccionimg = $_POST['direccion'];
-    
-    $producto_data = array(
-        "proveedor" => $proveedor,
-        "nombre" => $nombreproducto,
-        "descripcion" => $descripcion,
-        "contenido" => $contenido,
-        "precio" => $precio,
-        "marca" => $marca,
-        "categoria" => $categoria,
-        "stock" => $stock,
-        "imagen" => $direccionimg
-    );
+            <?php
+            if ($_SERVER["REQUEST_METHOD"] === "POST") {
+                $required_fields = ['proveedor', 'nombre', 'descripcion', 'contenido', 'precio', 'marca', 'categoria', 'stock', 'imagen'];
+                foreach ($required_fields as $field) {
+                    if (!isset($_POST[$field]) || empty($_POST[$field])) {
+                        echo '<div class="notification is-danger">';
+                        echo '<button class="delete"></button>';
+                        echo '¡Error! El campo ' . $field . ' es obligatorio.';
+                        echo '</div>';
+                        exit;
+                    }
+                }
+                $proveedor = $_POST['proveedor'];
+                $nombreproducto = $_POST['nombre'];
+                $descripcion = $_POST['descripcion'];
+                $contenido = $_POST['contenido'];
+                $precio = $_POST['precio'];
+                $marca = $_POST['marca'];
+                $categoria = $_POST['categoria'];
+                $stock = $_POST['stock'];
+                $imagen = $_POST['imagen'];
 
-    $curl = curl_init();
+                if (!isset($_SESSION['id_admin']) || empty($_SESSION['id_admin'])) {
+                    echo '<div class="notification is-danger">';
+                    echo '<button class="delete"></button>';
+                    echo '¡Error! No se encontró el id del administrador.';
+                    echo '</div>';
+                    exit;
+                }
 
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://localhost/mymbarekove.shop/controller/producto',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => json_encode($producto_data),
-        CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json',
-            'token: Bearer '.$_ENV['POST_PRODUCT'].' ',
-        ),
-    ));
+                $producto_data = array(
+                    "proveedor" => $proveedor,
+                    "nombre" => $nombreproducto,
+                    "descripcion" => $descripcion,
+                    "contenido" => $contenido,
+                    "precio" => $precio,
+                    "marca" => $marca,
+                    "categoria" => $categoria,
+                    "stock" => $stock,
+                    "imagen" => $imagen,
+                    'admin' => $token
+                );
 
-    $response = curl_exec($curl);
+                HttpClient::setUrl(URL . '/producto/create');
+                HttpClient::setBody($producto_data);
+                $responseData = HttpClient::post();
 
-    curl_close($curl);
+                if (isset($responseData['status']) && $responseData['status']) {
+                    echo '<div class="notification is-success">';
+                    echo '<button class="delete"></button>';
+                    echo '¡Producto insertado correctamente!';
+                    echo '<a href="./productos.php">Volver</a>';
+                    echo '</div>';
+                } else {
+                    echo '<div class="notification is-danger">';
+                    echo '<button class="delete"></button>';
+                    echo '¡Error al insertar el producto!';
+                    if (isset($responseData['message'])) {
+                        echo ' ' . htmlspecialchars($responseData['message']);
+                    }
+                    echo '</div>';
+                }
+            }
+            ?>
 
-    $responseData = json_decode($response, true);
-
-    if (isset($responseData['exito']) && $responseData['exito']) {
-        echo '<div class="notification is-success">';
-        echo '<button class="delete"></button>';
-        echo '¡Producto insertado correctamente!';
-        echo '<a href="./productos.php">Volver</a>';
-        echo '</div>';
-    }else{
-        echo '<div class="notification is-danger">';
-        echo '<button class="delete"></button>';
-        echo '¡Error! ' . $responseData['error'];
-        echo '</div>';
-    }
-}
-?>
     </div>
     </form>
 </body>

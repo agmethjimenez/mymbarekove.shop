@@ -1,8 +1,4 @@
 <?php
-include_once '../../database/conexion.php';
-$database = new Database();
-$conexion = $database->connect();
-
 if(isset($_GET['email']) && isset($_GET['token'])){
     $email = $_GET['email'];
     $token = $_GET['token'];

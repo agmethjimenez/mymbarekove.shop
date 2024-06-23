@@ -1,12 +1,9 @@
 <?php
-require '../config.php';
-require '../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); 
-$dotenv->load();
 session_start();
-if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && isset($_SESSION['usuario_apellido'])) ||
-  (isset($_COOKIE['id_usuario']) && isset($_COOKIE['usuario_nombre']) && isset($_COOKIE['usuario_apellido']))
-) {
+require '../config.php';
+require '../models/Http.php';
+
+if (isset($_SESSION['id_usuario']) || isset($_SESSION['id_admin']) ) {
   header("Location: catalogo.php");
   exit();
 }
@@ -73,8 +70,6 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
       </div>
 
       <div class="con3">
-        <div class="field">
-          <div class="control has-icons-left has-icons-right">
             <div class="select">
               <select name="tipoIdentificacion" id="tipoIdentificacion" required>
                 <option value="">Tipo de ID</option>
@@ -84,11 +79,7 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
                 <option value="3">PASAPORTE</option>
               </select>
             </div>
-            <div class="icon is-small is-left">
-              <i class="fa-solid fa-rectangle-list"></i>
-            </div>
-          </div>
-        </div>
+        
         <div class="field">
           <div class="control has-icons-left has-icons-right">
             <input class="input" type="text" placeholder="Identificacion" name="identificacion" id="identificacion" required pattern="^[0-9]+$" title="Solo numeros" minlength="7" maxlength="10" />
@@ -146,9 +137,6 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
         <input type="submit" id="submit" value="Registrarse" />
       </div>
       <?php
-      require_once("../models/Usuarios.php");
-      include_once("../database/conexion.php");
-
       if (isset(
         $_POST['identificacion'],
         $_POST['tipoIdentificacion'],
@@ -184,7 +172,7 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
                 exit; // Terminar la ejecución del script si las contraseñas no coinciden
             }
     
-            $data = array(
+            /*$data = array(
                 'identificacion' => $id_usuario,
                 'tipoid' => $cod_id,
                 'nombre1' => $primernombre,
@@ -194,19 +182,22 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
                 'email' => $email,
                 'telefono' => $telefono,
                 'password' => $contrasena,
-            );
-    
-            $ch = curl_init();
-    
-            curl_setopt($ch, CURLOPT_URL, 'http://' . URL . '/controller/users.php');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'token: Bearer ' . $_ENV['API_POST_USER']));
-            $response = curl_exec($ch);
-    
-            curl_close($ch);
-            $responseData = json_decode($response, true);
+            );*/
+            $data = array(
+              "identificacion" => $id_usuario,
+              "tipoId" => $cod_id,
+              "primerNombre" => $primernombre,
+              "segundoNombre" => $segundonombre,
+              "primerApellido" => $primerapellido,
+              "segundoApellido" => $segundoapellido,
+              "email" => $email,
+              "telefono" => $telefono,
+              "password" => $contrasena
+          );
+            HttpClient::setUrl(URL.'/usuario');
+            HttpClient::setBody($data);
+  
+            $responseData = HttpClient::post();
             if (isset($responseData['exito']) && $responseData['exito']) {
                 echo '<div class="message is-primary" id="message">';
                 echo '<p>Registro exitoso <a href="login.php">Inicie Sesión</a></p>';
@@ -225,12 +216,8 @@ if ((isset($_SESSION['id_usuario']) && isset($_SESSION['usuario_nombre']) && iss
         }
     }
     ?>
-    
-
-
       <p class="error" id="error"></p>
     </form>
   </div>
 </body>
-
 </html>

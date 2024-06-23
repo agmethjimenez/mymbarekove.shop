@@ -1,4 +1,6 @@
-
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
@@ -15,8 +17,7 @@
 <?php
 //session_start();
 include_once("header.php");
-if ((!isset($_SESSION['usuario_nombre']) || !isset($_SESSION['usuario_apellido']) || !isset($_SESSION['id_usuario'])) &&
-    (!isset($_COOKIE['usuario_nombre']) || !isset($_COOKIE['usuario_apellido']) || !isset($_COOKIE['id_usuario']))) {
+if (!isset($_SESSION['id_usuario'])){
     header("Location: login.php");
     exit();
 }
@@ -168,7 +169,6 @@ function tablear() {
 
         
     } else {
-        // Si hay productos, llenar la tabla y mostrar total y botón de vaciar carrito
         let thead = document.createElement("thead");
         thead.innerHTML = `
             <tr>

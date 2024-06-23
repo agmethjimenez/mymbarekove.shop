@@ -1,7 +1,8 @@
 <?php
-require '../../config.php';
 session_start();
-if (!isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+include '../../config.php';
+include '../../models/Http.php';
+if (!isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     header("Location: ../../catalogo/login.php");
     exit;
 }
@@ -19,38 +20,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "telefono" => $telefonoPorve
     );
 
-    $jsonData = json_encode($proveedorData);
+    HttpClient::setUrl(URL.'/proveedores');
+    HttpClient::setBody($proveedorData);
+    $response = HttpClient::post();
 
-    $curl = curl_init();
-
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://' . URL . '/controller/proveedor',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => $jsonData,
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer d0Qa2xl4rrXrFzObkcA4DPABXl1EfD7OvUWhaSN9zcKhNBdVbEptPX1qOTphEX2d4Obl588eWQ1e60uYVsiBF4q4G22PcVPjKH2B5nnDu8tuBPecHZl',
-            'Content-Type: application/json',
-            'Cookie: PHPSESSID=u8715ej4gmj7teu6hegneotmcr'
-        ),
-    ));
-
-    $response = curl_exec($curl);
-
-    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-    if ($http_status == 201) {
+    if ($response['status']) {
         echo '<script>alert("Proveedor registrado")</script>';
+        header("Location: provedores.php");
     } else {
-        echo '<script>alert("Error al registrar el proveedor. Código de estado: ' . $http_status . '")</script>';
+        echo '<script>alert("Error al registrar el proveedor")</script>';
     }
-
-    curl_close($curl);
 }
 ?>
 <!DOCTYPE html>
@@ -62,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="./estilos.css/update.css">
-    <title>Document</title>
+    <title>Crear Proveedor</title>
 </head>
 <body>
 <div class="contenedor">

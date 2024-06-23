@@ -1,17 +1,10 @@
 <?php
+session_start();
 require '../config.php';
-require '../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Corregido el directorio donde se encuentra el archivo .env
-$dotenv->load();
-require_once("../database/conexion.php");
-require_once("../models/Usuarios.php");
-
-$database = new Database();
-$conexion = $database->connect();
+require '../models/Http.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +13,6 @@ $conexion = $database->connect();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="./css/perfil.css">
     <link rel="icon" type="image/png" href="imgs/productos/Copia de Logo veterinaria animado azul rosado.png">
-
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="./js/perfil.js"></script>
     <title>Perfil</title>
@@ -28,11 +20,10 @@ $conexion = $database->connect();
 
 <body>
     <?php
-    session_start();
-    $usuario = new Usuario();
+    
+    HttpClient::setUrl(URL . '/usuarios/' . $_SESSION['id_usuario']);
+    $response = HttpClient::get();
 
-    $id = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : $_COOKIE['id_usuario'];
-    $usuario->verDatos($conexion, $id);
     ?>
     <div class="wrapper">
 
@@ -48,15 +39,15 @@ $conexion = $database->connect();
         <div class="info" id="info">
             <h1 class="titulo">Perfil de Usuario</h1>
             <h1 class="tit"><strong>Identificacion</strong></h1>
-            <p><?php echo $_SESSION['identificacion']; ?></p>
+            <p><?php echo $response['identificacion'] ?></p>
             <h1 class="tit"><strong>Nombres</strong></h1>
-            <p><?php echo $_SESSION['nombre1'] . ' ' . $_SESSION['nombre2']; ?></p>
+            <p><?php echo $response['primerNombre'] . ' ' . $response['segundoNombre'] ?></p>
             <h1 class="tit"><strong>Apellidos</strong></h1>
-            <p><?php echo $_SESSION['apellido1'] . ' ' . $_SESSION['apellido2']; ?></p>
+            <p><?php echo $response['primerApellido'] . ' ' . $response['segundoApellido'] ?></p>
             <h1 class="tit"><strong>Correo electronico</strong></h1>
-            <p><?php echo $_SESSION['email']; ?></p>
+            <p><?php echo $response['email'] ?></p>
             <h1 class="tit"><strong>Telefono</strong></h1>
-            <p><?php echo $_SESSION['telefono']; ?></p>
+            <p><?php echo $response['telefono'] ?></p>
 
         </div>
 
@@ -67,83 +58,61 @@ $conexion = $database->connect();
                 <div class="con1">
                     <div>
                         <label class="label" for="">Primer Nombre</label>
-                        <input class="input is-rounded" type="text" id="nombre1" name="nombre1" value="<?php echo $_SESSION['nombre1']; ?>">
+                        <input class="input is-rounded" type="text" id="nombre1" name="nombre1" value="<?php echo $response['primerNombre']; ?>">
                     </div>
                     <div>
                         <label class="label" for="">Segundo Nombre</label>
-                        <input class="input is-rounded" type="text" id="nombre2" name="nombre2" value="<?php echo $_SESSION['nombre2']; ?>">
+                        <input class="input is-rounded" type="text" id="nombre2" name="nombre2" value="<?php echo $response['segundoNombre']; ?>">
                     </div>
                 </div>
                 <div class="con2">
                     <div>
                         <label class="label" for="">Primer apellido</label>
-                        <input class="input is-rounded" type="text" id="apellido1" name="apellido1" value="<?php echo $_SESSION['apellido1'] ?>">
+                        <input class="input is-rounded" type="text" id="apellido1" name="apellido1" value="<?php echo $response['primerApellido'] ?>">
                     </div>
                     <div>
                         <label class="label" for="">Segundo apellido</label>
-                        <input class="input is-rounded" type="text" id="apellido2" name="apellido2" value="<?php echo $_SESSION['apellido2'] ?>">
+                        <input class="input is-rounded" type="text" id="apellido2" name="apellido2" value="<?php echo $response['segundoNombre'] ?>">
                     </div>
                 </div>
                 <div class="con3">
                     <div>
                         <label class="label" for="">Correo</label>
-                        <input class="input is-rounded" type="text" id="email" name="email" value="<?php echo $_SESSION['email'] ?>">
+                        <input class="input is-rounded" type="text" id="email" name="email" value="<?php echo $response['email'] ?>">
                     </div>
                     <div>
 
                         <label class="label" for="">Telefono</label>
-                        <input class="input is-rounded" type="text" id="telefono" name="telefono" value="<?php echo $_SESSION['telefono'] ?>">
+                        <input class="input is-rounded" type="text" id="telefono" name="telefono" value="<?php echo $response['telefono'] ?>">
                     </div>
-                </div>
-                <div class="con4">
-                    <div class="g-recaptcha" data-sitekey="6LelmxwpAAAAAFS3KlCNxJf9TfDpe70SP2y0Ie3w"></div>
                 </div>
                 <div class="boton">
                     <input type="submit" class="button is-black" name="submit" value="Actualizar">
                 </div>
                 <?php
                 if (isset($_POST['submit'])) {
-                    $curl = curl_init();
 
                     $data = array(
-                        "identificacion" => $_SESSION['identificacion'],
-                        "primerNombre" => $_POST['nombre1'],
-                        "segundoNombre" => $_POST['nombre2'],
-                        "primerApellido" => $_POST['apellido1'],
-                        "segundoApellido" => $_POST['apellido2'],
+                        "id" => $_SESSION['id_usuario'],
+                        "nombre1" => $_POST['nombre1'],
+                        "nombre2" => $_POST['nombre2'],
+                        "apellido1" => $_POST['apellido1'],
+                        "apellido2" => $_POST['apellido2'],
                         "telefono" => $_POST['telefono'],
                         "email" => $_POST['email']
                     );
 
-                    $payload = json_encode($data);
+                    HttpClient::setUrl(URL.'/usuarios/update');
+                    HttpClient::setBody($data);
+                    $responseData = HttpClient::put();
 
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'http://'.URL.'/controller/users',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'PUT',
-                        CURLOPT_POSTFIELDS => $payload,
-                        CURLOPT_HTTPHEADER => array(
-                            'token: ' . $_ENV['API_POST_USER'],
-                            'Content-Type: application/json'
-                        ),
-                    ));
-
-                    $response = curl_exec($curl);
-
-                    curl_close($curl);
-                    $responseData = json_decode($response, true);
-                    if (isset($responseData['exito']) && $responseData['exito']) {
+                    if (isset($responseData['status']) && $responseData['status']) {
                         echo '<div class="message is-primary" id="message">';
-                        echo '<p>Datos Actualizados</p>';
+                        echo '<p>' . $responseData['mensaje'] . '</p>';
                         echo '</div>';
                     } else {
                         echo '<div class="message is-danger" id="message">';
-                        echo '<p>Datos no actualizados</p>';
+                        echo '<p>' . $responseData['mensaje'] . '</p>';
                         echo '</div>';
                     }
                 }

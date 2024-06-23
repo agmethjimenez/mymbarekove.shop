@@ -1,13 +1,10 @@
 <?php 
-require '../../config.php'; 
-require '../../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../'); // Corregido el directorio donde se encuentra el archivo .env
-$dotenv->load();
 session_start();
-if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SESSION['token'])) {
+require '../../config.php'; 
+require '../../models/Http.php';
+if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['token'])) {
     $id_admin = $_SESSION['id_admin'];
     $username = $_SESSION['username'];
-    $email = $_SESSION['email'];
     $token = $_SESSION['token'];
 } else {
     header("Location: ../../catalogo/login.php");
@@ -23,13 +20,13 @@ if(isset($_SESSION['id_admin'], $_SESSION['username'], $_SESSION['email'], $_SES
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="./estilos/update.css">
-    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <title>Crear usuario</title>
 </head>
 <body>
 <div class="contenedor">
     <form action="create.php" method="post">
-    <?php
-?>
     <div class="title" ><h1>Agregar Usuario</h1></div>
         <div class="con1">
             <div class="con1-1">
@@ -108,40 +105,33 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $data = array(
         "identificacion" => $id_usuario,
-        "tipoid" => $cod_id,
-        "nombre1" => $primernombre,
-        "nombre2" => $segundonombre,
-        "apellido1" => $primerapellido,
-        "apellido2" => $segundoapellido,
+        "tipoId" => $cod_id,
+        "primerNombre" => $primernombre,
+        "segundoNombre" => $segundonombre,
+        "primerApellido" => $primerapellido,
+        "segundoApellido" => $segundoapellido,
         "email" => $email,
         "telefono" => $telefono,
         "password" => $hashed
     );
+    /*
+    {
+  "identificacion": 1027400956,
+  "tipoId": 1,
+  "primerNombre": "Agmeth",
+  "segundoNombre": "Emilio",
+  "primerApellido": "Jimenez",
+  "segundoApellido": "Castro",
+  "email": "agmeth.jimenez2005@gmail.com",
+  "telefono":3124376338,
+  "password": "agmeth123"
+}
+    */ 
+    HttpClient::setUrl(URL.'/usuario');
+    HttpClient::setBody($data);
+    $responsecode = HttpClient::post();
 
-    $payload = json_encode($data);
-
-    $curl = curl_init();
-
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://'.$_ENV['URL'].'/controller/users',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => $payload,
-        CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json',
-            'token: '.API_POST_USER
-        ),
-    ));
-
-    $response = curl_exec($curl);
-    $responsecode = json_decode($response, true);
-
-    if ($responsecode && $responsecode['exito']) {
+    if ($responsecode['status']) {
         echo '<div class="notification is-success">';
         echo '<button class="delete"></button>';
         echo '¡Usuario insertado correctamente!';
@@ -152,8 +142,6 @@ if($_SERVER["REQUEST_METHOD"] === "POST") {
         echo '¡Error! ' . ($responsecode['mensaje'] ?? 'No se pudo completar la solicitud');
         echo '</div>';
     }
-
-    curl_close($curl);
 }
 ?>
     </div>

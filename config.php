@@ -1,7 +1,7 @@
 <?php
 
-define("URL","localhost/mymbarekove.shop");
 define("URL2","192.168.20.47/mymbarekove.shop");
+define("URL","http://127.0.0.1:8000/api");
 define("URL3","https://wet-hoops-hang.loca.lt/mymbarekove.shop");
 //define("URL","localhost:8000");
 //ver usuarios
@@ -21,3 +21,6 @@ define("KEY_PRODUCTS","a48bdbf8e9da6943d26ea4061a7d42038ff6f9bab2037e2279d587537
 
 //LA DE ELIMINAR user, product, proveedor
 define("dku","8a63dfdbccb772adea1659ae53721e31e4b245f9ac46ea069f20502e8434739bcaff1aac47735dc4517c9b81197473f550cff5ea287db0f9b4fba61832a8ec19d25e3b1a1833fb6fe9cf6f5eaecd2a42e15167dd5cacdc879cd2f8ab28513d1d6c9f52219a21d4cadc57d1b79e34b15de115fb71d269fca2afa4617bdd29f879a187204521f34a171e2251a67df5b593ecd0dd0aec4f6aca6dfa0d2472a6d19dd8387da42a87a3a64c03d1d09a57ca3ef3e92f8a751feb86599a3df13c977a0eaa1f449d9a74ada7c1c23d9ef01e412e857bb28b5cb4f9fe80413aee0d3b121cada076c435145f612fc5c3913930744ec86f9897763416f810075f132dab6b4fbeb8dd9ddbdd06a95479191c1a42ea52cd5aa3e779b8c62e9ad99bc3a3a00e6a2b9bebd48b50fc5262f439a4");
+
+define("MP_KEY","TEST-6693173666765877-031700-87d1da02f11f43d3229da9902972b0ca-1732113818");
+define("MP_PROT","APP_USR-5218474367584835-120418-1530b364d59a0178643f060de7ec9ec3-1556051552");

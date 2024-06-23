@@ -81,16 +81,6 @@ input[type="submit"] {
 input[type="submit"]:hover {
   background-color: #6b6b6b;
 }
-#tipoIdentificacion select {
-  border-radius: 20px;
-  width: 270px;
-  background-color: #efefef;
-}
-#tipoIdentificacion::after {
-  color: #333;
-  position: absolute;
-  transform: translateX(230px);
-}
 .boton {
   display: flex;
   width: 90%;
